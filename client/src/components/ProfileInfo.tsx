@@ -1,6 +1,24 @@
+import { useState } from "react";
+import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+const profileSchema = z.object({
+  fullName: z.string().min(2, "İsim en az 2 karakter olmalıdır").optional(),
+  email: z.string().email("Geçerli bir email adresi girin").optional(),
+  phoneNumber: z.string().min(10, "Geçerli bir telefon numarası girin").optional(),
+  location: z.string().min(2, "Konum bilgisi en az 2 karakter olmalıdır").optional(),
+});
 
 interface User {
   id: number;
@@ -10,14 +28,6 @@ interface User {
   phoneNumber: string | null;
   location: string | null;
 }
-
-// Form validation schema
-const profileSchema = z.object({
-  fullName: z.string().min(3, "İsim en az 3 karakter olmalıdır."),
-  email: z.string().email("Geçerli bir e-posta adresi giriniz."),
-  phoneNumber: z.string().min(10, "Geçerli bir telefon numarası giriniz."),
-  location: z.string().min(3, "Konum bilgisi en az 3 karakter olmalıdır."),
-});
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
@@ -29,11 +39,9 @@ interface ProfileInfoProps {
 }
 
 export default function ProfileInfo({ user, isLoading, onUpdate, isPending }: ProfileInfoProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ProfileFormData>({
+  const [isEditing, setIsEditing] = useState(false);
+
+  const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       fullName: user?.fullName || "",
@@ -45,89 +53,129 @@ export default function ProfileInfo({ user, isLoading, onUpdate, isPending }: Pr
 
   const onSubmit = (data: ProfileFormData) => {
     onUpdate(data);
+    setIsEditing(false);
   };
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
-        <div className="h-20 bg-gray-100 animate-pulse rounded-lg"></div>
-        <div className="h-20 bg-gray-100 animate-pulse rounded-lg"></div>
-        <div className="h-20 bg-gray-100 animate-pulse rounded-lg"></div>
+      <div className="p-4">
+        <div className="w-1/2 h-6 bg-gray-200 animate-pulse rounded mb-4"></div>
+        <div className="w-full h-12 bg-gray-200 animate-pulse rounded mb-2"></div>
+        <div className="w-full h-12 bg-gray-200 animate-pulse rounded mb-2"></div>
+        <div className="w-full h-12 bg-gray-200 animate-pulse rounded mb-2"></div>
+        <div className="w-full h-12 bg-gray-200 animate-pulse rounded"></div>
       </div>
     );
   }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
-            İsim Soyisim
-          </label>
-          <input
-            id="fullName"
-            type="text"
-            {...register("fullName")}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#D6C3E5] focus:border-[#D6C3E5]"
-          />
-          {errors.fullName && (
-            <p className="mt-1 text-sm text-red-600">{errors.fullName.message}</p>
-          )}
-        </div>
+    <div className="p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">Profil Bilgileri</h2>
+        {!isEditing && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsEditing(true)}
+          >
+            Düzenle
+          </Button>
+        )}
+      </div>
 
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            E-posta
-          </label>
-          <input
-            id="email"
-            type="email"
-            {...register("email")}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#D6C3E5] focus:border-[#D6C3E5]"
-          />
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-          )}
-        </div>
+      {isEditing ? (
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="fullName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>İsim Soyisim</FormLabel>
+                  <FormControl>
+                    <Input placeholder="İsim Soyisim" {...field} value={field.value || ""} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <div>
-          <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1">
-            Telefon
-          </label>
-          <input
-            id="phoneNumber"
-            type="tel"
-            {...register("phoneNumber")}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#D6C3E5] focus:border-[#D6C3E5]"
-          />
-          {errors.phoneNumber && (
-            <p className="mt-1 text-sm text-red-600">{errors.phoneNumber.message}</p>
-          )}
-        </div>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Email" {...field} value={field.value || ""} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <div>
-          <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
-            Konum
-          </label>
-          <input
-            id="location"
-            type="text"
-            {...register("location")}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#D6C3E5] focus:border-[#D6C3E5]"
-          />
-          {errors.location && (
-            <p className="mt-1 text-sm text-red-600">{errors.location.message}</p>
-          )}
-        </div>
+            <FormField
+              control={form.control}
+              name="phoneNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Telefon</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Telefon" {...field} value={field.value || ""} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <button
-          type="submit"
-          disabled={isPending}
-          className="w-full py-2 px-4 bg-[#D6C3E5] text-white rounded-md shadow-sm hover:bg-[#D6C3E5]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D6C3E5] disabled:opacity-50"
-        >
-          {isPending ? "Güncelleniyor..." : "Profili Güncelle"}
-        </button>
-      </form>
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Konum</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Konum" {...field} value={field.value || ""} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex justify-end space-x-2">
+              <Button 
+                variant="outline" 
+                onClick={() => setIsEditing(false)}
+                type="button"
+              >
+                İptal
+              </Button>
+              <Button type="submit" disabled={isPending}>
+                {isPending ? "Kaydediliyor..." : "Kaydet"}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      ) : (
+        <div className="space-y-4">
+          <div>
+            <p className="text-sm text-gray-500">İsim Soyisim</p>
+            <p>{user?.fullName || "-"}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Email</p>
+            <p>{user?.email || "-"}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Telefon</p>
+            <p>{user?.phoneNumber || "-"}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Konum</p>
+            <p>{user?.location || "-"}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

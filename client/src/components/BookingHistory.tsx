@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
+import { tr } from "date-fns/locale";
+import { Button } from "@/components/ui/button";
 
 interface Booking {
   id: number;
@@ -59,99 +61,38 @@ export default function BookingHistory({ userId }: BookingHistoryProps) {
   });
 
   const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "confirmed":
+    switch (status) {
+      case "completed":
         return "bg-green-100 text-green-800";
       case "cancelled":
         return "bg-red-100 text-red-800";
       case "pending":
         return "bg-yellow-100 text-yellow-800";
-      case "completed":
-        return "bg-blue-100 text-blue-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
 
-  const getStatusTranslation = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "confirmed":
-        return "Onaylandı";
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "completed":
+        return "Tamamlandı";
       case "cancelled":
         return "İptal Edildi";
       case "pending":
-        return "Beklemede";
-      case "completed":
-        return "Tamamlandı";
+        return "Onay Bekliyor";
       default:
         return status;
     }
   };
 
-  // Helper function to fetch booking related data
-  const getBookingDetails = async (bookingId: number) => {
-    try {
-      // In a real app, we'd fetch these details from the API
-      // For demo purposes, we'll just simulate loading times
-      // and return mock data
-      const artist = await new Promise<Artist>(resolve => 
-        setTimeout(() => resolve({
-          id: 1,
-          name: "Jane Doe",
-          salonId: 1,
-          specialty: "Nail Art",
-          experience: "5 years",
-          rating: 4.8,
-          reviewCount: 250,
-          imageUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop"
-        }), 300)
-      );
-      
-      const service = await new Promise<Service>(resolve => 
-        setTimeout(() => resolve({
-          id: 1,
-          artistId: 1,
-          name: "Geometric Nail Art",
-          price: 45,
-          durationMinutes: 60,
-          description: "Beautiful geometric patterns on your nails."
-        }), 200)
-      );
-      
-      const salon = await new Promise<Salon>(resolve => 
-        setTimeout(() => resolve({
-          id: 1,
-          name: "Elegant Nails",
-          address: "123 Main St, City",
-          latitude: 40.7128,
-          longitude: -74.0060,
-          phoneNumber: "123-456-7890",
-          rating: 4.5,
-          reviewCount: 500,
-          openTime: "09:00",
-          closeTime: "20:00",
-          imageUrl: "https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=800&h=600&fit=crop",
-          discount: "10% off",
-          distance: 2.5,
-          isPremium: true
-        }), 400)
-      );
-      
-      return { artist, service, salon };
-    } catch (error) {
-      console.error("Error fetching booking details:", error);
-      return null;
-    }
-  };
-
   if (isLoading) {
     return (
-      <div className="space-y-4">
+      <div className="p-4">
+        <div className="w-1/2 h-6 bg-gray-200 animate-pulse rounded mb-4"></div>
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="bg-white rounded-lg shadow-sm p-4 animate-pulse">
-            <div className="h-6 bg-gray-200 rounded w-3/4 mb-3"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
-            <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+          <div key={i} className="mb-4 border rounded-lg overflow-hidden">
+            <div className="w-full h-24 bg-gray-200 animate-pulse"></div>
           </div>
         ))}
       </div>
@@ -160,57 +101,62 @@ export default function BookingHistory({ userId }: BookingHistoryProps) {
 
   if (!bookings || bookings.length === 0) {
     return (
-      <div className="text-center py-10">
-        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <i className="far fa-calendar-alt text-gray-400 text-xl"></i>
+      <div className="p-4">
+        <h2 className="text-xl font-semibold mb-4">Randevu Geçmişi</h2>
+        <div className="text-center py-8 border rounded-lg">
+          <p className="text-gray-500">Henüz bir randevunuz bulunmamaktadır.</p>
+          <Button className="mt-4">Randevu Al</Button>
         </div>
-        <h3 className="text-lg font-medium text-gray-900">Henüz Rezervasyonunuz Yok</h3>
-        <p className="mt-1 text-sm text-gray-500">
-          Rezervasyonlarınız burada görüntülenecektir.
-        </p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      {bookings.map((booking) => (
-        <div key={booking.id} className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
-          <div className="flex justify-between items-start mb-2">
-            <div>
-              <h3 className="font-medium">Randevu #{booking.id}</h3>
-              <p className="text-sm text-gray-600">
-                {format(new Date(booking.date), "d MMMM yyyy")} • {booking.startTime}
-              </p>
-            </div>
-            <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(booking.status)}`}>
-              {getStatusTranslation(booking.status)}
-            </span>
-          </div>
+    <div className="p-4">
+      <h2 className="text-xl font-semibold mb-4">Randevu Geçmişi</h2>
+      <div className="space-y-4">
+        {bookings.map((booking) => {
+          // In a real app, we would fetch these details from the API
+          // For now, we'll just simulate it with mock data
+          const bookingDate = new Date(booking.date);
           
-          <div className="mt-3 pt-3 border-t border-gray-100">
-            <div className="flex items-center text-sm">
-              <span className="font-medium mr-2">Sanatçı:</span>
-              <span className="text-gray-600">{booking.artistId} - Yükleniyor...</span>
+          return (
+            <div key={booking.id} className="border rounded-lg overflow-hidden">
+              <div className="p-4">
+                <div className="flex justify-between">
+                  <div>
+                    <p className="font-semibold text-sm">Randevu #{booking.id}</p>
+                    <p className="text-lg font-medium mt-1">Tırnak Bakımı</p>
+                    <p className="text-sm text-gray-600 mt-1">Güzellik Salonu</p>
+                  </div>
+                  <div>
+                    <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(booking.status)}`}>
+                      {getStatusText(booking.status)}
+                    </span>
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
+                  <div className="flex items-center">
+                    <i className="far fa-calendar-alt mr-1"></i>
+                    <span>
+                      {format(bookingDate, "d MMMM yyyy", { locale: tr })}
+                    </span>
+                    <span className="mx-1">•</span>
+                    <span>{booking.startTime}</span>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={booking.status !== "pending"}
+                  >
+                    {booking.status === "pending" ? "İptal Et" : "Detaylar"}
+                  </Button>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center text-sm mt-1">
-              <span className="font-medium mr-2">Hizmet:</span>
-              <span className="text-gray-600">{booking.serviceId} - Yükleniyor...</span>
-            </div>
-          </div>
-          
-          {booking.status.toLowerCase() === "confirmed" && (
-            <div className="mt-3 flex">
-              <button className="text-sm bg-[#F9E0E7] text-[#333333] px-3 py-1 rounded-full mr-2">
-                Düzenle
-              </button>
-              <button className="text-sm bg-red-100 text-red-800 px-3 py-1 rounded-full">
-                İptal Et
-              </button>
-            </div>
-          )}
-        </div>
-      ))}
+          );
+        })}
+      </div>
     </div>
   );
 }
