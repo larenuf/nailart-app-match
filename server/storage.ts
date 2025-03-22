@@ -144,11 +144,11 @@ export class MemStorage implements IStorage {
     
     // Sample stories - yüksek kaliteli nail art resimleri
     const stories = [
-      { title: 'Popular', imageUrl: 'https://images.pexels.com/photos/3997383/pexels-photo-3997383.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false },
-      { title: 'New', imageUrl: 'https://images.pexels.com/photos/6691780/pexels-photo-6691780.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false },
+      { title: 'Popular', imageUrl: 'https://images.pexels.com/photos/4210665/pexels-photo-4210665.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false },
+      { title: 'New', imageUrl: 'https://images.pexels.com/photos/704815/pexels-photo-704815.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false },
       { title: 'Today Only', imageUrl: 'https://images.pexels.com/photos/939835/pexels-photo-939835.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: true },
       { title: 'Discounted', imageUrl: 'https://images.pexels.com/photos/3997386/pexels-photo-3997386.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false },
-      { title: 'New discounted', imageUrl: 'https://images.pexels.com/photos/3422099/pexels-photo-3422099.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false }
+      { title: 'New discounted', imageUrl: 'https://images.pexels.com/photos/4210276/pexels-photo-4210276.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false }
     ];
     
     stories.forEach(story => {
