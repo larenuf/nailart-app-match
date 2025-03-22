@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Story } from "@/types";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 export default function StorySection() {
   const { data: stories, isLoading } = useQuery<Story[]>({
@@ -16,6 +15,11 @@ export default function StorySection() {
   const handleStoryClick = (story: Story) => {
     setSelectedStory(story);
     setIsStoryOpen(true);
+  };
+
+  // Story modalını kapatan fonksiyon
+  const closeStoryModal = () => {
+    setIsStoryOpen(false);
   };
 
   if (isLoading) {
@@ -62,53 +66,51 @@ export default function StorySection() {
         </div>
       </div>
       
-      {/* Story Görüntüleme Modalı */}
-      <Dialog open={isStoryOpen} onOpenChange={setIsStoryOpen}>
-        <DialogContent className="p-0 max-w-md mx-auto overflow-hidden border-none bg-transparent shadow-none">
-          {selectedStory && (
-            <div className="relative h-[80vh] bg-black rounded-xl overflow-hidden">
-              {/* Üst Bilgi Bölümü */}
-              <div className="absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-black/80 to-transparent p-4">
-                <div className="flex items-center">
-                  <img 
-                    src={selectedStory.imageUrl} 
-                    alt={selectedStory.title}
-                    className="w-10 h-10 rounded-full object-cover border border-white" 
-                  />
-                  <div className="ml-2">
-                    <p className="text-white font-medium text-sm">{selectedStory.title}</p>
-                    <p className="text-white/70 text-xs">Şimdi</p>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Ana Görsel */}
-              <img 
-                src={selectedStory.imageUrl} 
-                alt={selectedStory.title}
-                className="w-full h-full object-cover" 
-              />
-              
-              {/* Alt Bilgi */}
-              <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black/80 to-transparent p-4">
-                <div className="flex justify-between items-center">
-                  <input 
-                    type="text" 
-                    placeholder="Mesaj gönder..." 
-                    className="bg-white/20 text-white rounded-full px-4 py-2 text-sm w-full" 
-                  />
-                  <button 
-                    onClick={() => setIsStoryOpen(false)} 
-                    className="ml-2 bg-white/20 rounded-full p-2"
-                  >
-                    <i className="fas fa-times text-white"></i>
-                  </button>
+      {/* Story Görüntüleme Modalı - Özel modal yapısı kullanıyoruz (Dialog yerine) */}
+      {isStoryOpen && selectedStory && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center" onClick={closeStoryModal}>
+          <div className="relative h-[80vh] w-full max-w-md bg-black rounded-xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            {/* Üst Bilgi Bölümü */}
+            <div className="absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-black/80 to-transparent p-4">
+              <div className="flex items-center">
+                <img 
+                  src={selectedStory.imageUrl} 
+                  alt={selectedStory.title}
+                  className="w-10 h-10 rounded-full object-cover border border-white" 
+                />
+                <div className="ml-2">
+                  <p className="text-white font-medium text-sm">{selectedStory.title}</p>
+                  <p className="text-white/70 text-xs">Şimdi</p>
                 </div>
               </div>
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
+            
+            {/* Ana Görsel */}
+            <img 
+              src={selectedStory.imageUrl} 
+              alt={selectedStory.title}
+              className="w-full h-full object-cover" 
+            />
+            
+            {/* Alt Bilgi */}
+            <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black/80 to-transparent p-4">
+              <div className="flex justify-between items-center">
+                <input 
+                  type="text" 
+                  placeholder="Mesaj gönder..." 
+                  className="bg-white/20 text-white rounded-full px-4 py-2 text-sm w-full" 
+                />
+                <button 
+                  onClick={closeStoryModal} 
+                  className="ml-2 bg-white/20 rounded-full p-2"
+                >
+                  <i className="fas fa-times text-white"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
