@@ -1,22 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
 import { Category } from "@/types";
 
-// Treatwell tarzı modern kategori görselleri
+// Treatwell tarzı modern kategori görselleri - çalışan ve güvenilir URL'ler
 const treatwellStyleImages = {
   "Manikür": {
-    image: "https://images.unsplash.com/photo-1463696775863-dd7be99cdb5c?w=800&auto=format&fit=crop",
-    position: "top right" // Görsel konumlandırma
+    image: "https://images.pexels.com/photos/704815/pexels-photo-704815.jpeg?auto=compress&cs=tinysrgb&w=800",
+    position: "center" // Görsel konumlandırma
   },
   "Pedikür": {
-    image: "https://images.unsplash.com/photo-1519415387722-a1c3bbef716c?w=800&auto=format&fit=crop",
+    image: "https://images.pexels.com/photos/3997373/pexels-photo-3997373.jpeg?auto=compress&cs=tinysrgb&w=800",
     position: "center"
   },
   "Jel Tırnak": {
-    image: "https://images.unsplash.com/photo-1604902396830-aca29e19b067?w=800&auto=format&fit=crop",
+    image: "https://images.pexels.com/photos/939836/pexels-photo-939836.jpeg?auto=compress&cs=tinysrgb&w=800",
     position: "center"
   },
   "Kalıcı Oje": {
-    image: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=800&auto=format&fit=crop",
+    image: "https://images.pexels.com/photos/3997391/pexels-photo-3997391.jpeg?auto=compress&cs=tinysrgb&w=800",
     position: "center"
   }
 };
@@ -59,7 +59,7 @@ export default function CategoriesSection() {
       <div className="space-y-4">
         {displayCategories.slice(0, 4).map((category) => {
           const categoryStyle = treatwellStyleImages[category.name as keyof typeof treatwellStyleImages] || {
-            image: "https://images.unsplash.com/photo-1601049926914-ec12a0c8bcf6?w=800&auto=format&fit=crop",
+            image: "https://images.pexels.com/photos/704815/pexels-photo-704815.jpeg?auto=compress&cs=tinysrgb&w=800",
             position: "center"
           };
           
