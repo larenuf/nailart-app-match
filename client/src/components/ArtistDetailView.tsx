@@ -3,6 +3,8 @@ import { useAppContext } from "@/context/AppContext";
 import { Service, PortfolioItem } from "@/types";
 import BottomNavigation from "./BottomNavigation";
 import ReviewSystem from "./ReviewSystem";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 
 export default function ArtistDetailView() {
   const { selectedArtist, selectedSalon, setSelectedArtist, setSelectedService } = useAppContext();
@@ -17,6 +19,13 @@ export default function ArtistDetailView() {
     enabled: !!selectedArtist,
   });
 
+  // Benzer çalışmalar - gerçek veritabanından gelecek
+  const similarWorks = [
+    "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=500&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1604902396830-aca29e19b067?w=500&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1604902396830-aca29e19b067?w=500&auto=format&fit=crop"
+  ];
+
   const handleBackToSalon = () => {
     setSelectedArtist(null);
   };
@@ -28,23 +37,33 @@ export default function ArtistDetailView() {
   if (!selectedArtist || !selectedSalon) return null;
 
   return (
-    <div className="max-w-md mx-auto bg-white min-h-screen relative pb-16">
-      <div className="px-4 py-2">
-        <div className="flex items-center mb-4">
+    <div className="max-w-md mx-auto bg-white min-h-screen relative pb-20">
+      {/* Sabit Üst Bar */}
+      <div className="sticky top-0 z-10 bg-white shadow-sm">
+        <div className="flex items-center px-4 py-3">
           <button className="text-[#333333] mr-2" onClick={handleBackToSalon}>
             <i className="fas fa-arrow-left"></i>
           </button>
           <h2 className="text-lg font-bold font-playfair">{selectedArtist.name}</h2>
+          {selectedArtist.experience?.includes("Senior") && (
+            <Badge className="ml-2 bg-[#6A0DAD] text-white">Uzman</Badge>
+          )}
         </div>
+      </div>
 
-        <div className="flex items-center mb-4">
+      {/* Sanatçı Profil Başlığı */}
+      <div className="px-4 py-4 bg-[#FBF7FA]">
+        <div className="flex">
           <img
             src={selectedArtist.imageUrl}
             alt={selectedArtist.name}
-            className="w-20 h-20 rounded-full object-cover mr-4"
+            className="w-24 h-24 rounded-full object-cover border-2 border-white shadow-md"
           />
-          <div>
-            <div className="flex items-center">
+          <div className="ml-4 flex-1">
+            <h3 className="text-xl font-semibold">{selectedArtist.name}</h3>
+            <p className="text-sm font-medium text-[#6A0DAD] mt-1">{selectedArtist.specialty}</p>
+            
+            <div className="flex items-center mt-1">
               <div className="flex text-[#FFD700]">
                 {[...Array(Math.floor(selectedArtist.rating))].map((_, i) => (
                   <i key={i} className="fas fa-star"></i>
@@ -54,42 +73,145 @@ export default function ArtistDetailView() {
                 )}
               </div>
               <span className="text-sm ml-1 text-gray-600">
-                {selectedArtist.rating.toFixed(1)} ({selectedArtist.reviewCount} reviews)
+                {selectedArtist.rating.toFixed(1)} ({selectedArtist.reviewCount} yorum)
               </span>
             </div>
-            <p className="text-sm mt-1">{selectedArtist.specialty}</p>
-            <p className="text-sm text-gray-600">{selectedArtist.experience}</p>
+            
+            <div className="mt-2 flex space-x-2">
+              <button className="bg-[#F9E0E7] text-[#333333] px-4 py-1.5 rounded-full text-sm font-medium">
+                <i className="far fa-calendar-check mr-1"></i> Randevu Al
+              </button>
+              <button className="bg-white border border-gray-200 p-2 rounded-full">
+                <i className="far fa-heart text-gray-400"></i>
+              </button>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div className="mb-4">
-          <h3 className="font-bold mb-2">Portfolio</h3>
+      {/* Sekme Yapısı */}
+      <Tabs defaultValue="about" className="w-full">
+        <div className="px-4 border-b">
+          <TabsList className="grid grid-cols-4 h-10">
+            <TabsTrigger value="about" className="text-xs">Hakkında</TabsTrigger>
+            <TabsTrigger value="portfolio" className="text-xs">Portfolyo</TabsTrigger>
+            <TabsTrigger value="services" className="text-xs">Hizmetler</TabsTrigger>
+            <TabsTrigger value="reviews" className="text-xs">Yorumlar</TabsTrigger>
+          </TabsList>
+        </div>
+
+        {/* Hakkında Sekmesi */}
+        <TabsContent value="about" className="px-4 py-3">
+          <div className="mb-4">
+            <h3 className="font-bold mb-2">Sanatçı Hakkında</h3>
+            <p className="text-sm text-gray-600">
+              {selectedArtist.name}, {selectedArtist.experience} deneyime sahip, {selectedSalon.name}'da çalışan uzman bir tırnak sanatçısıdır. 
+              {selectedArtist.specialty} alanında uzmanlaşmış olup, yaratıcı ve detaylara önem veren çalışmalarıyla tanınır.
+            </p>
+          </div>
+
+          <div className="mb-4">
+            <h3 className="font-bold mb-2">Uzmanlık Alanları</h3>
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="outline" className="bg-[#FBF7FA]">Kalıcı Oje</Badge>
+              <Badge variant="outline" className="bg-[#FBF7FA]">Jel Tırnak</Badge>
+              <Badge variant="outline" className="bg-[#FBF7FA]">3D Nail Art</Badge>
+              <Badge variant="outline" className="bg-[#FBF7FA]">French Manicure</Badge>
+              <Badge variant="outline" className="bg-[#FBF7FA]">Akrilik Uygulamalar</Badge>
+            </div>
+          </div>
+          
+          <div className="mb-4">
+            <h3 className="font-bold mb-2">Çalışma Saatleri</h3>
+            <div className="grid grid-cols-2 gap-2 text-sm">
+              <div>
+                <p className="font-medium">Pazartesi - Cuma</p>
+                <p className="text-gray-600">09:00 - 19:00</p>
+              </div>
+              <div>
+                <p className="font-medium">Cumartesi</p>
+                <p className="text-gray-600">10:00 - 18:00</p>
+              </div>
+              <div>
+                <p className="font-medium">Pazar</p>
+                <p className="text-gray-600">Kapalı</p>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 className="font-bold mb-2">Salon Bilgileri</h3>
+            <div className="bg-[#FBF7FA] p-3 rounded-lg flex items-center">
+              <img
+                src={selectedSalon.imageUrl}
+                alt={selectedSalon.name}
+                className="w-16 h-16 rounded-lg object-cover mr-3"
+              />
+              <div>
+                <h4 className="font-semibold">{selectedSalon.name}</h4>
+                <p className="text-xs text-gray-600">{selectedSalon.address}</p>
+                <div className="flex items-center mt-1">
+                  <div className="flex text-[#FFD700] text-xs">
+                    {[...Array(Math.floor(selectedSalon.rating))].map((_, i) => (
+                      <i key={i} className="fas fa-star"></i>
+                    ))}
+                  </div>
+                  <span className="text-xs ml-1 text-gray-600">
+                    ({selectedSalon.reviewCount} yorum)
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+
+        {/* Portfolyo Sekmesi */}
+        <TabsContent value="portfolio" className="px-4 py-3">
+          <h3 className="font-bold mb-3">Sanatçı Portfolyosu</h3>
+          
           {portfolioLoading ? (
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-3">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="w-full h-24 bg-gray-100 animate-pulse rounded-lg"></div>
+                <div key={i} className="w-full h-40 bg-gray-100 animate-pulse rounded-lg"></div>
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-3 gap-2">
-              {portfolioItems?.map((item) => (
-                <img
-                  key={item.id}
-                  src={item.imageUrl}
-                  alt="Nail art example"
-                  className="w-full h-24 object-cover rounded-lg"
-                />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-2 gap-3 mb-6">
+                {portfolioItems?.map((item) => (
+                  <div key={item.id} className="rounded-lg overflow-hidden shadow-sm">
+                    <img
+                      src={item.imageUrl}
+                      alt="Nail art example"
+                      className="w-full h-44 object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+              
+              <h4 className="font-medium text-gray-700 mb-2">Benzer Çalışmalar</h4>
+              <div className="grid grid-cols-3 gap-2">
+                {similarWorks.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`Similar work ${index + 1}`}
+                    className="w-full h-24 object-cover rounded-lg"
+                  />
+                ))}
+              </div>
+            </>
           )}
-        </div>
+        </TabsContent>
 
-        <div className="mb-4">
-          <h3 className="font-bold mb-2">Services & Pricing</h3>
+        {/* Hizmetler Sekmesi */}
+        <TabsContent value="services" className="px-4 py-3">
+          <h3 className="font-bold mb-3">Sunulan Hizmetler</h3>
+          
           {servicesLoading ? (
             <div className="space-y-3">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="py-2 border-b border-gray-200">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="py-3 border-b border-gray-100">
                   <div className="w-2/3 h-5 bg-gray-100 animate-pulse rounded mb-2"></div>
                   <div className="w-1/2 h-4 bg-gray-100 animate-pulse rounded"></div>
                 </div>
@@ -100,28 +222,49 @@ export default function ArtistDetailView() {
               {services?.map((service) => (
                 <div
                   key={service.id}
-                  className="flex justify-between items-center py-2 border-b border-gray-200 cursor-pointer"
+                  className="p-3 border border-gray-100 rounded-lg hover:border-[#F9E0E7] transition-colors"
                   onClick={() => handleServiceSelect(service)}
                 >
-                  <div>
-                    <h4 className="font-medium">{service.name}</h4>
-                    <p className="text-sm text-gray-600">{service.durationMinutes} minutes</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold">${service.price}</p>
-                    <button className="text-xs bg-[#F9E0E7] text-[#333333] px-3 py-1 rounded-full mt-1">
-                      Book
-                    </button>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="font-medium">{service.name}</h4>
+                      <p className="text-sm text-gray-500 mt-1">{service.description || "Premium tırnak bakımı ve uygulama"}</p>
+                      <div className="flex items-center mt-2 text-xs text-gray-500">
+                        <i className="far fa-clock mr-1"></i>
+                        <span>{service.durationMinutes} dakika</span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-bold text-lg">${service.price}</p>
+                      <button className="text-xs bg-[#F9E0E7] hover:bg-[#F9E0E7]/80 text-[#333333] px-3 py-1 rounded-full mt-1">
+                        Randevu Al
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           )}
-        </div>
-        
-        {/* Reviews Section */}
-        <ReviewSystem artistId={selectedArtist.id} />
-      </div>
+          
+          <div className="mt-6 p-3 bg-[#FBF7FA] rounded-lg">
+            <h4 className="font-medium flex items-center">
+              <i className="fas fa-info-circle text-[#6A0DAD] mr-2"></i>
+              Ek Bilgi
+            </h4>
+            <p className="text-sm text-gray-600 mt-1">
+              Tüm hizmetlerimiz, kullanılan malzemeleri ve gerekli bakımı içerir. 
+              İptal ve değişiklikler için lütfen en az 24 saat önceden haber veriniz.
+            </p>
+          </div>
+        </TabsContent>
+
+        {/* Yorumlar Sekmesi */}
+        <TabsContent value="reviews" className="px-4 py-3">
+          <ReviewSystem artistId={selectedArtist.id} />
+        </TabsContent>
+      </Tabs>
+
+      {/* Alt Navigasyon */}
       <BottomNavigation />
     </div>
   );
