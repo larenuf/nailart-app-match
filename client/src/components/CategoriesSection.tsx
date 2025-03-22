@@ -1,30 +1,30 @@
 import { useQuery } from "@tanstack/react-query";
 import { Category } from "@/types";
 
-// Treatwell tarzı modern kategori görselleri - daha şık ve profesyonel
+// Treatwell tarzı modern kategori görselleri - daha kaliteli ve profesyonel
 const treatwellStyleImages = {
   "Manikür": {
-    image: "https://images.pexels.com/photos/4210276/pexels-photo-4210276.jpeg?auto=compress&cs=tinysrgb&w=800",
+    image: "https://images.pexels.com/photos/3997383/pexels-photo-3997383.jpeg?auto=compress&cs=tinysrgb&w=800", 
     color: "from-[#FFCDD2]/80" // Kategori renk tonları
   },
   "Pedikür": {
-    image: "https://images.pexels.com/photos/3997385/pexels-photo-3997385.jpeg?auto=compress&cs=tinysrgb&w=800",
+    image: "https://images.pexels.com/photos/3997386/pexels-photo-3997386.jpeg?auto=compress&cs=tinysrgb&w=800",
     color: "from-[#BBDEFB]/80"
   },
   "Jel Tırnak": {
-    image: "https://images.pexels.com/photos/7766185/pexels-photo-7766185.jpeg?auto=compress&cs=tinysrgb&w=800",
+    image: "https://images.pexels.com/photos/704815/pexels-photo-704815.jpeg?auto=compress&cs=tinysrgb&w=800",
     color: "from-[#E1BEE7]/80"
   },
   "Kalıcı Oje": {
-    image: "https://images.pexels.com/photos/1638349/pexels-photo-1638349.jpeg?auto=compress&cs=tinysrgb&w=800",
+    image: "https://images.pexels.com/photos/9277008/pexels-photo-9277008.jpeg?auto=compress&cs=tinysrgb&w=800",
     color: "from-[#C8E6C9]/80"
   },
   "French Manicure": {
-    image: "https://images.pexels.com/photos/3422099/pexels-photo-3422099.jpeg?auto=compress&cs=tinysrgb&w=800",
+    image: "https://images.pexels.com/photos/4210665/pexels-photo-4210665.jpeg?auto=compress&cs=tinysrgb&w=800",
     color: "from-[#FFE0B2]/80"
   },
   "Nail Art": {
-    image: "https://images.pexels.com/photos/3422099/pexels-photo-3422099.jpeg?auto=compress&cs=tinysrgb&w=800",
+    image: "https://images.pexels.com/photos/6691652/pexels-photo-6691652.jpeg?auto=compress&cs=tinysrgb&w=800",
     color: "from-[#F8BBD0]/80"
   }
 };

@@ -1,10 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { Story } from "@/types";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 export default function StorySection() {
   const { data: stories, isLoading } = useQuery<Story[]>({
     queryKey: ["/api/stories"],
   });
+
+  // Seçilen story'yi izlemek için state
+  const [selectedStory, setSelectedStory] = useState<Story | null>(null);
+  const [isStoryOpen, setIsStoryOpen] = useState(false);
+
+  // Story'ye tıklandığında çağrılacak fonksiyon
+  const handleStoryClick = (story: Story) => {
+    setSelectedStory(story);
+    setIsStoryOpen(true);
+  };
 
   if (isLoading) {
     return (
@@ -22,27 +34,81 @@ export default function StorySection() {
   }
 
   return (
-    <div className="px-4 py-3 bg-[#FAFAFA] border-b border-gray-100">
-      <div className="flex space-x-4 overflow-x-auto pb-2 no-scrollbar">
-        {stories?.map((story) => (
-          <div key={story.id} className="flex flex-col items-center">
-            <div
-              className={`w-[70px] h-[70px] rounded-full overflow-hidden ${
-                story.highlighted 
-                  ? "ring-2 ring-[#FF5864] ring-offset-1" 
-                  : "border-2 border-gray-200"
-              } p-0.5`}
+    <>
+      <div className="px-4 py-3 bg-[#FAFAFA] border-b border-gray-100">
+        <div className="flex space-x-4 overflow-x-auto pb-2 no-scrollbar">
+          {stories?.map((story) => (
+            <div 
+              key={story.id} 
+              className="flex flex-col items-center cursor-pointer"
+              onClick={() => handleStoryClick(story)}
             >
-              <img
-                src={story.imageUrl}
-                alt={story.title}
-                className="w-full h-full object-cover rounded-full"
-              />
+              <div
+                className={`w-[70px] h-[70px] rounded-full overflow-hidden ${
+                  story.highlighted 
+                    ? "ring-2 ring-[#FF5864] ring-offset-1" 
+                    : "border-2 border-gray-200"
+                } p-0.5`}
+              >
+                <img
+                  src={story.imageUrl}
+                  alt={story.title}
+                  className="w-full h-full object-cover rounded-full"
+                />
+              </div>
+              <p className="text-xs font-medium text-center mt-1">{story.title}</p>
             </div>
-            <p className="text-xs font-medium text-center mt-1">{story.title}</p>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+      
+      {/* Story Görüntüleme Modalı */}
+      <Dialog open={isStoryOpen} onOpenChange={setIsStoryOpen}>
+        <DialogContent className="p-0 max-w-md mx-auto overflow-hidden border-none bg-transparent shadow-none">
+          {selectedStory && (
+            <div className="relative h-[80vh] bg-black rounded-xl overflow-hidden">
+              {/* Üst Bilgi Bölümü */}
+              <div className="absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-black/80 to-transparent p-4">
+                <div className="flex items-center">
+                  <img 
+                    src={selectedStory.imageUrl} 
+                    alt={selectedStory.title}
+                    className="w-10 h-10 rounded-full object-cover border border-white" 
+                  />
+                  <div className="ml-2">
+                    <p className="text-white font-medium text-sm">{selectedStory.title}</p>
+                    <p className="text-white/70 text-xs">Şimdi</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Ana Görsel */}
+              <img 
+                src={selectedStory.imageUrl} 
+                alt={selectedStory.title}
+                className="w-full h-full object-cover" 
+              />
+              
+              {/* Alt Bilgi */}
+              <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black/80 to-transparent p-4">
+                <div className="flex justify-between items-center">
+                  <input 
+                    type="text" 
+                    placeholder="Mesaj gönder..." 
+                    className="bg-white/20 text-white rounded-full px-4 py-2 text-sm w-full" 
+                  />
+                  <button 
+                    onClick={() => setIsStoryOpen(false)} 
+                    className="ml-2 bg-white/20 rounded-full p-2"
+                  >
+                    <i className="fas fa-times text-white"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
