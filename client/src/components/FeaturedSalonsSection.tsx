@@ -1,22 +1,27 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAppContext } from "@/context/AppContext";
+import { useLocation } from "wouter";
 import { Salon } from "@/types";
 
 export default function FeaturedSalonsSection() {
   const { setSelectedSalon } = useAppContext();
+  const [, navigate] = useLocation();
+  
   const { data: salons, isLoading } = useQuery<Salon[]>({
     queryKey: ["/api/salons/featured"],
   });
 
   const handleSelectSalon = (salon: Salon) => {
+    // Hem context'i güncelle hem de URL'yi doğrudan değiştir
     setSelectedSalon(salon);
+    navigate(`/salons/${salon.id}`);
   };
 
   if (isLoading) {
     return (
       <div className="px-4 py-4">
         <div className="flex justify-between items-center mb-3">
-          <h2 className="text-lg font-bold font-playfair">Featured Salons</h2>
+          <h2 className="text-lg font-bold font-playfair">Öne Çıkan Salonlar</h2>
           <div className="w-16 h-4 bg-gray-200 animate-pulse rounded"></div>
         </div>
         <div className="space-y-4">
@@ -38,9 +43,9 @@ export default function FeaturedSalonsSection() {
   return (
     <div className="px-4 py-4">
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-lg font-bold font-playfair">Featured Salons</h2>
+        <h2 className="text-lg font-bold font-playfair">Öne Çıkan Salonlar</h2>
         <a href="#" className="text-sm text-[#D6C3E5]">
-          View All
+          Tümünü Gör
         </a>
       </div>
 
@@ -76,7 +81,7 @@ export default function FeaturedSalonsSection() {
                 </div>
                 {salon.discount && (
                   <span className="bg-[#F9E0E7] text-[#333333] text-xs font-semibold px-2 py-1 rounded-full">
-                    {salon.discount}
+                    {salon.discount} İndirim
                   </span>
                 )}
                 {salon.isPremium && (
@@ -87,10 +92,10 @@ export default function FeaturedSalonsSection() {
               </div>
               <div className="flex items-center mt-2 text-xs text-gray-600">
                 <i className="fas fa-map-marker-alt mr-1"></i>
-                <span>{salon.distance} miles away</span>
+                <span>{salon.distance} km uzaklıkta</span>
                 <div className="mx-2 h-1 w-1 rounded-full bg-gray-300"></div>
                 <i className="far fa-clock mr-1"></i>
-                <span>Open until {salon.closeTime}</span>
+                <span>{salon.closeTime}'e kadar açık</span>
               </div>
             </div>
           </div>
