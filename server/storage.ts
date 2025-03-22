@@ -142,12 +142,13 @@ export class MemStorage implements IStorage {
       });
     });
     
-    // Sample stories
+    // Sample stories - yüksek kaliteli nail art resimleri
     const stories = [
-      { title: 'Popular', imageUrl: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=150&h=150&fit=crop&crop=faces&auto=format', highlighted: false },
-      { title: 'New', imageUrl: 'https://images.unsplash.com/photo-1600020037688-c11a09a52fd4?w=150&h=150&fit=crop&crop=faces&auto=format', highlighted: false },
-      { title: 'Today Only', imageUrl: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=150&h=150&fit=crop&crop=faces&auto=format', highlighted: true },
-      { title: 'Discounted', imageUrl: 'https://images.unsplash.com/photo-1610992932411-f200e69c841c?w=150&h=150&fit=crop&crop=faces&auto=format', highlighted: false }
+      { title: 'Popular', imageUrl: 'https://images.pexels.com/photos/3997383/pexels-photo-3997383.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false },
+      { title: 'New', imageUrl: 'https://images.pexels.com/photos/6691780/pexels-photo-6691780.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false },
+      { title: 'Today Only', imageUrl: 'https://images.pexels.com/photos/939835/pexels-photo-939835.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: true },
+      { title: 'Discounted', imageUrl: 'https://images.pexels.com/photos/3997386/pexels-photo-3997386.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false },
+      { title: 'New discounted', imageUrl: 'https://images.pexels.com/photos/3422099/pexels-photo-3422099.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false }
     ];
     
     stories.forEach(story => {
