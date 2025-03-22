@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAppContext } from "@/context/AppContext";
 import { Service, PortfolioItem } from "@/types";
 import BottomNavigation from "./BottomNavigation";
+import ReviewSystem from "./ReviewSystem";
 
 export default function ArtistDetailView() {
   const { selectedArtist, selectedSalon, setSelectedArtist, setSelectedService } = useAppContext();
@@ -117,6 +118,9 @@ export default function ArtistDetailView() {
             </div>
           )}
         </div>
+        
+        {/* Reviews Section */}
+        <ReviewSystem artistId={selectedArtist.id} />
       </div>
       <BottomNavigation />
     </div>

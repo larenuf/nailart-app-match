@@ -33,6 +33,7 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  updateUser(id: number, userData: Partial<User>): Promise<User>;
   
   // Salon operations
   getSalons(): Promise<Salon[]>;
@@ -278,6 +279,24 @@ export class MemStorage implements IStorage {
   // User operations
   async getUser(id: number): Promise<User | undefined> {
     return this.users.get(id);
+  }
+  
+  async updateUser(id: number, userData: Partial<User>): Promise<User> {
+    const user = await this.getUser(id);
+    if (!user) {
+      throw new Error(`User with id ${id} not found`);
+    }
+    
+    const updatedUser: User = {
+      ...user,
+      ...userData,
+      // Ensure we don't override the id or password
+      id: user.id,
+      password: user.password,
+    };
+    
+    this.users.set(id, updatedUser);
+    return updatedUser;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
