@@ -3,7 +3,7 @@ import { useAppContext } from "@/context/AppContext";
 import { Salon } from "@/types";
 import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
-import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
+import { GoogleMap, LoadScript, InfoWindow } from "@react-google-maps/api";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, MapPin, Navigation } from "lucide-react";
@@ -246,37 +246,37 @@ export default function NearestSalonsMap() {
                   zoomControl: true
                 }}
               >
-                {/* Kullanıcının konumu */}
-                <Marker
-                  position={center}
-                  icon={{
-                    path: 0, // Icon will be a simple circle
-                    fillColor: "#3B82F6",
-                    fillOpacity: 1,
-                    scale: 8,
-                    strokeColor: "#FFFFFF",
-                    strokeWeight: 2,
+                {/* AdvancedMarkerElement yerine div kullanarak özel marker */}
+                <div 
+                  className="w-3 h-3 bg-blue-500 rounded-full border border-white absolute"
+                  style={{
+                    position: 'absolute',
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)'
                   }}
-                />
+                ></div>
                 
-                {/* Salon işaretleri */}
+                {/* Salon listesi için dinamik div */}
                 {salons?.map((salon) => (
-                  <Marker
+                  <div 
                     key={salon.id}
-                    position={{
-                      lat: salon.latitude,
-                      lng: salon.longitude
+                    className="absolute"
+                    style={{
+                      position: 'absolute',
+                      left: `${Math.random() * 80 + 10}%`,
+                      top: `${Math.random() * 80 + 10}%`
                     }}
                     onClick={() => handleMarkerClick(salon)}
-                    icon={{
-                      path: 0, // Icon will be a simple circle
-                      fillColor: salon.isPremium ? "#F59E0B" : "#EC4899",
-                      fillOpacity: 1,
-                      scale: 7,
-                      strokeColor: "#FFFFFF",
-                      strokeWeight: 2,
-                    }}
-                  />
+                  >
+                    <div 
+                      className="w-5 h-5 rounded-full cursor-pointer"
+                      style={{
+                        backgroundColor: salon.isPremium ? "#F59E0B" : "#EC4899",
+                        border: "2px solid white"
+                      }}
+                    ></div>
+                  </div>
                 ))}
                 
                 {/* Seçilen salon için bilgi penceresi */}
