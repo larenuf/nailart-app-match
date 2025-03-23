@@ -130,15 +130,43 @@ export default function Search() {
       const hasPriceInRange = selectedFilters.priceSlider &&
         (selectedFilters.priceSlider[0] > 0 || selectedFilters.priceSlider[1] < 500);
       
-      // This is a mock implementation since we don't have real price data in the salon model
-      // In a real app, we would filter based on actual service prices
+      // Mock price check - in a real app we would check service prices
+      // For demo, premium salons have higher prices
+      const estimatedMinPrice = salon.isPremium ? 200 : 50;
+      const estimatedMaxPrice = salon.isPremium ? 500 : 300;
+      const priceOverlaps = (min1: number, max1: number, min2: number, max2: number) => {
+        return Math.max(min1, min2) <= Math.min(max1, max2);
+      };
+      
       const matchesPriceRange = hasPriceInRange
-        ? (salon.discount ? true : !salon.isPremium) // Just for demonstration
+        ? priceOverlaps(
+            selectedFilters.priceSlider[0], 
+            selectedFilters.priceSlider[1], 
+            estimatedMinPrice, 
+            estimatedMaxPrice
+          )
+        : true;
+        
+      // Service Time Filter - check if service duration is within the selected range
+      // For demo, we use an estimated service time range
+      const estimatedMinDuration = salon.isPremium ? 60 : 30;
+      const estimatedMaxDuration = salon.isPremium ? 120 : 90;
+      
+      const hasServiceTimeRange = selectedFilters.serviceTime &&
+        (selectedFilters.serviceTime[0] !== 15 || selectedFilters.serviceTime[1] !== 120);
+        
+      const matchesServiceTime = hasServiceTimeRange
+        ? priceOverlaps(
+            selectedFilters.serviceTime[0],
+            selectedFilters.serviceTime[1],
+            estimatedMinDuration,
+            estimatedMaxDuration
+          )
         : true;
         
       // Filter by availability today
       const matchesAvailability = selectedFilters.availableToday
-        ? true // In a real app, we would check if the salon has any available time slots today
+        ? Math.random() > 0.3 // For demo, random availability
         : true;
 
       // Combined filters
@@ -149,6 +177,7 @@ export default function Search() {
              matchesPremium && 
              matchesDiscount &&
              matchesPriceRange &&
+             matchesServiceTime &&
              matchesAvailability;
     });
   };
@@ -426,6 +455,9 @@ export default function Search() {
                 <div className="flex justify-between text-xs text-gray-500">
                   <span>15 dk</span>
                   <span>120 dk</span>
+                  <span className="absolute -top-7 left-1/3 bg-[#F9E0E7] text-[#333333] text-xs px-2 py-0.5 rounded-full transform -translate-x-1/2 opacity-0 transition-opacity duration-200" id="serviceTimeBadge">
+                    {selectedFilters.serviceTime ? `${selectedFilters.serviceTime[0]} dk` : ''}
+                  </span>
                 </div>
               </div>
               
