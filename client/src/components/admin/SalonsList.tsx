@@ -149,8 +149,13 @@ export default function SalonsList() {
   };
 
   // Toggle salon active status handler
-  const handleToggleStatus = (id: number, currentStatus: boolean) => {
-    toggleSalonStatusMutation.mutate({ id, isActive: !currentStatus });
+  const handleToggleStatus = (salonId: number) => {
+    const salon = salons?.find(s => s.id === salonId);
+    if (salon) {
+      // Varsayılan olarak aktif kabul et, salon durumu yoksa veya tanımsızsa
+      const currentStatus = salon.status === "active" || !!salon.isActive;
+      toggleSalonStatusMutation.mutate({ id: salonId, isActive: !currentStatus });
+    }
   };
 
   return (
@@ -247,8 +252,8 @@ export default function SalonsList() {
                     </TableCell>
                     <TableCell>
                       <Switch
-                        checked={salon.status === "active" || salon.isActive}
-                        onCheckedChange={() => handleToggleStatus(salon.id, salon.status === "active" || salon.isActive)}
+                        checked={salon.status === "active" || Boolean(salon.isActive)}
+                        onCheckedChange={() => handleToggleStatus(salon.id)}
                         disabled={toggleSalonStatusMutation.isPending}
                       />
                     </TableCell>
