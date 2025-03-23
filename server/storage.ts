@@ -245,6 +245,25 @@ export class MemStorage implements IStorage {
         rating: 4.0,
         reviewCount: 32,
         imageUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=faces&auto=format'
+      },
+      // Artists for the second salon
+      {
+        salonId: salonIds[1],
+        name: 'Olivia Parker',
+        specialty: 'Nail Art Designer',
+        experience: '7+ years experience',
+        rating: 4.9,
+        reviewCount: 56,
+        imageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=faces&auto=format'
+      },
+      {
+        salonId: salonIds[1],
+        name: 'Isabella Martinez',
+        specialty: 'Acrylics Expert',
+        experience: '4+ years experience',
+        rating: 4.7,
+        reviewCount: 38,
+        imageUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=faces&auto=format'
       }
     ];
     
@@ -252,6 +271,7 @@ export class MemStorage implements IStorage {
     
     // Sample services
     const services = [
+      // Services for the first artist
       {
         artistId: artistIds[0],
         name: 'Gel Manicure',
@@ -272,6 +292,36 @@ export class MemStorage implements IStorage {
         price: 75,
         durationMinutes: 90,
         description: 'Complete acrylic nail extension with gel polish'
+      },
+      // Services for the third artist (first artist in the second salon)
+      {
+        artistId: artistIds[2],
+        name: 'Premium Gel Manicure',
+        price: 45,
+        durationMinutes: 60,
+        description: 'High-end gel polish with luxury hand treatment'
+      },
+      {
+        artistId: artistIds[2],
+        name: 'Advanced Nail Art',
+        price: 65,
+        durationMinutes: 75,
+        description: 'Custom designs with crystals and 3D elements'
+      },
+      // Services for the fourth artist (second artist in the second salon)
+      {
+        artistId: artistIds[3],
+        name: 'Acrylic Full Set',
+        price: 80,
+        durationMinutes: 90,
+        description: 'Premium acrylic extensions with custom shapes'
+      },
+      {
+        artistId: artistIds[3],
+        name: 'Acrylic Fill',
+        price: 45,
+        durationMinutes: 60,
+        description: 'Maintenance for existing acrylic nails'
       }
     ];
     
@@ -279,12 +329,30 @@ export class MemStorage implements IStorage {
     
     // Sample portfolio items
     const portfolioItems = [
+      // Portfolio for the first artist
       { artistId: artistIds[0], imageUrl: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=200&h=200&fit=crop&auto=format' },
       { artistId: artistIds[0], imageUrl: 'https://images.unsplash.com/photo-1613452707901-1160c8010239?w=200&h=200&fit=crop&auto=format' },
       { artistId: artistIds[0], imageUrl: 'https://images.unsplash.com/photo-1604902394631-2ce5401662b8?w=200&h=200&fit=crop&auto=format' },
       { artistId: artistIds[0], imageUrl: 'https://images.unsplash.com/photo-1604902396636-da5aea655eca?w=200&h=200&fit=crop&auto=format' },
       { artistId: artistIds[0], imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798c?w=200&h=200&fit=crop&auto=format' },
-      { artistId: artistIds[0], imageUrl: 'https://images.unsplash.com/photo-1610992932411-f200e69c841c?w=200&h=200&fit=crop&auto=format' }
+      { artistId: artistIds[0], imageUrl: 'https://images.unsplash.com/photo-1610992932411-f200e69c841c?w=200&h=200&fit=crop&auto=format' },
+      
+      // Portfolio for the second artist
+      { artistId: artistIds[1], imageUrl: 'https://images.unsplash.com/photo-1630283784711-011b115748c4?w=200&h=200&fit=crop&auto=format' },
+      { artistId: artistIds[1], imageUrl: 'https://images.unsplash.com/photo-1632344593064-cf34f59eef89?w=200&h=200&fit=crop&auto=format' },
+      { artistId: artistIds[1], imageUrl: 'https://images.unsplash.com/photo-1600416553849-26fe8f143d53?w=200&h=200&fit=crop&auto=format' },
+      
+      // Portfolio for the third artist (first artist in second salon)
+      { artistId: artistIds[2], imageUrl: 'https://images.unsplash.com/photo-1551753103-7d6305be5c5b?w=200&h=200&fit=crop&auto=format' },
+      { artistId: artistIds[2], imageUrl: 'https://images.unsplash.com/photo-1632344905301-0d41b7848750?w=200&h=200&fit=crop&auto=format' },
+      { artistId: artistIds[2], imageUrl: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=200&h=200&fit=crop&auto=format' },
+      { artistId: artistIds[2], imageUrl: 'https://images.unsplash.com/photo-1565885548167-80bb3c7b0a28?w=200&h=200&fit=crop&auto=format' },
+      
+      // Portfolio for the fourth artist (second artist in second salon)
+      { artistId: artistIds[3], imageUrl: 'https://images.unsplash.com/photo-1635107123353-33a5b3e268fe?w=200&h=200&fit=crop&auto=format' },
+      { artistId: artistIds[3], imageUrl: 'https://images.unsplash.com/photo-1640885988958-ae5d17ebf1a7?w=200&h=200&fit=crop&auto=format' },
+      { artistId: artistIds[3], imageUrl: 'https://images.unsplash.com/photo-1601065750844-720d7dcd780b?w=200&h=200&fit=crop&auto=format' },
+      { artistId: artistIds[3], imageUrl: 'https://images.unsplash.com/photo-1645237455554-d0003f0ffd67?w=200&h=200&fit=crop&auto=format' }
     ];
     
     portfolioItems.forEach(item => this.createPortfolioItem(item));
@@ -297,12 +365,15 @@ export class MemStorage implements IStorage {
       
       const times = ['10:00 AM', '11:00 AM', '12:30 PM', '2:00 PM', '3:30 PM', '5:00 PM'];
       
-      times.forEach(time => {
-        this.createTimeSlot({
-          artistId: artistIds[0],
-          date,
-          startTime: time,
-          isBooked: false
+      // Time slots for all artists
+      artistIds.forEach(artistId => {
+        times.forEach(time => {
+          this.createTimeSlot({
+            artistId,
+            date,
+            startTime: time,
+            isBooked: false
+          });
         });
       });
     }
