@@ -64,16 +64,27 @@ function WeatherPromoBanner() {
   };
   
   return (
-    <div className="px-4 pt-3 pb-2">
-      <div className="bg-gradient-to-r from-blue-50 to-white rounded-xl shadow-sm border border-blue-100 overflow-hidden relative">
+    <div className="px-4 py-6 mt-4 bg-gradient-to-br from-blue-50 to-white rounded-t-3xl relative overflow-hidden shadow-sm">
+      {/* Dekoratif arka plan elementleri */}
+      <div className="absolute -top-12 -right-12 w-40 h-40 rounded-full bg-blue-200/20 blur-xl"></div>
+      <div className="absolute -bottom-20 -left-10 w-40 h-40 rounded-full bg-indigo-200/20 blur-xl"></div>
+      
+      <div className="flex items-center justify-between mb-3 relative z-10">
+        <div>
+          <h2 className="text-lg font-bold text-gray-800 flex items-center">
+            <Sun size={20} className="text-amber-500 mr-2" /> 
+            Güne Özel Fırsatlar
+          </h2>
+          <p className="text-xs text-gray-600 mt-0.5">Günün hava durumuna göre özel teklifler</p>
+        </div>
+      </div>
+      
+      <div className="bg-gradient-to-r from-blue-50 to-white rounded-xl shadow-sm border border-blue-100 overflow-hidden relative mt-2">
         <div className="absolute top-0 right-0 w-24 h-24 bg-blue-400/10 rounded-full -mr-8 -mt-8"></div>
         <div className="absolute bottom-0 right-12 w-16 h-16 bg-blue-300/10 rounded-full -mb-8"></div>
         
         <div className="p-4 relative">
           <div className="flex items-start">
-            <div className="bg-blue-500/10 rounded-full p-2 mr-3">
-              <Sun className="h-5 w-5 text-blue-500" />
-            </div>
             <div className="flex-1">
               <h3 className="text-sm font-medium text-gray-800">Güne Uygun Şık Başlangıç</h3>
               <div className="mt-1.5 text-xs text-gray-600 space-y-1">
@@ -223,9 +234,9 @@ export default function HomeView() {
       
       <div className="pb-16">
         <StorySection />
-        <WeatherPromoBanner />
         <CategoriesSection />
         <FeaturedSalonsSection />
+        <WeatherPromoBanner />
         <PremiumFeaturesSection />
       </div>
       
