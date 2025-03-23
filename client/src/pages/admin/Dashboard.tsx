@@ -27,6 +27,37 @@ import {
   Search
 } from "lucide-react";
 
+// Admin istatistikleri için tip tanımı
+interface AdminStats {
+  totalSalons: number;
+  activeSalons: number;
+  totalUsers: number;
+  totalAppointments: number;
+  pendingAppointments: number;
+  todayAppointments: number;
+  totalReviews: number;
+  unreviewedComments: number;
+  averageRating: string | number;
+  recentActivity: Array<{
+    id: number;
+    type: string;
+    message: string;
+    user: string;
+    time: string;
+  }>;
+  topSalons: Array<{
+    id: number;
+    name: string;
+    rating: number;
+    bookings: number;
+  }>;
+  popularCategories: Array<{
+    id: number;
+    name: string;
+    count: number;
+  }>;
+}
+
 // Gelişmiş admin paneli bileşeni
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -34,7 +65,7 @@ export default function Dashboard() {
   const [_, navigate] = useLocation();
 
   // Platformu yönetmek için API istatistiklerini getir
-  const { data: stats, isLoading, error } = useQuery({
+  const { data: stats, isLoading, error } = useQuery<AdminStats>({
     queryKey: ["/api/admin/stats"]
   });
 
