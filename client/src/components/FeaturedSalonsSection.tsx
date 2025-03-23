@@ -13,11 +13,19 @@ export default function FeaturedSalonsSection() {
     queryKey: ["/api/salons/featured"],
   });
 
-  // Salon seçimi için güvenli tıklama işleyicisi
+  // Salon seçimi için güvenli tıklama işleyicisi - preventDefault kullanmadan!
   const handleSelectSalon = useCallback((e: React.MouseEvent, salon: Salon) => {
-    // Event propagation'ı engelle
-    e.preventDefault();
+    // Sadece yayılımı önle
     e.stopPropagation();
+    
+    console.log("Salon seçildi, yönlendiriliyor:", salon.name);
+    
+    // Debug: Seçilen salonu göster
+    console.log("Salon bilgileri:", {
+      id: salon.id,
+      name: salon.name,
+      image: salon.imageUrl
+    });
     
     // Hem context'i güncelle hem de URL'yi doğrudan değiştir
     setSelectedSalon(salon);
@@ -207,18 +215,22 @@ export default function FeaturedSalonsSection() {
             key={salon.id}
             className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer"
             onClick={(e) => {
-              e.preventDefault();
+              // Yönlendirme için preventDefault kullanmıyoruz, sadece yayılımı durduracağız
               e.stopPropagation();
               handleSelectSalon(e, salon);
             }}
           >
             <img
-              src={salon.imageUrl}
+              src={salon.imageUrl || 'https://placekitten.com/400/300'}
               alt={salon.name}
               className="w-full h-40 object-cover"
               onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
+                e.stopPropagation(); // Sadece yayılımı durduruyoruz
+              }}
+              onError={(e) => {
+                console.error("Salon resmi yüklenemedi:", salon.imageUrl);
+                // Yedek resim göster
+                (e.target as HTMLImageElement).src = 'https://placekitten.com/400/300';
               }}
             />
             <div 
