@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { initializeData } from "./init-data";
 
 const app = express();
 app.use(express.json());
@@ -37,6 +38,13 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Örnek verileri yükle
+  try {
+    await initializeData();
+  } catch (error) {
+    console.error("Örnek veri yükleme hatası:", error);
+  }
+  
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
