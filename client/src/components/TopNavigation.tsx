@@ -1,7 +1,9 @@
 import { useAppContext } from "@/context/AppContext";
 import { useTheme } from "@/context/ThemeContext";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Settings } from "lucide-react";
 import { useCallback, useState } from "react";
+import { useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import LocationPicker from "./LocationPicker";
 
 export default function TopNavigation() {
@@ -9,6 +11,13 @@ export default function TopNavigation() {
   const displayLocation = userLocation || "New York";
   const { darkMode, toggleDarkMode } = useTheme();
   const [locationPickerOpen, setLocationPickerOpen] = useState(false);
+  const [_, navigate] = useLocation();
+  
+  // Kullanıcı bilgisini al
+  const { data: user } = useQuery({
+    queryKey: ["/api/user"],
+    retry: false,
+  });
 
   // Dark mode toggle butonu için click handler
   const handleToggleDarkMode = useCallback((e: React.MouseEvent) => {
@@ -31,6 +40,13 @@ export default function TopNavigation() {
     e.stopPropagation();
     console.log("Bildirim butonuna tıklandı");
   }, []);
+  
+  // Yönetim paneli butonuna tıklama işleyicisi
+  const handleAdminClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate("/admin/dashboard");
+  }, [navigate]);
 
   // Konum seçimine tıklama işleyicisi
   const handleLocationClick = useCallback((e: React.MouseEvent) => {
@@ -71,6 +87,17 @@ export default function TopNavigation() {
                 2
               </span>
             </button>
+            {/* Salon sahipleri ve yöneticiler için yönetim paneli butonu */}
+            {user && (user.role === "salon_owner" || user.role === "admin") && (
+              <button 
+                className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm text-[#333333] dark:bg-gray-700 dark:text-white"
+                onClick={handleAdminClick}
+                aria-label="Yönetim Paneli"
+                type="button"
+              >
+                <Settings size={18} />
+              </button>
+            )}
           </div>
         </div>
         <div 
