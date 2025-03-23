@@ -109,13 +109,13 @@ export default function CategoriesSection() {
       {/* Özel Teklifler Bölümü - Sabit, yan yana kartlar */}
       <div className="mb-6">
         <div className="flex justify-between items-center mb-3">
-          <h2 className="text-sm font-medium tracking-tight text-gray-700 flex items-center">
+          <h2 className="text-sm font-medium tracking-tight text-gray-700 dark:text-gray-300 flex items-center">
             <SparklesIcon size={14} className="text-amber-500 mr-1" />
             Özel Teklifler
           </h2>
           <button 
             onClick={() => window.location.href = '/search?promo=all'}
-            className="text-xs font-medium text-primary flex items-center">
+            className="text-xs font-medium text-primary dark:text-pink-400 flex items-center">
             Tümünü Gör <FingerprintIcon size={10} className="ml-0.5" />
           </button>
         </div>
@@ -154,13 +154,13 @@ export default function CategoriesSection() {
       </div>
       
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-sm font-medium tracking-tight text-gray-700 flex items-center">
+        <h2 className="text-sm font-medium tracking-tight text-gray-700 dark:text-gray-300 flex items-center">
           <FingerprintIcon size={14} className="text-pink-500 mr-1" />
           Kategoriler
         </h2>
         <button 
           onClick={() => window.location.href = '/search'}
-          className="text-xs font-medium text-primary flex items-center">
+          className="text-xs font-medium text-primary dark:text-pink-400 flex items-center">
           Tümünü Gör <FingerprintIcon size={10} className="ml-0.5" />
         </button>
       </div>
