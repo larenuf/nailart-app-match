@@ -122,16 +122,20 @@ export class MemStorage implements IStorage {
   }
   
   private initSampleData() {
-    // Sample categories
+    // Sample categories - Fresha stil
     const categories = [
-      { name: 'French Manicure', iconName: 'paint-brush', backgroundColor: 'soft-pink' },
-      { name: 'Gel Nails', iconName: 'magic', backgroundColor: 'nude' },
-      { name: 'Nail Stickers', iconName: 'certificate', backgroundColor: 'lavender' },
-      { name: 'Acrylics', iconName: 'gem', backgroundColor: 'soft-pink' },
-      { name: 'Dipping Powder', iconName: 'spray-can', backgroundColor: 'nude' },
-      { name: 'Nail Art', iconName: 'star', backgroundColor: 'lavender' },
-      { name: 'Polish Change', iconName: 'heart', backgroundColor: 'soft-pink' },
-      { name: 'Spa Manicure', iconName: 'spa', backgroundColor: 'nude' }
+      { name: 'Hair & styling', iconName: 'cut', backgroundColor: 'white' },
+      { name: 'Nails', iconName: 'hand-sparkles', backgroundColor: 'white' },
+      { name: 'Eyebrows & eyelashes', iconName: 'eye', backgroundColor: 'white' },
+      { name: 'Massage', iconName: 'hands', backgroundColor: 'white' },
+      { name: 'Barbering', iconName: 'cut', backgroundColor: 'white' },
+      { name: 'Hair removal', iconName: 'feather', backgroundColor: 'white' },
+      { name: 'Facials & skincare', iconName: 'smile', backgroundColor: 'white' },
+      { name: 'Injectables & fillers', iconName: 'syringe', backgroundColor: 'white' },
+      { name: 'Body', iconName: 'user', backgroundColor: 'white' },
+      { name: 'Tattoo & piercing', iconName: 'paint-brush', backgroundColor: 'white' },
+      { name: 'Makeup', iconName: 'palette', backgroundColor: 'white' },
+      { name: 'Medical & dental', iconName: 'tooth', backgroundColor: 'white' }
     ];
     
     categories.forEach(cat => {
