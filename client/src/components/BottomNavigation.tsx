@@ -40,7 +40,7 @@ export default function BottomNavigation() {
       
       {/* Yönetim Paneli Kısayolu */}
       <div className="max-w-md mx-auto mt-1 text-center">
-        <Link href="/admin/dashboard">
+        <Link href="/admin">
           <span className="text-xs text-gray-500 dark:text-gray-400 hover:text-[#D6C3E5] dark:hover:text-[#D3B5E8]">
             Yönetim Paneli
           </span>
