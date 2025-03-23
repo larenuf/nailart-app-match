@@ -34,7 +34,7 @@ import {
   type InsertReview
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, and, gte, lte, desc, sql } from "drizzle-orm";
+import { eq, and, gte, lte, lt, desc, asc, sql, inArray } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
@@ -54,46 +54,65 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: number, userData: Partial<User>): Promise<User>;
+  getUsers(): Promise<User[]>; // Yeni: Tüm kullanıcıları getir
   
   // Salon operations
   getSalons(): Promise<Salon[]>;
   getFeaturedSalons(): Promise<Salon[]>;
   getSalon(id: number): Promise<Salon | undefined>;
   createSalon(salon: InsertSalon): Promise<Salon>;
+  updateSalon(id: number, salonData: Partial<Salon>): Promise<Salon>; // Yeni: Salon güncelleme
+  deleteSalon(id: number): Promise<boolean>; // Yeni: Salon silme
   
   // Artist operations
   getAllArtists(): Promise<Artist[]>;
   getArtistsBySalon(salonId: number): Promise<Artist[]>;
   getArtist(id: number): Promise<Artist | undefined>;
   createArtist(artist: InsertArtist): Promise<Artist>;
+  updateArtist(id: number, artistData: Partial<Artist>): Promise<Artist>; // Yeni: Artist güncelleme
+  deleteArtist(id: number): Promise<boolean>; // Yeni: Artist silme
   
   // Service operations
   getServicesByArtist(artistId: number): Promise<Service[]>;
   getService(id: number): Promise<Service | undefined>;
   createService(service: InsertService): Promise<Service>;
+  updateService(id: number, serviceData: Partial<Service>): Promise<Service>; // Yeni: Hizmet güncelleme
+  deleteService(id: number): Promise<boolean>; // Yeni: Hizmet silme
+  getAllServices(): Promise<Service[]>; // Yeni: Tüm hizmetleri getir
   
   // Portfolio operations
   getPortfolioByArtist(artistId: number): Promise<PortfolioItem[]>;
   createPortfolioItem(item: InsertPortfolioItem): Promise<PortfolioItem>;
+  deletePortfolioItem(id: number): Promise<boolean>; // Yeni: Portfolyo öğesi silme
   
   // Category operations
   getCategories(): Promise<Category[]>;
   createCategory(category: InsertCategory): Promise<Category>;
+  updateCategory(id: number, categoryData: Partial<Category>): Promise<Category>; // Yeni: Kategori güncelleme
+  deleteCategory(id: number): Promise<boolean>; // Yeni: Kategori silme
   
   // Story operations
   getStories(): Promise<Story[]>;
   createStory(story: InsertStory): Promise<Story>;
+  updateStory(id: number, storyData: Partial<Story>): Promise<Story>; // Yeni: Hikaye güncelleme
+  deleteStory(id: number): Promise<boolean>; // Yeni: Hikaye silme
   
   // Booking operations
   createBooking(booking: InsertBooking): Promise<Booking>;
   getBookingsByUser(userId: number): Promise<Booking[]>;
   getBooking(id: number): Promise<Booking | undefined>;
   updateBookingStatus(id: number, status: string): Promise<Booking>;
+  getAllBookings(): Promise<Booking[]>; // Yeni: Tüm randevuları getir
+  getBookingsByArtist(artistId: number): Promise<Booking[]>; // Yeni: Artiste göre randevuları getir
+  getBookingsBySalon(salonId: number): Promise<Booking[]>; // Yeni: Salona göre randevuları getir
+  getBookingsByDate(date: Date): Promise<Booking[]>; // Yeni: Tarihe göre randevuları getir
   
   // Time slot operations
   getAvailableTimeSlots(artistId: number, date: Date): Promise<TimeSlot[]>;
   bookTimeSlot(id: number): Promise<TimeSlot>;
   createTimeSlot(timeSlot: InsertTimeSlot): Promise<TimeSlot>;
+  deleteTimeSlot(id: number): Promise<boolean>; // Yeni: Zaman dilimi silme
+  getAllTimeSlots(): Promise<TimeSlot[]>; // Yeni: Tüm zaman dilimlerini getir
   
   // Chat operations
   getChatMessages(): Promise<ChatMessage[]>;
@@ -104,6 +123,9 @@ export interface IStorage {
   getReviewsByArtist(artistId: number): Promise<Review[]>;
   getReviewsByUser(userId: number): Promise<Review[]>;
   getReview(id: number): Promise<Review | undefined>;
+  getAllReviews(): Promise<Review[]>; // Yeni: Tüm yorumları getir
+  updateReview(id: number, reviewData: Partial<Review>): Promise<Review>; // Yeni: Yorum güncelleme
+  deleteReview(id: number): Promise<boolean>; // Yeni: Yorum silme
   
   // Promotion operations
   getPromotions(): Promise<Promotion[]>;
@@ -156,6 +178,10 @@ export class DatabaseStorage implements IStorage {
       .where(eq(users.id, id))
       .returning();
     return updatedUser;
+  }
+  
+  async getUsers(): Promise<User[]> {
+    return await db.select().from(users);
   }
 
   // Salon operations
@@ -272,6 +298,51 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return updatedBooking;
   }
+  
+  async getAllBookings(): Promise<Booking[]> {
+    return await db.select().from(bookings).orderBy(desc(bookings.createdAt));
+  }
+  
+  async getBookingsByArtist(artistId: number): Promise<Booking[]> {
+    return await db
+      .select()
+      .from(bookings)
+      .where(eq(bookings.artistId, artistId))
+      .orderBy(desc(bookings.createdAt));
+  }
+  
+  async getBookingsBySalon(salonId: number): Promise<Booking[]> {
+    // Bu işlev için önce artistleri sorgulayıp, sonra bu artistlerin randevularını birleştiriyoruz
+    const salonArtists = await this.getArtistsBySalon(salonId);
+    const artistIds = salonArtists.map(artist => artist.id);
+    
+    if (artistIds.length === 0) {
+      return [];
+    }
+    
+    return await db
+      .select()
+      .from(bookings)
+      .where(inArray(bookings.artistId, artistIds))
+      .orderBy(desc(bookings.createdAt));
+  }
+  
+  async getBookingsByDate(date: Date): Promise<Booking[]> {
+    // Belirli bir tarihe ait randevuları getir (saat bilgisini dikkate almadan)
+    const startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+    
+    return await db
+      .select()
+      .from(bookings)
+      .where(
+        and(
+          gte(bookings.date, startDate),
+          lt(bookings.date, endDate)
+        )
+      )
+      .orderBy(asc(bookings.startTime));
+  }
 
   // Time slot operations
   async getAvailableTimeSlots(artistId: number, date: Date): Promise<TimeSlot[]> {
@@ -362,6 +433,24 @@ export class DatabaseStorage implements IStorage {
   async getReview(id: number): Promise<Review | undefined> {
     const [review] = await db.select().from(reviews).where(eq(reviews.id, id));
     return review;
+  }
+  
+  async getAllReviews(): Promise<Review[]> {
+    return await db.select().from(reviews).orderBy(desc(reviews.createdAt));
+  }
+  
+  async updateReview(id: number, reviewData: Partial<Review>): Promise<Review> {
+    const [updatedReview] = await db
+      .update(reviews)
+      .set(reviewData)
+      .where(eq(reviews.id, id))
+      .returning();
+    return updatedReview;
+  }
+  
+  async deleteReview(id: number): Promise<boolean> {
+    await db.delete(reviews).where(eq(reviews.id, id));
+    return true;
   }
 
   // Promotion operations

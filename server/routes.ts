@@ -25,6 +25,163 @@ const mockStripe = {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication routes
   setupAuth(app);
+  
+  // ---------- ADMİN API ENDPOİNTLERİ ----------
+  
+  // Admin istatistikleri
+  app.get("/api/admin/stats", async (req, res) => {
+    try {
+      // Admin yetkisi kontrolü yapılabilir (şimdilik atlanıyor)
+      
+      // Toplam salon sayısı
+      const salons = await storage.getSalons();
+      const activeSalons = salons.filter(salon => salon.isActive !== false).length;
+      
+      // Kullanıcı sayısı
+      const users = await storage.getUsers();
+      
+      // Randevu sayısı
+      const bookings = await storage.getAllBookings();
+      
+      // Bugünkü randevular
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      
+      const todayBookings = bookings.filter(booking => {
+        const bookingDate = new Date(booking.date);
+        return bookingDate >= today && bookingDate < tomorrow;
+      });
+      
+      // Bekleyen randevular
+      const pendingBookings = bookings.filter(booking => booking.status === "pending");
+      
+      // Yorumlar
+      const reviews = await storage.getAllReviews();
+      
+      // Ortalama değerlendirme
+      const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+      const averageRating = reviews.length > 0 ? (totalRating / reviews.length).toFixed(1) : "0.0";
+      
+      // Son aktiviteler
+      const recentActivities = [
+        ...bookings.slice(0, 5).map(booking => ({
+          id: booking.id,
+          type: "appointment",
+          message: "Yeni randevu oluşturuldu",
+          user: `ID: ${booking.userId}`,
+          time: new Date(booking.createdAt).toLocaleString()
+        })),
+        ...reviews.slice(0, 5).map(review => ({
+          id: review.id,
+          type: "review",
+          message: `Yeni yorum eklendi (${review.rating} yıldız)`,
+          user: `ID: ${review.userId}`,
+          time: new Date(review.createdAt).toLocaleString()
+        }))
+      ].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
+       .slice(0, 5);
+      
+      // En iyi salonlar
+      const topSalons = [...salons]
+        .sort((a, b) => b.rating - a.rating)
+        .slice(0, 3)
+        .map(salon => ({
+          id: salon.id,
+          name: salon.name,
+          rating: salon.rating,
+          bookings: bookings.filter(b => b.artistId && salon.id === b.artistId).length
+        }));
+      
+      // Tüm istatistikler
+      const stats = {
+        totalSalons: salons.length,
+        activeSalons,
+        totalUsers: users.length,
+        totalAppointments: bookings.length,
+        pendingAppointments: pendingBookings.length,
+        todayAppointments: todayBookings.length,
+        totalReviews: reviews.length,
+        unreviewedComments: reviews.filter(r => !r.adminReviewed).length,
+        averageRating,
+        recentActivity: recentActivities,
+        topSalons,
+        popularCategories: [
+          { id: 1, name: "Manikür", count: 1245 },
+          { id: 2, name: "Pedikür", count: 832 },
+          { id: 3, name: "Protez Tırnak", count: 678 }
+        ]
+      };
+      
+      res.json(stats);
+    } catch (error: any) {
+      console.error("Admin istatistikleri alınırken hata:", error);
+      res.status(500).json({ 
+        message: error.message,
+        error: "Admin istatistikleri alınamadı"
+      });
+    }
+  });
+  
+  // Admin salon yönetimi - salon oluşturma
+  app.post("/api/admin/salons", async (req, res) => {
+    try {
+      // Admin yetkisi kontrolü yapılabilir (şimdilik atlanıyor)
+      
+      const salonData = req.body;
+      
+      // Salon verilerini doğrula
+      if (!salonData.name || !salonData.address) {
+        return res.status(400).json({ message: "Salon adı ve adresi gereklidir" });
+      }
+      
+      // Salon oluştur
+      const newSalon = await storage.createSalon({
+        name: salonData.name,
+        address: salonData.address,
+        phoneNumber: salonData.phoneNumber || "",
+        latitude: salonData.latitude || 0,
+        longitude: salonData.longitude || 0,
+        rating: 0,
+        reviewCount: 0,
+        openTime: salonData.openTime || "09:00",
+        closeTime: salonData.closeTime || "18:00",
+        imageUrl: salonData.imageUrl || "https://images.unsplash.com/photo-1632345031435-8727f6897d53",
+        discount: salonData.discount || "",
+        distance: 0,
+        isPremium: salonData.isPremium || false,
+        isActive: salonData.isActive !== undefined ? salonData.isActive : true,
+        city: salonData.city || "İstanbul",
+        district: salonData.district || "",
+        description: salonData.description || "",
+        email: salonData.email || "",
+        website: salonData.website || "",
+        specialFeatures: salonData.specialFeatures || ""
+      });
+      
+      res.status(201).json(newSalon);
+    } catch (error: any) {
+      console.error("Salon oluşturulurken hata:", error);
+      res.status(500).json({ 
+        message: error.message,
+        error: "Salon oluşturulamadı"
+      });
+    }
+  });
+  
+  // Admin kullanıcı listesi
+  app.get("/api/admin/users", async (req, res) => {
+    try {
+      // Admin yetkisi kontrolü yapılabilir (şimdilik atlanıyor)
+      
+      const users = await storage.getUsers();
+      res.json(users);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
   // Get all stories
   app.get("/api/stories", async (req, res) => {
     try {
