@@ -35,16 +35,10 @@ function Router() {
       <Route path="/virtual-consultation" component={VirtualConsultation} />
       <Route path="/color-matcher" component={ColorMatcher} />
       
-      {/* Salon Yönetim Sayfaları */}
-      <Route path="/admin">
-        <Dashboard />
-      </Route>
-      <Route path="/admin/dashboard">
-        <Dashboard />
-      </Route>
-      <Route path="/admin/create-salon">
-        <CreateSalon />
-      </Route>
+      {/* Salon Yönetim Sayfaları - Tam eşleşme kullan */}
+      <Route path="/admin" children={<Dashboard />} />
+      <Route path="/admin/dashboard" children={<Dashboard />} />
+      <Route path="/admin/create-salon" children={<CreateSalon />} />
       
       <Route component={NotFound} />
     </Switch>
