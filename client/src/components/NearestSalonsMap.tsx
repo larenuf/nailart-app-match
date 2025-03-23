@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { AlertCircle } from "lucide-react";
 
 const containerStyle = {
   width: '100%',
@@ -70,65 +71,54 @@ export default function NearestSalonsMap() {
     );
   }
 
+  // Geçici bir çözüm olarak harita yerine kart gösterimi
   return (
     <Card className="mt-4">
       <CardContent className="p-3">
         <h2 className="font-bold mb-2">Yakındaki Salonlar</h2>
         
-        <LoadScript googleMapsApiKey={apiKey}>
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={center}
-            zoom={13}
-          >
-            {/* Kullanıcı konumu */}
-            <Marker
-              position={center}
-              icon={{
-                url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-              }}
-            />
-            
-            {/* Salon konumları */}
-            {salons?.map((salon) => (
-              <Marker
-                key={salon.id}
-                position={{ lat: salon.latitude, lng: salon.longitude }}
-                onClick={() => handleMarkerClick(salon)}
-                icon={{
-                  url: salon.isPremium 
-                    ? "https://maps.google.com/mapfiles/ms/icons/yellow-dot.png" 
-                    : "https://maps.google.com/mapfiles/ms/icons/pink-dot.png"
-                }}
-              />
-            ))}
-            
-            {selectedMarker && (
-              <InfoWindow
-                position={{ lat: selectedMarker.latitude, lng: selectedMarker.longitude }}
-                onCloseClick={handleInfoWindowClose}
-              >
-                <div className="p-1">
-                  <h3 className="font-bold text-sm">{selectedMarker.name}</h3>
-                  <p className="text-xs text-gray-600">{selectedMarker.address}</p>
-                  <div className="flex items-center text-xs my-1">
-                    <span className="text-yellow-500">★</span>
-                    <span className="ml-1">{selectedMarker.rating} ({selectedMarker.reviewCount} yorum)</span>
-                  </div>
-                  <div className="mt-2">
-                    <Button 
-                      size="sm" 
-                      className="text-xs p-2 h-7 w-full"
-                      onClick={() => handleViewSalon(selectedMarker)}
-                    >
-                      Detayları Gör
-                    </Button>
+        {/* API anahtarı sorunu düzeltilene kadar salon listesi göster */}
+        <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-3 flex items-start dark:bg-amber-900/30 dark:border-amber-700">
+          <AlertCircle className="h-5 w-5 text-amber-500 mr-2 flex-shrink-0 mt-0.5" />
+          <div>
+            <h3 className="text-sm font-medium text-amber-800 dark:text-amber-200">Harita yüklenemiyor</h3>
+            <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+              Geçerli bir Google Maps API anahtarı gerekiyor. Şimdilik size normal liste görünümü sunuyoruz.
+            </p>
+          </div>
+        </div>
+        
+        <div className="space-y-2 mt-3">
+          {salons?.map((salon) => (
+            <div 
+              key={salon.id} 
+              className="border rounded-lg p-2 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
+              onClick={() => handleViewSalon(salon)}
+            >
+              <div className="flex items-start">
+                <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center bg-pink-100 dark:bg-pink-900/30 rounded-full mr-3">
+                  {salon.isPremium ? (
+                    <span className="text-yellow-500 text-lg">★</span>
+                  ) : (
+                    <span className="text-pink-500">💅</span>
+                  )}
+                </div>
+                <div>
+                  <h3 className="font-medium text-sm">{salon.name}</h3>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">{salon.address}</p>
+                  <div className="flex items-center mt-1">
+                    <div className="flex items-center">
+                      <span className="text-yellow-500 text-xs">★</span>
+                      <span className="ml-1 text-xs">{salon.rating}</span>
+                    </div>
+                    <span className="mx-1 text-gray-300 text-xs">•</span>
+                    <span className="text-xs text-gray-500">{salon.distance} km</span>
                   </div>
                 </div>
-              </InfoWindow>
-            )}
-          </GoogleMap>
-        </LoadScript>
+              </div>
+            </div>
+          ))}
+        </div>
       </CardContent>
     </Card>
   );
