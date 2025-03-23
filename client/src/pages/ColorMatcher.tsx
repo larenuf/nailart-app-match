@@ -109,27 +109,58 @@ export default function ColorMatcher() {
     
     setIsAnalyzing(true);
     
-    // Simulate AI color analysis
+    // Simulate AI color analysis - gerçek bir projede renk analizi API'si kullanılırdı
     setTimeout(() => {
-      // In a real app, this would perform image analysis and color detection
-      // For this mockup, we'll use predefined results
+      // Demo amacıyla kıyafet rengine uygun hazır renkler sunuyoruz
+      // Gerçek bir uygulamada görüntü işleme yapılacaktır
       
-      // Generate 5 random colors for demonstration
-      const extractedColors = [
-        "#" + Math.floor(Math.random()*16777215).toString(16),
-        "#" + Math.floor(Math.random()*16777215).toString(16),
-        "#" + Math.floor(Math.random()*16777215).toString(16),
-        "#" + Math.floor(Math.random()*16777215).toString(16),
-        "#" + Math.floor(Math.random()*16777215).toString(16),
-      ];
+      // Seçilen alana bağlı olarak farklı renkler sunuyoruz
+      // Bu bir simulasyondur - gerçek uygulamada piksel analizi yapılacaktır
+      let extractedColors;
+      
+      if (selectedOutfitArea.x < 33) {
+        // Sol taraf seçilmişse - soğuk tonlar
+        extractedColors = [
+          "#A2D2FF", "#BDE0FE", "#B8C0FF", "#C8B6FF", "#D0D1FF"
+        ];
+      } else if (selectedOutfitArea.x < 66) {
+        // Orta bölüm seçilmişse - nötr tonlar
+        extractedColors = [
+          "#E2CFC4", "#F7EDE2", "#D8E2DC", "#CCD5AE", "#E9EDC9"
+        ];
+      } else {
+        // Sağ taraf seçilmişse - sıcak tonlar
+        extractedColors = [
+          "#FFAFCC", "#FFC8DD", "#FFCFD2", "#FCD5CE", "#FFDDD2"
+        ];
+      }
+      
+      // Ten tonuna göre önerilen tonları ayarlıyoruz
+      // Gerçek bir projede cilt tonu analizi yapılacaktır
+      if (skinToneHue[0] < 30) {
+        // Koyu cilt tonu için
+        COLOR_PALETTES[0].matchPercentage = 98;
+        COLOR_PALETTES[1].matchPercentage = 72;
+      } else if (skinToneHue[0] < 60) {
+        // Orta cilt tonu için
+        COLOR_PALETTES[1].matchPercentage = 95;
+        COLOR_PALETTES[3].matchPercentage = 85;
+      } else {
+        // Açık cilt tonu için
+        COLOR_PALETTES[2].matchPercentage = 94;
+        COLOR_PALETTES[4].matchPercentage = 82;
+      }
       
       setDominantColors(extractedColors);
-      setMatchResults(COLOR_PALETTES);
+      
+      // Sonuçları eşleştirme yüzdesine göre sıralıyoruz
+      const sortedPalettes = [...COLOR_PALETTES].sort((a, b) => b.matchPercentage - a.matchPercentage);
+      setMatchResults(sortedPalettes);
       setIsAnalyzing(false);
       
       toast({
         title: "Analiz Tamamlandı",
-        description: "En uyumlu tırnak renkleri belirlendi.",
+        description: "Kıyafetinize ve ten tonunuza en uyumlu tırnak renkleri belirlendi.",
       });
     }, 2000);
   };
