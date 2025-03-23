@@ -3,8 +3,7 @@ import BottomNavigation from "./BottomNavigation";
 import StorySection from "./StorySection";
 import CategoriesSection from "./CategoriesSection";
 import FeaturedSalonsSection from "./FeaturedSalonsSection";
-import PromotionBanner from "./PromotionBanner";
-import { Sparkles, Palette, Medal, MousePointerClick, ImagePlus, Megaphone, SlidersHorizontal, Calendar } from 'lucide-react';
+import { Sparkles, Palette, Medal, MousePointerClick, ImagePlus, Megaphone, SlidersHorizontal, Calendar, Sun, ArrowRight } from 'lucide-react';
 
 // Feature card component
 interface FeatureCardProps {
@@ -52,6 +51,50 @@ function FeatureCard({ title, description, icon, onClick, available, gradient }:
           >
             {available ? 'Kullan' : 'Bilgi Al'}
           </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Weather-based promotional banner
+function WeatherPromoBanner() {
+  const navigate = () => {
+    window.location.href = '/search';
+  };
+  
+  return (
+    <div className="px-4 pt-3 pb-2">
+      <div className="bg-gradient-to-r from-blue-50 to-white rounded-xl shadow-sm border border-blue-100 overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-24 h-24 bg-blue-400/10 rounded-full -mr-8 -mt-8"></div>
+        <div className="absolute bottom-0 right-12 w-16 h-16 bg-blue-300/10 rounded-full -mb-8"></div>
+        
+        <div className="p-4 relative">
+          <div className="flex items-start">
+            <div className="bg-blue-500/10 rounded-full p-2 mr-3">
+              <Sun className="h-5 w-5 text-blue-500" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-sm font-medium text-gray-800">Güne Uygun Şık Başlangıç</h3>
+              <div className="mt-1.5 text-xs text-gray-600 space-y-1">
+                <p className="flex items-center">
+                  <span className="text-amber-500 mr-1">☀️</span> Bugün İstanbul'da hava çok güzel...
+                </p>
+                <p className="flex items-center">
+                  <span className="text-pink-500 mr-1">💅</span> Tırnakların da en az senin kadar parlasın!
+                </p>
+                <p className="font-medium text-gray-700">NAM ile randevunu al, tarzını yansıt.</p>
+              </div>
+              
+              <button 
+                onClick={navigate}
+                className="mt-3 flex items-center text-xs bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-3 py-1.5 rounded-full font-medium hover:shadow-sm transition-all"
+              >
+                Randevu Al
+                <ArrowRight className="ml-1 h-3 w-3" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -180,10 +223,10 @@ export default function HomeView() {
       
       <div className="pb-16">
         <StorySection />
+        <WeatherPromoBanner />
         <CategoriesSection />
         <FeaturedSalonsSection />
         <PremiumFeaturesSection />
-        <PromotionBanner />
       </div>
       
       <BottomNavigation />
