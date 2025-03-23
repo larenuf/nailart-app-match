@@ -3,13 +3,19 @@ import { useState, useRef, useEffect } from "react";
 import { Story } from "@/types";
 
 export default function StorySection() {
-  // Olay yayılımı problemini çözmek için
-  const handleComponentClick = (e: React.MouseEvent) => {
-    // Sadece direkt bu bileşene yapılan tıklamaları durdur
-    if (e.currentTarget === e.target) {
-      e.stopPropagation();
-    }
+  // Sorunun kaynağı: StorySection'ın yüksek z-index'i ve tam sayfa overlay yapısı
+  // Tüm tıklamaları yakalayan bir yapı var - bunu düzelteceğiz
+  
+  // Başka yerlere tıklama olaylarını izole edecek yardımcı
+  const stopClickPropagation = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Olay durduruldu, burada bitecek
+    console.log("Tıklama olayı StorySection'da durduruldu");
   };
+  
+  // Bileşene özel tıklama olayı (scope)
+  const [isStoryClicked, setIsStoryClicked] = useState(false);
   
   const { data: stories, isLoading } = useQuery<Story[]>({
     queryKey: ["/api/stories"],
@@ -20,12 +26,19 @@ export default function StorySection() {
   
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Story'ye tıklandığında çağrılacak fonksiyon
+  // Story'ye tıklandığında çağrılacak fonksiyon - tamamen izole
   const handleStoryClick = (e: React.MouseEvent, story: Story) => {
-    e.preventDefault();
+    // Çok önemli: Bunu son derece sağlam şekilde durduruyoruz
+    e.preventDefault(); 
     e.stopPropagation();
+    
+    // Tıklanan element izole ediliyor
+    setIsStoryClicked(true);
     setSelectedStory(story);
     setIsStoryOpen(true);
+    
+    // Başka bir eleman tıklanma olasılığını önlemek için
+    e.currentTarget.classList.add('clicked');
   };
 
   // Story modalını kapatan fonksiyon
@@ -35,9 +48,16 @@ export default function StorySection() {
       e.stopPropagation();
     }
     setIsStoryOpen(false);
+    setIsStoryClicked(false);
+    
     if (videoRef.current) {
       videoRef.current.pause();
     }
+    
+    // Tıklanan eleman işaretini kaldır
+    document.querySelectorAll('.clicked').forEach(el => {
+      el.classList.remove('clicked');
+    });
   };
   
   // Video açıldığında oynatmayı başlat
@@ -68,14 +88,22 @@ export default function StorySection() {
     <>
       <div 
         className="px-4 py-3 bg-[#FAFAFA] dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700"
-        onClick={(e) => e.stopPropagation()}
+        onClick={stopClickPropagation}
       >
-        <div className="flex space-x-4 overflow-x-auto pb-2 no-scrollbar">
+        <div 
+          className="flex space-x-4 overflow-x-auto pb-2 no-scrollbar"
+          onClick={stopClickPropagation}
+        >
           {stories?.map((story) => (
             <div 
               key={story.id} 
-              className="cursor-pointer flex flex-col items-center"
-              onClick={(e) => handleStoryClick(e, story)}
+              className="cursor-pointer flex flex-col items-center story-item"
+              data-story-id={story.id}
+              onClick={(e) => {
+                if (!isStoryClicked) {
+                  handleStoryClick(e, story);
+                }
+              }}
             >
               <div
                 className={`w-[70px] h-[70px] rounded-full overflow-hidden ${
@@ -83,31 +111,49 @@ export default function StorySection() {
                     ? "ring-2 ring-[#FF5864] ring-offset-1" 
                     : "border-2 border-gray-200 dark:border-gray-600"
                 } p-0.5`}
+                onClick={stopClickPropagation}
               >
                 <img
                   src={story.imageUrl}
                   alt={story.title}
                   className="w-full h-full object-cover rounded-full"
+                  onClick={stopClickPropagation}
                 />
                 {story.videoUrl && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-black/30 rounded-full p-1">
+                  <div 
+                    className="absolute inset-0 flex items-center justify-center"
+                    onClick={stopClickPropagation}
+                  >
+                    <div 
+                      className="bg-black/30 rounded-full p-1"
+                      onClick={stopClickPropagation}
+                    >
                       <i className="fas fa-play text-white text-xs"></i>
                     </div>
                   </div>
                 )}
               </div>
-              <p className="text-xs font-medium text-center mt-1 dark:text-white">{story.title}</p>
+              <p 
+                className="text-xs font-medium text-center mt-1 dark:text-white"
+                onClick={stopClickPropagation}
+              >
+                {story.title}
+              </p>
             </div>
           ))}
         </div>
       </div>
       
-      {/* Story Modal */}
+      {/* Story Modal - Daha düşük z-index ve doğrudan tıklandığında kapatılıyor */}
       {isStoryOpen && selectedStory && (
         <div 
-          className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center" 
-          onClick={(e) => closeStoryModal(e)}
+          className="fixed inset-0 z-30 bg-black/70 flex items-center justify-center" 
+          onClick={(e) => {
+            // Doğrudan tıklama
+            e.preventDefault();
+            e.stopPropagation();
+            closeStoryModal(e);
+          }}
         >
           <div 
             className="relative h-[80vh] w-full max-w-md bg-black rounded-xl overflow-hidden" 
