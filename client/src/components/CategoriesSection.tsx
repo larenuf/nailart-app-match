@@ -106,18 +106,46 @@ export default function CategoriesSection() {
 
   return (
     <div className="px-4 py-6">
-      {/* Özel Teklifler Bölümü */}
+      {/* Özel Teklifler Bölümü - Yatay Scroll */}
       <div className="mb-6">
-        <div className="bg-gradient-to-r from-[#FFA5B5] to-[#FFB7B2] p-5 rounded-xl text-white shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-xl font-bold">Özel Teklifler</h3>
-              <p className="text-sm mt-1 opacity-95">Yeni müşteriler için %20 indirim</p>
-              <button className="mt-4 bg-white text-primary px-5 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all duration-300">
-                Şimdi Keşfet
-              </button>
+        <div className="flex overflow-x-auto gap-3 hide-scrollbar pb-2 pt-1 -mx-4 px-4">
+          <div className="bg-gradient-to-r from-[#FFA5B5] to-[#FFB7B2] p-3 rounded-xl text-white shadow-sm flex-shrink-0" style={{ width: '270px' }}>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-bold">Özel Teklifler</h3>
+                <p className="text-xs mt-0.5 opacity-95">Yeni müşteriler için %20 indirim</p>
+                <button className="mt-2 bg-white text-primary px-3 py-1 rounded-full text-xs font-medium shadow-sm hover:shadow-md transition-all duration-300">
+                  Şimdi Keşfet
+                </button>
+              </div>
+              <div className="text-2xl">✨</div>
             </div>
-            <div className="text-4xl">✨</div>
+          </div>
+          
+          <div className="bg-gradient-to-r from-[#93c5fd] to-[#60a5fa] p-3 rounded-xl text-white shadow-sm flex-shrink-0" style={{ width: '250px' }}>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-bold">Hafta Sonu</h3>
+                <p className="text-xs mt-0.5 opacity-95">Tüm hizmetlerde %15 indirim</p>
+                <button className="mt-2 bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-medium shadow-sm hover:shadow-md transition-all duration-300">
+                  Detaylar
+                </button>
+              </div>
+              <div className="text-2xl">🎁</div>
+            </div>
+          </div>
+          
+          <div className="bg-gradient-to-r from-[#fcd34d] to-[#f59e0b] p-3 rounded-xl text-white shadow-sm flex-shrink-0" style={{ width: '230px' }}>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-bold">Doğum Günü</h3>
+                <p className="text-xs mt-0.5 opacity-95">Özel %30 doğum günü indirimi</p>
+                <button className="mt-2 bg-white text-yellow-600 px-3 py-1 rounded-full text-xs font-medium shadow-sm hover:shadow-md transition-all duration-300">
+                  Hemen Al
+                </button>
+              </div>
+              <div className="text-2xl">🎂</div>
+            </div>
           </div>
         </div>
       </div>
@@ -131,18 +159,19 @@ export default function CategoriesSection() {
         </button>
       </div>
       
-      {/* Kategori Grid - Modern Minimalist */}
-      <div className="grid grid-cols-4 gap-3 mb-8">
-        {displayCategories.slice(0, 8).map((category) => {
+      {/* Kategori Scroll - Yatay Kaydırma */}
+      <div className="flex overflow-x-auto gap-3 mb-8 hide-scrollbar pb-4">
+        {displayCategories.map((category) => {
           const categoryStyle = categoryImages[category.name as keyof typeof categoryImages] || defaultStyle;
           
           return (
             <div
               key={category.id}
-              className="flex flex-col items-center cursor-pointer group"
+              className="flex flex-col items-center cursor-pointer group flex-shrink-0"
+              style={{ width: '80px' }}
             >
               <div 
-                className="relative overflow-hidden aspect-square rounded-xl mb-2 w-full shadow-sm transition-transform duration-300 group-hover:scale-105"
+                className="relative overflow-hidden aspect-square rounded-lg mb-2 w-16 h-16 shadow-sm transition-transform duration-300 group-hover:scale-105"
                 style={{ backgroundColor: categoryStyle.color }}
               >
                 <div className="absolute inset-0 opacity-80 overflow-hidden">
@@ -154,11 +183,11 @@ export default function CategoriesSection() {
                   />
                 </div>
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
-                <div className="absolute top-2 left-2 bg-white rounded-lg p-1.5 shadow-sm">
+                <div className="absolute top-1.5 left-1.5 bg-white rounded-md p-1 shadow-sm">
                   {categoryStyle.icon}
                 </div>
               </div>
-              <p className="text-xs font-medium text-center line-clamp-1 text-gray-800">
+              <p className="text-[10px] font-medium text-center line-clamp-1 text-gray-800">
                 {category.name}
               </p>
             </div>
@@ -166,32 +195,44 @@ export default function CategoriesSection() {
         })}
       </div>
       
-      {/* Daha büyük kartlar - Çift sütun */}
-      <div className="grid grid-cols-2 gap-4 mb-8">
-        {displayCategories.slice(0, 2).map((category) => {
-          const categoryStyle = categoryImages[category.name as keyof typeof categoryImages] || defaultStyle;
-          
-          return (
-            <div
-              key={`featured-${category.id}`}
-              className="relative overflow-hidden rounded-xl aspect-[3/2] cursor-pointer group shadow-sm transition-transform duration-300 hover:scale-[1.02]"
-            >
-              <div className="absolute inset-0">
-                <img 
-                  src={categoryStyle.image}
-                  alt={category.name}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
+      {/* Popüler Kategoriler - Yatay kaydırma */}
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-base font-medium tracking-tight text-gray-900">
+            Popüler Kategoriler
+          </h2>
+          <button className="text-xs font-medium text-primary">
+            Tümü
+          </button>
+        </div>
+        
+        <div className="flex overflow-x-auto gap-3 hide-scrollbar pb-2 -mx-4 px-4">
+          {displayCategories.slice(0, 5).map((category) => {
+            const categoryStyle = categoryImages[category.name as keyof typeof categoryImages] || defaultStyle;
+            
+            return (
+              <div
+                key={`featured-${category.id}`}
+                className="relative overflow-hidden rounded-lg aspect-[3/2] cursor-pointer group shadow-sm transition-transform duration-300 hover:scale-[1.02] flex-shrink-0"
+                style={{ width: '180px' }}
+              >
+                <div className="absolute inset-0">
+                  <img 
+                    src={categoryStyle.image}
+                    alt={category.name}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
+                </div>
+                <div className="absolute bottom-0 left-0 p-2.5 text-white">
+                  <h3 className="text-sm font-semibold">{category.name}</h3>
+                  <p className="text-[10px] text-gray-200 mt-0.5">En Popüler</p>
+                </div>
               </div>
-              <div className="absolute bottom-0 left-0 p-4 text-white">
-                <h3 className="text-lg font-semibold">{category.name}</h3>
-                <p className="text-xs text-gray-200 mt-1">Popüler Servisler</p>
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
