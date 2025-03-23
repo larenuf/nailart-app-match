@@ -146,60 +146,18 @@ export default function CategoriesSection() {
         </button>
       </div>
       
-      {/* Kategori Grid - Grid layout */}
-      <div className="grid grid-cols-4 gap-3 mb-8">
-        {displayCategories.slice(0, 8).map((category) => {
+      {/* Kategoriler - Orta boyutlu kartlar */}
+      <div className="grid grid-cols-2 gap-3 mb-8">
+        {displayCategories.slice(0, 4).map((category) => {
           const categoryStyle = categoryImages[category.name as keyof typeof categoryImages] || defaultStyle;
           
           return (
             <div
               key={category.id}
-              className="flex flex-col items-center cursor-pointer group"
+              className="cursor-pointer group"
             >
               <div 
-                className="relative overflow-hidden aspect-square rounded-lg mb-2 w-16 h-16 shadow-sm transition-transform duration-300 group-hover:scale-105"
-                style={{ backgroundColor: categoryStyle.color }}
-              >
-                <div className="absolute inset-0 opacity-80 overflow-hidden">
-                  <img 
-                    src={categoryStyle.image}
-                    alt={category.name}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
-                <div className="absolute top-1.5 left-1.5 bg-white rounded-md p-1 shadow-sm">
-                  {categoryStyle.icon}
-                </div>
-              </div>
-              <p className="text-[10px] font-medium text-center line-clamp-1 text-gray-800">
-                {category.name}
-              </p>
-            </div>
-          );
-        })}
-      </div>
-      
-      {/* Popüler Kategoriler - Büyük Grid Kartlar */}
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-medium tracking-tight text-gray-900">
-            Popüler Kategoriler
-          </h2>
-          <button className="text-sm font-medium text-primary">
-            Tümü
-          </button>
-        </div>
-        
-        <div className="grid grid-cols-2 gap-3 pb-2">
-          {displayCategories.slice(0, 2).map((category) => {
-            const categoryStyle = categoryImages[category.name as keyof typeof categoryImages] || defaultStyle;
-            
-            return (
-              <div
-                key={`featured-${category.id}`}
-                className="relative overflow-hidden rounded-xl aspect-[3/2] cursor-pointer group shadow-sm transition-transform duration-300 hover:scale-[1.01]"
+                className="relative overflow-hidden rounded-lg aspect-[3/2] mb-1 shadow-sm transition-transform duration-300 group-hover:scale-[1.02]"
               >
                 <div className="absolute inset-0">
                   <img 
@@ -208,17 +166,19 @@ export default function CategoriesSection() {
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
                 </div>
-                <div className="absolute bottom-0 left-0 p-4 text-white">
-                  <h3 className="text-xl font-semibold">{category.name}</h3>
-                  <p className="text-sm text-gray-200 mt-1">En Popüler</p>
+                <div className="absolute bottom-0 left-0 p-2 text-white">
+                  <h3 className="text-base font-semibold">{category.name}</h3>
+                  <p className="text-xs text-gray-200">En Popüler</p>
                 </div>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
+      
+      {/* Popüler Kategoriler bölümünü kaldırdık, kategorileri zaten büyük gösteriyoruz */}
     </div>
   );
 }
