@@ -12,6 +12,7 @@ import Checkout from "@/pages/Checkout";
 import PaymentSuccess from "@/pages/PaymentSuccess";
 import Profile from "@/pages/Profile";
 import Search from "@/pages/Search";
+import AiChat from "@/components/AiChat";
 
 function Router() {
   return (
@@ -36,6 +37,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AppProvider>
         <Router />
+        <AiChat />
         <Toaster />
       </AppProvider>
     </QueryClientProvider>
