@@ -199,6 +199,7 @@ export default function HomeView() {
         <CategoriesSection />
         <WeatherPromoBanner />
         <FeaturedSalonsSection />
+        <div className="mt-4"></div>
         <PremiumFeaturesSection />
       </div>
       
