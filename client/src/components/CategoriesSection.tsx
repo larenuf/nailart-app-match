@@ -181,26 +181,25 @@ export default function CategoriesSection() {
         })}
       </div>
       
-      {/* Popüler Kategoriler - Yatay kaydırma */}
+      {/* Popüler Kategoriler - Büyük Grid Kartlar */}
       <div className="mb-6">
-        <div className="flex justify-between items-center mb-3">
-          <h2 className="text-base font-medium tracking-tight text-gray-900">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-medium tracking-tight text-gray-900">
             Popüler Kategoriler
           </h2>
-          <button className="text-xs font-medium text-primary">
+          <button className="text-sm font-medium text-primary">
             Tümü
           </button>
         </div>
         
-        <div className="flex overflow-x-auto gap-3 hide-scrollbar pb-2 -mx-4 px-4">
-          {displayCategories.slice(0, 5).map((category) => {
+        <div className="grid grid-cols-2 gap-3 pb-2">
+          {displayCategories.slice(0, 2).map((category) => {
             const categoryStyle = categoryImages[category.name as keyof typeof categoryImages] || defaultStyle;
             
             return (
               <div
                 key={`featured-${category.id}`}
-                className="relative overflow-hidden rounded-lg aspect-[3/2] cursor-pointer group shadow-sm transition-transform duration-300 hover:scale-[1.02] flex-shrink-0"
-                style={{ width: '180px' }}
+                className="relative overflow-hidden rounded-xl aspect-[3/2] cursor-pointer group shadow-sm transition-transform duration-300 hover:scale-[1.01]"
               >
                 <div className="absolute inset-0">
                   <img 
@@ -211,9 +210,9 @@ export default function CategoriesSection() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
                 </div>
-                <div className="absolute bottom-0 left-0 p-2.5 text-white">
-                  <h3 className="text-sm font-semibold">{category.name}</h3>
-                  <p className="text-[10px] text-gray-200 mt-0.5">En Popüler</p>
+                <div className="absolute bottom-0 left-0 p-4 text-white">
+                  <h3 className="text-xl font-semibold">{category.name}</h3>
+                  <p className="text-sm text-gray-200 mt-1">En Popüler</p>
                 </div>
               </div>
             );
