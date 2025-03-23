@@ -43,17 +43,14 @@ export default function FeaturedSalonsSectionNew() {
             <ShoppingCart size={14} className="text-purple-500 mr-1"/>
             Tırnak Ürünleri
           </h2>
-          <Link href="/shop">
-            <a className="text-xs font-medium text-primary dark:text-pink-400 flex items-center">
-              Mağazaya Git <ArrowRight size={10} className="ml-0.5"/>
-            </a>
+          <Link href="/shop" className="text-xs font-medium text-primary dark:text-pink-400 flex items-center cursor-pointer">
+            Mağazaya Git <ArrowRight size={10} className="ml-0.5"/>
           </Link>
         </div>
         
         <div className="grid grid-cols-2 gap-3">
           {/* Tırnak Bakım Ürünleri */}
-          <Link href="/product-category/nail-care">
-            <a className="cursor-pointer group">
+          <Link href="/product-category/nail-care" className="cursor-pointer group">
               <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02] bg-gradient-to-b from-slate-100 via-slate-200 to-slate-400">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-slate-500 text-2xl font-medium">Tırnak Bakım Ürünleri</div>
@@ -67,12 +64,10 @@ export default function FeaturedSalonsSectionNew() {
                   </div>
                 </div>
               </div>
-            </a>
           </Link>
           
           {/* Nail Art Kitleri */}
-          <Link href="/product-category/nail-art-kits">
-            <a className="cursor-pointer group">
+          <Link href="/product-category/nail-art-kits" className="cursor-pointer group">
               <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02] bg-gradient-to-b from-slate-100 via-slate-200 to-slate-400">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-slate-500 text-2xl font-medium">Nail Art Kitleri</div>
@@ -86,7 +81,6 @@ export default function FeaturedSalonsSectionNew() {
                   </div>
                 </div>
               </div>
-            </a>
           </Link>
         </div>
       </div>
@@ -96,75 +90,73 @@ export default function FeaturedSalonsSectionNew() {
           <Sparkles size={14} className="text-amber-500 mr-1"/>
           Öne Çıkan Salonlar
         </h2>
-        <Link href="/search">
-          <a className="text-xs font-medium text-primary dark:text-pink-400 flex items-center">
+        <Link href="/search" className="text-xs font-medium text-primary dark:text-pink-400 flex items-center cursor-pointer">
             Tümünü Gör <ArrowRight size={10} className="ml-0.5"/>
-          </a>
         </Link>
       </div>
 
       <div className="space-y-4">
         {salons?.map((salon) => (
-          <Link key={salon.id} href={`/salons/${salon.id}`}>
-            <a 
-              className="block bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer"
-              onClick={() => {
-                // Context'i güncelle
-                setSelectedSalon(salon);
-                console.log("Salon seçildi:", salon.name);
+          <Link 
+            key={salon.id} 
+            href={`/salons/${salon.id}`}
+            className="block bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer"
+            onClick={() => {
+              // Context'i güncelle
+              setSelectedSalon(salon);
+              console.log("Salon seçildi:", salon.name);
+            }}
+          >
+            <img
+              src={salon.id === 1 ? "https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80" : 
+                   salon.id === 2 ? "https://images.unsplash.com/photo-1604902396830-aca29e19b067?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80" :
+                   salon.id === 3 ? "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80" :
+                   "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80"}
+              alt={salon.name}
+              className="w-full h-40 object-cover"
+              onError={(e) => {
+                console.error("Salon resmi yüklenemedi:", salon.id);
+                // Yedek resim göster
+                (e.target as HTMLImageElement).src = 'https://placekitten.com/400/300';
               }}
-            >
-              <img
-                src={salon.id === 1 ? "https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80" : 
-                     salon.id === 2 ? "https://images.unsplash.com/photo-1604902396830-aca29e19b067?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80" :
-                     salon.id === 3 ? "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80" :
-                     "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80"}
-                alt={salon.name}
-                className="w-full h-40 object-cover"
-                onError={(e) => {
-                  console.error("Salon resmi yüklenemedi:", salon.id);
-                  // Yedek resim göster
-                  (e.target as HTMLImageElement).src = 'https://placekitten.com/400/300';
-                }}
-              />
-              <div className="p-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-bold text-[#333333] dark:text-white">{salon.name}</h3>
-                    <div className="flex items-center mt-1">
-                      <div className="flex text-[#FFD700]">
-                        {[...Array(Math.floor(salon.rating))].map((_, i) => (
-                          <i key={i} className="fas fa-star text-xs"></i>
-                        ))}
-                        {salon.rating % 1 > 0 && (
-                          <i className="fas fa-star-half-alt text-xs"></i>
-                        )}
-                      </div>
-                      <span className="text-xs ml-1 text-gray-600 dark:text-gray-400">
-                        {salon.rating.toFixed(1)} ({salon.reviewCount})
-                      </span>
+            />
+            <div className="p-3">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="font-bold text-[#333333] dark:text-white">{salon.name}</h3>
+                  <div className="flex items-center mt-1">
+                    <div className="flex text-[#FFD700]">
+                      {[...Array(Math.floor(salon.rating))].map((_, i) => (
+                        <i key={i} className="fas fa-star text-xs"></i>
+                      ))}
+                      {salon.rating % 1 > 0 && (
+                        <i className="fas fa-star-half-alt text-xs"></i>
+                      )}
                     </div>
+                    <span className="text-xs ml-1 text-gray-600 dark:text-gray-400">
+                      {salon.rating.toFixed(1)} ({salon.reviewCount})
+                    </span>
                   </div>
-                  {salon.discount && (
-                    <span className="bg-[#F9E0E7] text-[#333333] text-xs font-semibold px-2 py-1 rounded-full">
-                      {salon.discount}
-                    </span>
-                  )}
-                  {salon.isPremium && (
-                    <span className="bg-[#D6C3E5] text-[#333333] text-xs font-semibold px-2 py-1 rounded-full">
-                      Premium
-                    </span>
-                  )}
                 </div>
-                <div className="flex items-center mt-2 text-xs text-gray-600 dark:text-gray-400">
-                  <i className="fas fa-map-marker-alt mr-1"></i>
-                  <span>{salon.distance} km uzaklıkta</span>
-                  <div className="mx-2 h-1 w-1 rounded-full bg-gray-300 dark:bg-gray-600"></div>
-                  <i className="far fa-clock mr-1"></i>
-                  <span>{salon.closeTime}'e kadar açık</span>
-                </div>
+                {salon.discount && (
+                  <span className="bg-[#F9E0E7] text-[#333333] text-xs font-semibold px-2 py-1 rounded-full">
+                    {salon.discount}
+                  </span>
+                )}
+                {salon.isPremium && (
+                  <span className="bg-[#D6C3E5] text-[#333333] text-xs font-semibold px-2 py-1 rounded-full">
+                    Premium
+                  </span>
+                )}
               </div>
-            </a>
+              <div className="flex items-center mt-2 text-xs text-gray-600 dark:text-gray-400">
+                <i className="fas fa-map-marker-alt mr-1"></i>
+                <span>{salon.distance} km uzaklıkta</span>
+                <div className="mx-2 h-1 w-1 rounded-full bg-gray-300 dark:bg-gray-600"></div>
+                <i className="far fa-clock mr-1"></i>
+                <span>{salon.closeTime}'e kadar açık</span>
+              </div>
+            </div>
           </Link>
         ))}
       </div>
