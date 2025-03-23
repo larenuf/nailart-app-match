@@ -157,8 +157,28 @@ export default function BookingView() {
       return;
     }
 
-    // Navigate to checkout page instead of completing booking directly
-    window.location.href = '/checkout';
+    // Mark the current time slot as booked and create a booking
+    const formattedDate = selectedDate.toLocaleDateString('tr-TR', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    });
+    
+    setBookingDetails({
+      artist: selectedArtist,
+      service: selectedService,
+      salon: selectedSalon!,
+      date: formattedDate,
+      time: selectedTime
+    });
+    
+    // Show confirmation before proceeding to checkout
+    setShowConfirmation(true);
+    
+    // Navigate to checkout page
+    setTimeout(() => {
+      window.location.href = '/checkout';
+    }, 1500);
   };
 
   if (!selectedService || !selectedArtist || !selectedSalon) return null;

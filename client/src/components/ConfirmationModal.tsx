@@ -27,26 +27,26 @@ export default function ConfirmationModal() {
           </div>
         </div>
 
-        <h3 className="text-center font-bold text-lg mb-2">Booking Confirmed!</h3>
+        <h3 className="text-center font-bold text-lg mb-2">Rezervasyon Onaylandı!</h3>
         <p className="text-center text-gray-600 mb-4">
-          Your appointment has been scheduled
+          Randevunuz başarıyla oluşturuldu
         </p>
 
         <div className="bg-[#F5F1EB] bg-opacity-30 p-3 rounded-lg mb-4">
           <div className="flex justify-between mb-2">
-            <p className="text-sm text-gray-600">Date:</p>
+            <p className="text-sm text-gray-600">Tarih:</p>
             <p className="text-sm font-medium">{bookingDetails.date}</p>
           </div>
           <div className="flex justify-between mb-2">
-            <p className="text-sm text-gray-600">Time:</p>
+            <p className="text-sm text-gray-600">Saat:</p>
             <p className="text-sm font-medium">{bookingDetails.time}</p>
           </div>
           <div className="flex justify-between mb-2">
-            <p className="text-sm text-gray-600">Service:</p>
+            <p className="text-sm text-gray-600">Hizmet:</p>
             <p className="text-sm font-medium">{bookingDetails.service.name}</p>
           </div>
           <div className="flex justify-between">
-            <p className="text-sm text-gray-600">Artist:</p>
+            <p className="text-sm text-gray-600">Sanatçı:</p>
             <p className="text-sm font-medium">{bookingDetails.artist.name}</p>
           </div>
         </div>
@@ -56,13 +56,13 @@ export default function ConfirmationModal() {
             className="flex-1 bg-white border border-[#D6C3E5] text-[#D6C3E5] py-2 rounded-lg"
             onClick={handleAddToCalendar}
           >
-            Add to Calendar
+            Takvime Ekle
           </button>
           <button
             className="flex-1 bg-[#D6C3E5] text-white py-2 rounded-lg"
             onClick={handleCloseConfirmation}
           >
-            Done
+            Tamam
           </button>
         </div>
       </div>
