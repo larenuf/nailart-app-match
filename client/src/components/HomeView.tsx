@@ -19,11 +19,11 @@ function FeatureCard({ title, description, icon, onClick, available, gradient }:
   return (
     <div 
       onClick={onClick}
-      className={`rounded-full overflow-hidden shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-300 cursor-pointer border border-gray-100 w-12 h-12 flex items-center justify-center`}
+      className={`rounded-full overflow-hidden shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-300 cursor-pointer border border-gray-100 w-12 h-12 flex items-center justify-center relative`}
       style={{ background: gradient }}
-      title={title}
+      title={`${title}${!available ? ' (Yakında)' : ''}`}
     >
-      <div className="bg-white/80 rounded-full p-1.5 w-8 h-8 flex items-center justify-center">
+      <div className="bg-white/90 rounded-full p-1.5 w-8 h-8 flex items-center justify-center">
         <div className="text-primary">{icon}</div>
       </div>
       {!available && (
@@ -172,18 +172,39 @@ function PremiumFeaturesSection() {
         </h2>
       </div>
       
-      <div className="flex gap-2 overflow-x-auto pb-2 hide-scrollbar">
-        {features.map((feature, index) => (
-          <FeatureCard 
-            key={index}
-            title={feature.title}
-            description={feature.description}
-            icon={feature.icon}
-            onClick={feature.onClick}
-            available={feature.available}
-            gradient={feature.gradient}
-          />
-        ))}
+      {/* Alt alta 2 satır, her satırda 4 özellik */}
+      <div className="flex flex-col gap-3 pb-2">
+        <div className="grid grid-cols-4 gap-3">
+          {features.slice(0, 4).map((feature, index) => (
+            <div key={index} className="flex flex-col items-center">
+              <FeatureCard 
+                title={feature.title}
+                description={feature.description}
+                icon={feature.icon}
+                onClick={feature.onClick}
+                available={feature.available}
+                gradient={feature.gradient}
+              />
+              <span className="text-[9px] mt-1 text-center text-gray-500 font-medium">{feature.title}</span>
+            </div>
+          ))}
+        </div>
+        
+        <div className="grid grid-cols-4 gap-3">
+          {features.slice(4, 8).map((feature, index) => (
+            <div key={index} className="flex flex-col items-center">
+              <FeatureCard 
+                title={feature.title}
+                description={feature.description}
+                icon={feature.icon}
+                onClick={feature.onClick}
+                available={feature.available}
+                gradient={feature.gradient}
+              />
+              <span className="text-[9px] mt-1 text-center text-gray-500 font-medium">{feature.title}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
