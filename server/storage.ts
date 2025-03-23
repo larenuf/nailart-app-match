@@ -244,35 +244,35 @@ export class MemStorage implements IStorage {
       this.stories.set(1, {
         id: 1,
         title: 'Popüler',
-        imageUrl: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=400&fit=crop&auto=format',
+        imageUrl: 'https://plus.unsplash.com/premium_photo-1681426472399-bee07ea73195?q=80&w=150&h=150&auto=format&fit=crop',
         highlighted: false
       });
       
       this.stories.set(2, {
         id: 2,
         title: 'Yeni',
-        imageUrl: 'https://images.unsplash.com/photo-1613452707901-1160c8010239?w=400&h=400&fit=crop&auto=format',
+        imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?q=80&w=150&h=150&auto=format&fit=crop',
         highlighted: false
       });
       
       this.stories.set(3, {
         id: 3,
         title: 'Bugüne Özel',
-        imageUrl: 'https://images.unsplash.com/photo-1604902394631-2ce5401662b8?w=400&h=400&fit=crop&auto=format',
+        imageUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=150&h=150&auto=format&fit=crop',
         highlighted: true
       });
       
       this.stories.set(4, {
         id: 4,
         title: 'İndirimli',
-        imageUrl: 'https://images.unsplash.com/photo-1630283784711-011b115748c4?w=400&h=400&fit=crop&auto=format',
+        imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?q=80&w=150&h=150&auto=format&fit=crop',
         highlighted: false
       });
       
       this.stories.set(5, {
         id: 5,
         title: 'Yeni İndirimler',
-        imageUrl: 'https://images.unsplash.com/photo-1632344593064-cf34f59eef89?w=400&h=400&fit=crop&auto=format',
+        imageUrl: 'https://plus.unsplash.com/premium_photo-1661664742761-d6596bba43c7?q=80&w=150&h=150&auto=format&fit=crop',
         highlighted: false
       });
       
@@ -440,58 +440,58 @@ export class MemStorage implements IStorage {
       this.portfolioItems.set(1, {
         id: 1,
         artistId: 1,
-        imageUrl: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=200&h=200&fit=crop&auto=format'
+        imageUrl: 'https://plus.unsplash.com/premium_photo-1681426472399-bee07ea73195?q=80&w=200&h=200&auto=format&fit=crop'
       });
       
       this.portfolioItems.set(2, {
         id: 2,
         artistId: 1,
-        imageUrl: 'https://images.unsplash.com/photo-1613452707901-1160c8010239?w=200&h=200&fit=crop&auto=format'
+        imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?q=80&w=200&h=200&auto=format&fit=crop'
       });
       
       this.portfolioItems.set(3, {
         id: 3,
         artistId: 1,
-        imageUrl: 'https://images.unsplash.com/photo-1604902394631-2ce5401662b8?w=200&h=200&fit=crop&auto=format'
+        imageUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=200&h=200&auto=format&fit=crop'
       });
       
       // Portfolio for artist 2
       this.portfolioItems.set(4, {
         id: 4,
         artistId: 2,
-        imageUrl: 'https://images.unsplash.com/photo-1630283784711-011b115748c4?w=200&h=200&fit=crop&auto=format'
+        imageUrl: 'https://images.unsplash.com/photo-1624323753127-5f764dbb30c1?q=80&w=200&h=200&auto=format&fit=crop'
       });
       
       this.portfolioItems.set(5, {
         id: 5,
         artistId: 2,
-        imageUrl: 'https://images.unsplash.com/photo-1632344593064-cf34f59eef89?w=200&h=200&fit=crop&auto=format'
+        imageUrl: 'https://plus.unsplash.com/premium_photo-1661664742761-d6596bba43c7?q=80&w=200&h=200&auto=format&fit=crop'
       });
       
       // Portfolio for artist 3
       this.portfolioItems.set(6, {
         id: 6,
         artistId: 3,
-        imageUrl: 'https://images.unsplash.com/photo-1551753103-7d6305be5c5b?w=200&h=200&fit=crop&auto=format'
+        imageUrl: 'https://images.unsplash.com/photo-1604902396804-f57c5c8d5a42?q=80&w=200&h=200&auto=format&fit=crop'
       });
       
       this.portfolioItems.set(7, {
         id: 7,
         artistId: 3,
-        imageUrl: 'https://images.unsplash.com/photo-1632344905301-0d41b7848750?w=200&h=200&fit=crop&auto=format'
+        imageUrl: 'https://images.unsplash.com/photo-1508341591423-4347099e1f19?q=80&w=200&h=200&auto=format&fit=crop'
       });
       
       // Portfolio for artist 4
       this.portfolioItems.set(8, {
         id: 8,
         artistId: 4,
-        imageUrl: 'https://images.unsplash.com/photo-1635107123353-33a5b3e268fe?w=200&h=200&fit=crop&auto=format'
+        imageUrl: 'https://images.unsplash.com/photo-1619116712852-e0d2703ee3ca?q=80&w=200&h=200&auto=format&fit=crop'
       });
       
       this.portfolioItems.set(9, {
         id: 9,
         artistId: 4,
-        imageUrl: 'https://images.unsplash.com/photo-1640885988958-ae5d17ebf1a7?w=200&h=200&fit=crop&auto=format'
+        imageUrl: 'https://plus.unsplash.com/premium_photo-1667540103438-c84efa63f4cb?q=80&w=200&h=200&auto=format&fit=crop'
       });
       
       this.portfolioIdCounter = 10;
