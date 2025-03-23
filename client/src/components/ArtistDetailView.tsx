@@ -52,14 +52,14 @@ export default function ArtistDetailView() {
   if (!selectedArtist || !selectedSalon) return null;
 
   return (
-    <div className="max-w-md mx-auto bg-white min-h-screen relative pb-20">
+    <div className="max-w-md mx-auto bg-white dark:bg-gray-900 min-h-screen relative pb-20">
       {/* Sabit Üst Bar */}
-      <div className="sticky top-0 z-10 bg-white shadow-sm">
+      <div className="sticky top-0 z-10 bg-white dark:bg-gray-800 shadow-sm">
         <div className="flex items-center px-4 py-3">
-          <button className="text-[#333333] mr-2" onClick={handleBackToSalon}>
+          <button className="text-[#333333] dark:text-white mr-2" onClick={handleBackToSalon}>
             <i className="fas fa-arrow-left"></i>
           </button>
-          <h2 className="text-lg font-bold font-playfair">{selectedArtist.name}</h2>
+          <h2 className="text-lg font-bold font-playfair dark:text-white">{selectedArtist.name}</h2>
           {selectedArtist.experience?.includes("Senior") && (
             <Badge className="ml-2 bg-[#6A0DAD] text-white">Uzman</Badge>
           )}
@@ -67,16 +67,16 @@ export default function ArtistDetailView() {
       </div>
 
       {/* Sanatçı Profil Başlığı */}
-      <div className="px-4 py-4 bg-[#FBF7FA]">
+      <div className="px-4 py-4 bg-[#FBF7FA] dark:bg-gray-800">
         <div className="flex">
           <img
             src={selectedArtist.imageUrl}
             alt={selectedArtist.name}
-            className="w-24 h-24 rounded-full object-cover border-2 border-white shadow-md"
+            className="w-24 h-24 rounded-full object-cover border-2 border-white dark:border-gray-700 shadow-md"
           />
           <div className="ml-4 flex-1">
-            <h3 className="text-xl font-semibold">{selectedArtist.name}</h3>
-            <p className="text-sm font-medium text-[#6A0DAD] mt-1">{selectedArtist.specialty}</p>
+            <h3 className="text-xl font-semibold dark:text-white">{selectedArtist.name}</h3>
+            <p className="text-sm font-medium text-[#6A0DAD] dark:text-pink-400 mt-1">{selectedArtist.specialty}</p>
             
             <div className="flex items-center mt-1">
               <div className="flex text-[#FFD700]">
@@ -87,7 +87,7 @@ export default function ArtistDetailView() {
                   <i className="fas fa-star-half-alt"></i>
                 )}
               </div>
-              <span className="text-sm ml-1 text-gray-600">
+              <span className="text-sm ml-1 text-gray-600 dark:text-gray-400">
                 {selectedArtist.rating.toFixed(1)} ({selectedArtist.reviewCount} yorum)
               </span>
             </div>
@@ -95,11 +95,11 @@ export default function ArtistDetailView() {
             <div className="mt-2 flex space-x-2">
               <button 
                 onClick={() => handleServiceSelect(services?.[0])}
-                className="bg-[#F9E0E7] text-[#333333] px-4 py-1.5 rounded-full text-sm font-medium">
+                className="bg-[#F9E0E7] dark:bg-pink-900 text-[#333333] dark:text-white px-4 py-1.5 rounded-full text-sm font-medium">
                 <i className="far fa-calendar-check mr-1"></i> Randevu Al
               </button>
-              <button className="bg-white border border-gray-200 p-2 rounded-full">
-                <i className="far fa-heart text-gray-400"></i>
+              <button className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 p-2 rounded-full">
+                <i className="far fa-heart text-gray-400 dark:text-gray-300"></i>
               </button>
             </div>
           </div>

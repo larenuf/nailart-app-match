@@ -113,7 +113,7 @@ export default function FeaturedSalonsSection() {
         {salons?.map((salon) => (
           <div
             key={salon.id}
-            className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer"
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer"
             onClick={() => handleSelectSalon(salon)}
           >
             <img
@@ -124,7 +124,7 @@ export default function FeaturedSalonsSection() {
             <div className="p-3">
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="font-bold text-[#333333]">{salon.name}</h3>
+                  <h3 className="font-bold text-[#333333] dark:text-white">{salon.name}</h3>
                   <div className="flex items-center mt-1">
                     <div className="flex text-[#FFD700]">
                       {[...Array(Math.floor(salon.rating))].map((_, i) => (
@@ -134,7 +134,7 @@ export default function FeaturedSalonsSection() {
                         <i className="fas fa-star-half-alt text-xs"></i>
                       )}
                     </div>
-                    <span className="text-xs ml-1 text-gray-600">
+                    <span className="text-xs ml-1 text-gray-600 dark:text-gray-400">
                       {salon.rating.toFixed(1)} ({salon.reviewCount})
                     </span>
                   </div>
@@ -150,10 +150,10 @@ export default function FeaturedSalonsSection() {
                   </span>
                 )}
               </div>
-              <div className="flex items-center mt-2 text-xs text-gray-600">
+              <div className="flex items-center mt-2 text-xs text-gray-600 dark:text-gray-400">
                 <i className="fas fa-map-marker-alt mr-1"></i>
                 <span>{salon.distance} km uzaklıkta</span>
-                <div className="mx-2 h-1 w-1 rounded-full bg-gray-300"></div>
+                <div className="mx-2 h-1 w-1 rounded-full bg-gray-300 dark:bg-gray-600"></div>
                 <i className="far fa-clock mr-1"></i>
                 <span>{salon.closeTime}'e kadar açık</span>
               </div>
