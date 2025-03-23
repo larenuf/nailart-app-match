@@ -114,10 +114,15 @@ export default function StorySection() {
                 onClick={stopClickPropagation}
               >
                 <img
-                  src={story.imageUrl}
+                  src={story.imageUrl || 'https://placekitten.com/70/70'} 
                   alt={story.title}
                   className="w-full h-full object-cover rounded-full"
                   onClick={stopClickPropagation}
+                  onError={(e) => {
+                    console.error("Resim yüklenemedi:", story.imageUrl);
+                    // Yedek resim göster
+                    (e.target as HTMLImageElement).src = 'https://placekitten.com/70/70';
+                  }}
                 />
                 {story.videoUrl && (
                   <div 

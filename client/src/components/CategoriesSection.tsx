@@ -41,12 +41,16 @@ export default function CategoriesSection() {
             }}
           >
             <img 
-              src={category.id === 1 ? "https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80" : 
-                   category.id === 2 ? "https://images.unsplash.com/photo-1604902396830-aca29e19b067?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80" :
-                   category.id === 3 ? "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80" :
-                   "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80"}
+              src={category.id === 1 ? "https://i.imgur.com/lDRLXVu.jpg" : 
+                   category.id === 2 ? "https://i.imgur.com/fX0JMHs.jpg" :
+                   category.id === 3 ? "https://i.imgur.com/QdVQoYL.jpg" :
+                   "https://i.imgur.com/PGQrKuM.jpg"}
               alt={category.name}
               className="w-full h-full object-cover"
+              onError={(e) => {
+                console.error(`Kategori resmi yüklenemedi: ${category.id}`);
+                (e.target as HTMLImageElement).src = 'https://placekitten.com/300/300';
+              }}
             />
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center flex-col p-4">
               <h3 className="text-white text-lg font-semibold text-center">{category.name}</h3>
