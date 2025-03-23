@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertBookingSchema, insertReviewSchema } from "@shared/schema";
+import { insertBookingSchema, insertReviewSchema, insertPromotionSchema } from "@shared/schema";
 import { v4 as uuidv4 } from 'uuid';
 import type { ChatMessage } from './storage';
 
