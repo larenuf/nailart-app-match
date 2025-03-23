@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Story } from "@/types";
 
 export default function StorySection() {
@@ -10,6 +10,9 @@ export default function StorySection() {
   // Seçilen story'yi izlemek için state
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
   const [isStoryOpen, setIsStoryOpen] = useState(false);
+  
+  // Video referansı
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   // Story'ye tıklandığında çağrılacak fonksiyon
   const handleStoryClick = (story: Story) => {
@@ -20,16 +23,29 @@ export default function StorySection() {
   // Story modalını kapatan fonksiyon
   const closeStoryModal = () => {
     setIsStoryOpen(false);
+    // Video oynatılıyorsa durdur
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
   };
+  
+  // Video açıldığında oynatmayı başlat
+  useEffect(() => {
+    if (isStoryOpen && videoRef.current && selectedStory?.videoUrl) {
+      videoRef.current.play().catch(error => {
+        console.error("Video otomatik olarak oynatılamadı:", error);
+      });
+    }
+  }, [isStoryOpen, selectedStory]);
 
   if (isLoading) {
     return (
-      <div className="px-4 py-3 bg-[#FAFAFA]">
+      <div className="px-4 py-3 bg-[#FAFAFA] dark:bg-gray-800">
         <div className="flex space-x-4 overflow-x-auto pb-2">
           {[...Array(4)].map((_, i) => (
             <div key={i} className="flex flex-col items-center">
-              <div className="story-circle border-2 border-[#FF5864] p-0.5 bg-gray-200 animate-pulse rounded-full w-[70px] h-[70px]"></div>
-              <div className="mt-1 w-16 h-3 bg-gray-200 animate-pulse rounded"></div>
+              <div className="story-circle border-2 border-[#FF5864] p-0.5 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-full w-[70px] h-[70px]"></div>
+              <div className="mt-1 w-16 h-3 bg-gray-200 dark:bg-gray-700 animate-pulse rounded"></div>
             </div>
           ))}
         </div>
@@ -39,7 +55,7 @@ export default function StorySection() {
 
   return (
     <>
-      <div className="px-4 py-3 bg-[#FAFAFA] border-b border-gray-100">
+      <div className="px-4 py-3 bg-[#FAFAFA] dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
         <div className="flex space-x-4 overflow-x-auto pb-2 no-scrollbar">
           {stories?.map((story) => (
             <div 
@@ -51,7 +67,7 @@ export default function StorySection() {
                 className={`w-[70px] h-[70px] rounded-full overflow-hidden ${
                   story.highlighted 
                     ? "ring-2 ring-[#FF5864] ring-offset-1" 
-                    : "border-2 border-gray-200"
+                    : "border-2 border-gray-200 dark:border-gray-600"
                 } p-0.5`}
               >
                 <img
@@ -59,8 +75,15 @@ export default function StorySection() {
                   alt={story.title}
                   className="w-full h-full object-cover rounded-full"
                 />
+                {story.videoUrl && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="bg-black/30 rounded-full p-1">
+                      <i className="fas fa-play text-white text-xs"></i>
+                    </div>
+                  </div>
+                )}
               </div>
-              <p className="text-xs font-medium text-center mt-1">{story.title}</p>
+              <p className="text-xs font-medium text-center mt-1 dark:text-white">{story.title}</p>
             </div>
           ))}
         </div>
@@ -85,12 +108,24 @@ export default function StorySection() {
               </div>
             </div>
             
-            {/* Ana Görsel */}
-            <img 
-              src={selectedStory.imageUrl} 
-              alt={selectedStory.title}
-              className="w-full h-full object-cover" 
-            />
+            {/* Ana İçerik - Video veya Resim */}
+            {selectedStory.videoUrl ? (
+              <video 
+                ref={videoRef}
+                src={selectedStory.videoUrl}
+                poster={selectedStory.imageUrl}
+                className="w-full h-full object-cover"
+                controls
+                playsInline
+                loop
+              ></video>
+            ) : (
+              <img 
+                src={selectedStory.imageUrl} 
+                alt={selectedStory.title}
+                className="w-full h-full object-cover" 
+              />
+            )}
             
             {/* Alt Bilgi */}
             <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black/80 to-transparent p-4">

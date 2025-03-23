@@ -3,6 +3,7 @@ export type Story = {
   title: string;
   imageUrl: string;
   highlighted: boolean;
+  videoUrl?: string;
 };
 
 export type Category = {
