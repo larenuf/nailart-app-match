@@ -11,6 +11,11 @@ export const users = pgTable("users", {
   fullName: text("full_name"),
   phoneNumber: text("phone_number"),
   location: text("location"),
+  role: text("role").notNull().default("user"), // user, salon_owner, admin
+  isVerified: boolean("is_verified").default(false),
+  salonId: integer("salon_id"), // if user is a salon owner
+  createdAt: timestamp("created_at").defaultNow(),
+  lastLogin: timestamp("last_login"),
 });
 
 // Salon model
@@ -21,14 +26,22 @@ export const salons = pgTable("salons", {
   latitude: doublePrecision("latitude"),
   longitude: doublePrecision("longitude"),
   phoneNumber: text("phone_number"),
-  rating: doublePrecision("rating"),
-  reviewCount: integer("review_count"),
+  rating: doublePrecision("rating").default(0),
+  reviewCount: integer("review_count").default(0),
   openTime: text("open_time"),
   closeTime: text("close_time"),
   imageUrl: text("image_url"),
   discount: text("discount"),
   distance: doublePrecision("distance"),
-  isPremium: boolean("is_premium"),
+  isPremium: boolean("is_premium").default(false),
+  description: text("description"),
+  city: text("city"),
+  email: text("email"),
+  website: text("website"),
+  status: text("status").default("active"), // active, inactive, pending
+  featuredPosition: integer("featured_position"), // for ordering in featured list
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at"),
 });
 
 // Artist model
@@ -38,9 +51,18 @@ export const artists = pgTable("artists", {
   name: text("name").notNull(),
   specialty: text("specialty"),
   experience: text("experience"),
-  rating: doublePrecision("rating"),
-  reviewCount: integer("review_count"),
+  rating: doublePrecision("rating").default(0),
+  reviewCount: integer("review_count").default(0),
   imageUrl: text("image_url"),
+  bio: text("bio"),
+  isAvailable: boolean("is_available").default(true),
+  status: text("status").default("active"), // active, inactive, on_leave
+  position: text("position"), // senior stylist, junior stylist, etc.
+  email: text("email"),
+  phoneNumber: text("phone_number"),
+  instagramProfile: text("instagram_profile"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at"),
 });
 
 // Service model
@@ -138,6 +160,8 @@ export const insertUserSchema = createInsertSchema(users).pick({
   fullName: true,
   phoneNumber: true,
   location: true,
+  role: true,
+  salonId: true,
 });
 
 export const insertSalonSchema = createInsertSchema(salons).omit({
