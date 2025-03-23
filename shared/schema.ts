@@ -117,8 +117,8 @@ export const promotions = pgTable("promotions", {
   code: text("code").notNull(),
   discountType: text("discount_type").notNull(), // percentage, fixed
   discountValue: doublePrecision("discount_value").notNull(),
-  startDate: date("start_date").notNull(),
-  endDate: date("end_date").notNull(),
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date").notNull(),
   isActive: boolean("is_active").default(true),
   salonId: integer("salon_id"), // can be null for global promotions
   serviceId: integer("service_id"), // can be null for all services

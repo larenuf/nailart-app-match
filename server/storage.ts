@@ -18,6 +18,9 @@ import {
   type Category,
   type InsertCategory,
   stories,
+  promotions,
+  type Promotion,
+  type InsertPromotion,
   type Story,
   type InsertStory,
   bookings,
@@ -144,6 +147,7 @@ export class MemStorage implements IStorage {
     this.bookings = new Map();
     this.timeSlots = new Map();
     this.reviews = new Map();
+    this.promotions = new Map();
     this.chatMessages = [];
     
     this.userIdCounter = 1;
@@ -156,6 +160,7 @@ export class MemStorage implements IStorage {
     this.bookingIdCounter = 1;
     this.timeSlotIdCounter = 1;
     this.reviewIdCounter = 1;
+    this.promotionIdCounter = 1;
     
     // Initialize with sample data
     this.initSampleData();
@@ -548,11 +553,85 @@ export class MemStorage implements IStorage {
       this.timeSlotIdCounter = timeSlotId;
       
       console.log("Sample data initialized successfully!");
+      // Sample promotions
+      // Using the existing 'today' variable
+      const oneWeekFromNow = new Date(today);
+      oneWeekFromNow.setDate(today.getDate() + 7);
+      
+      const oneMonthFromNow = new Date(today);
+      oneMonthFromNow.setMonth(today.getMonth() + 1);
+      
+      // Global promotion (applies to all salons)
+      this.promotions.set(1, {
+        id: 1,
+        title: "Hoş Geldin İndirimi",
+        description: "Yeni müşteriler için ilk randevuda %20 indirim",
+        imageUrl: "https://loremflickr.com/400/200/nails,promotion",
+        code: "WELCOME20",
+        discountType: "percentage",
+        discountValue: 20,
+        startDate: today, // Date object is compatible with Timestamp
+        endDate: oneMonthFromNow,
+        isActive: true,
+        salonId: null,
+        serviceId: null,
+        minSpend: 0,
+        maxDiscount: 100,
+        usageLimit: 100,
+        usageCount: 0,
+        createdAt: new Date()
+      });
+      
+      // Salon-specific promotion
+      this.promotions.set(2, {
+        id: 2,
+        title: "Glossy Salon Özel Teklif",
+        description: "Glossy Nails Salon'da sadece bu hafta tüm hizmetlerde %15 indirim",
+        imageUrl: "https://loremflickr.com/400/200/manicure,promotion",
+        code: "GLOSSY15",
+        discountType: "percentage",
+        discountValue: 15,
+        startDate: today,
+        endDate: oneWeekFromNow,
+        isActive: true,
+        salonId: 1,
+        serviceId: null,
+        minSpend: 30,
+        maxDiscount: null,
+        usageLimit: 50,
+        usageCount: 0,
+        createdAt: new Date()
+      });
+      
+      // Service-specific promotion
+      this.promotions.set(3, {
+        id: 3,
+        title: "Jel Manikür İndirimi",
+        description: "Premium Jel Manikür hizmetinde 10₺ indirim",
+        imageUrl: "https://loremflickr.com/400/200/gel,nails",
+        code: "GEL10",
+        discountType: "fixed",
+        discountValue: 10,
+        startDate: today,
+        endDate: oneMonthFromNow,
+        isActive: true,
+        salonId: null,
+        serviceId: 4,
+        minSpend: 0,
+        maxDiscount: null,
+        usageLimit: null,
+        usageCount: 0,
+        createdAt: new Date()
+      });
+      
+      this.promotionIdCounter = 4;
+      
       console.log(`Created ${this.salons.size} salons`);
       console.log(`Created ${this.artists.size} artists`);
       console.log(`Created ${this.services.size} services`);
       console.log(`Created ${this.portfolioItems.size} portfolio items`);
       console.log(`Created ${this.timeSlots.size} time slots`);
+      console.log(`Created ${this.promotions.size} promotions`);
       
     } catch (error) {
       console.error("Error initializing sample data:", error);
@@ -590,7 +669,14 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.userIdCounter++;
-    const user: User = { ...insertUser, id };
+    const user: User = { 
+      ...insertUser, 
+      id,
+      email: insertUser.email || null,
+      fullName: insertUser.fullName || null,
+      phoneNumber: insertUser.phoneNumber || null,
+      location: insertUser.location || null
+    };
     this.users.set(id, user);
     return user;
   }
@@ -796,6 +882,93 @@ export class MemStorage implements IStorage {
 
   async getReview(id: number): Promise<Review | undefined> {
     return this.reviews.get(id);
+  }
+
+  // Promotion operations
+  async getPromotions(): Promise<Promotion[]> {
+    return Array.from(this.promotions.values());
+  }
+
+  async getActivePromotions(): Promise<Promotion[]> {
+    const now = new Date();
+    return Array.from(this.promotions.values()).filter(promo => {
+      const usageCount = promo.usageCount || 0;
+      const usageLimit = promo.usageLimit || null;
+      
+      return promo.isActive && 
+        new Date(promo.startDate) <= now && 
+        new Date(promo.endDate) >= now &&
+        (!usageLimit || usageCount < usageLimit);
+    });
+  }
+
+  async getPromotion(id: number): Promise<Promotion | undefined> {
+    return this.promotions.get(id);
+  }
+
+  async getPromotionByCode(code: string): Promise<Promotion | undefined> {
+    return Array.from(this.promotions.values()).find(
+      promo => promo.code === code && promo.isActive
+    );
+  }
+
+  async createPromotion(promotion: InsertPromotion): Promise<Promotion> {
+    const id = this.promotionIdCounter++;
+    const newPromotion: Promotion = { 
+      ...promotion, 
+      id,
+      salonId: promotion.salonId || null,
+      serviceId: promotion.serviceId || null,
+      maxDiscount: promotion.maxDiscount || null,
+      usageLimit: promotion.usageLimit || null,
+      usageCount: 0,
+      createdAt: new Date()
+    };
+    this.promotions.set(id, newPromotion);
+    return newPromotion;
+  }
+
+  async updatePromotion(id: number, promotionData: Partial<Promotion>): Promise<Promotion> {
+    const promotion = await this.getPromotion(id);
+    if (!promotion) {
+      throw new Error(`Promotion with id ${id} not found`);
+    }
+
+    const updatedPromotion: Promotion = {
+      ...promotion,
+      ...promotionData,
+      // Ensure we don't override these fields
+      id: promotion.id,
+      createdAt: promotion.createdAt
+    };
+
+    this.promotions.set(id, updatedPromotion);
+    return updatedPromotion;
+  }
+
+  async deletePromotion(id: number): Promise<boolean> {
+    const exists = this.promotions.has(id);
+    if (exists) {
+      this.promotions.delete(id);
+    }
+    return exists;
+  }
+
+  async incrementPromotionUsage(id: number): Promise<Promotion> {
+    const promotion = await this.getPromotion(id);
+    if (!promotion) {
+      throw new Error(`Promotion with id ${id} not found`);
+    }
+
+    const currentCount = promotion.usageCount || 0;
+
+    const updatedPromotion: Promotion = {
+      ...promotion,
+      usageCount: currentCount + 1
+    };
+
+    this.promotions.set(id, updatedPromotion);
+    return updatedPromotion;
   }
 }
 
