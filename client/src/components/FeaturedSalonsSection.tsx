@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAppContext } from "@/context/AppContext";
 import { useLocation } from "wouter";
 import { Salon } from "@/types";
+import { ShoppingCart, Sparkles } from "lucide-react";
 
 export default function FeaturedSalonsSection() {
   const { setSelectedSalon } = useAppContext();
@@ -42,6 +43,57 @@ export default function FeaturedSalonsSection() {
 
   return (
     <div className="px-4 py-4">
+      {/* Tırnak Ürünleri Satış Alanı */}
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-lg font-bold font-playfair">Tırnak Ürünleri</h2>
+          <a href="#" className="text-sm text-[#D6C3E5] flex items-center">
+            <ShoppingCart size={14} className="mr-1"/>
+            Mağaza
+          </a>
+        </div>
+        
+        <div className="grid grid-cols-2 gap-3">
+          {/* Tırnak Bakım Ürünleri */}
+          <div className="cursor-pointer group">
+            <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02]">
+              <img 
+                src="https://images.unsplash.com/photo-1632345031435-9896753de517?q=80&w=1000"
+                alt="Tırnak Bakım Ürünleri"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
+              <div className="absolute bottom-0 left-0 p-2.5 text-white">
+                <h3 className="text-sm font-bold">💅 Tırnak Bakım Ürünleri</h3>
+                <div className="flex items-center mt-1">
+                  <span className="text-xs mr-2 bg-white/30 px-2 py-0.5 rounded-full backdrop-blur-sm">Özel Fiyatlar</span>
+                  <span className="text-xs bg-primary/80 px-2 py-0.5 rounded-full">%15 İndirim</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Nail Art Kitleri */}
+          <div className="cursor-pointer group">
+            <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02]">
+              <img 
+                src="https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=1000"
+                alt="Nail Art Kitleri"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
+              <div className="absolute bottom-0 left-0 p-2.5 text-white">
+                <h3 className="text-sm font-bold">✨ Nail Art Kitleri</h3>
+                <div className="flex items-center mt-1">
+                  <span className="text-xs mr-2 bg-white/30 px-2 py-0.5 rounded-full backdrop-blur-sm">Yeni Ürünler</span>
+                  <span className="text-xs bg-primary/80 px-2 py-0.5 rounded-full">%20 İndirim</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-lg font-bold font-playfair">Öne Çıkan Salonlar</h2>
         <a href="#" className="text-sm text-[#D6C3E5]">
