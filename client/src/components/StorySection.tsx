@@ -23,7 +23,11 @@ export default function StorySection() {
   };
 
   // Story modalını kapatan fonksiyon
-  const closeStoryModal = () => {
+  const closeStoryModal = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setIsStoryOpen(false);
     // Video oynatılıyorsa durdur
     if (videoRef.current) {
@@ -93,7 +97,7 @@ export default function StorySection() {
       
       {/* Story Görüntüleme Modalı - Özel modal yapısı kullanıyoruz (Dialog yerine) */}
       {isStoryOpen && selectedStory && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center" onClick={closeStoryModal}>
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center" onClick={(e) => closeStoryModal(e)}>
           <div className="relative h-[80vh] w-full max-w-md bg-black rounded-xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
             {/* Üst Bilgi Bölümü */}
             <div className="absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-black/80 to-transparent p-4">
@@ -137,8 +141,9 @@ export default function StorySection() {
                   className="bg-white/20 text-white rounded-full px-4 py-2 text-sm w-full" 
                 />
                 <button 
-                  onClick={closeStoryModal} 
+                  onClick={(e) => closeStoryModal(e)} 
                   className="ml-2 bg-white/20 rounded-full p-2"
+                  type="button"
                 >
                   <i className="fas fa-times text-white"></i>
                 </button>

@@ -1,16 +1,17 @@
 import { useAppContext } from "@/context/AppContext";
 import { useTheme } from "@/context/ThemeContext";
 import { Moon, Sun } from "lucide-react";
+import { useCallback } from "react";
 
 export default function TopNavigation() {
   const { userLocation } = useAppContext();
   const { darkMode, toggleDarkMode } = useTheme();
 
-  const handleToggleDarkMode = (e: React.MouseEvent) => {
+  const handleToggleDarkMode = useCallback((e: React.MouseEvent) => {
     e.preventDefault(); // Link davranışını engelle
     e.stopPropagation(); // Event bubbling'i engelle
     toggleDarkMode();
-  };
+  }, [toggleDarkMode]);
 
   return (
     <div className="px-4 py-4 bg-[#FAFAFA] dark:bg-gray-900 transition-colors duration-200">

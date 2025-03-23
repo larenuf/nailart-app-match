@@ -4,21 +4,29 @@ import StorySection from "./StorySection";
 import CategoriesSection from "./CategoriesSection";
 import FeaturedSalonsSection from "./FeaturedSalonsSection";
 import { Sparkles, Palette, Medal, MousePointerClick, ImagePlus, Megaphone, SlidersHorizontal, Calendar, Sun, ArrowRight } from 'lucide-react';
+import { useCallback } from "react";
+import { useLocation } from "wouter";
 
 // Feature card component
 interface FeatureCardProps {
   title: string;
   description: string;
   icon: React.ReactNode;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent) => void;
   available: boolean;
   gradient: string;
 }
 
 function FeatureCard({ title, description, icon, onClick, available, gradient }: FeatureCardProps) {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClick(e);
+  };
+  
   return (
     <div 
-      onClick={onClick}
+      onClick={handleClick}
       className={`rounded-full overflow-hidden shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-300 cursor-pointer border border-gray-100 dark:border-gray-700 w-12 h-12 flex items-center justify-center relative`}
       style={{ background: gradient }}
       title={`${title}${!available ? ' (Yakında)' : ''}`}
@@ -38,11 +46,13 @@ function FeatureCard({ title, description, icon, onClick, available, gradient }:
 
 // Weather-based promotional banner
 function WeatherPromoBanner() {
-  const navigate = (e: React.MouseEvent) => {
+  const [_, setLocation] = useLocation();
+
+  const handleNavigate = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    window.location.href = '/search';
-  };
+    setLocation('/search');
+  }, [setLocation]);
   
   return (
     <div className="px-4 pt-3 pb-4">
@@ -70,7 +80,7 @@ function WeatherPromoBanner() {
               </div>
               
               <button 
-                onClick={navigate}
+                onClick={handleNavigate}
                 className="mt-3 flex items-center text-sm bg-white text-indigo-600 px-4 py-2 rounded-full font-medium shadow-sm hover:bg-white/90 transition-all"
                 type="button"
               >
@@ -87,24 +97,26 @@ function WeatherPromoBanner() {
 
 // New section to showcase premium features
 function PremiumFeaturesSection() {
-  const navigate = (e: React.MouseEvent, path: string) => {
+  const [_, setLocation] = useLocation();
+  
+  const handleNavigate = useCallback((e: React.MouseEvent, path: string) => {
     e.preventDefault();
     e.stopPropagation();
-    window.location.href = path;
-  };
+    setLocation(path);
+  }, [setLocation]);
   
-  const showComingSoon = (e: React.MouseEvent, feature: string) => {
+  const showComingSoon = useCallback((e: React.MouseEvent, feature: string) => {
     e.preventDefault();
     e.stopPropagation();
     alert(`${feature} yakında geliyor! Bizi takip etmeye devam edin.`);
-  };
+  }, []);
   
   const features = [
     {
       title: "Sanal Danışmanlık",
       description: "Uzman stilist avatarımız ile kişiselleştirilmiş tırnak sanatı tavsiyeleri alın",
       icon: <Sparkles size={14} />,
-      onClick: () => navigate('/virtual-consultation'),
+      onClick: (e: React.MouseEvent) => handleNavigate(e, '/virtual-consultation'),
       available: true,
       gradient: "linear-gradient(135deg, #f9a8d4 0%, #ec4899 100%)" // Pastel pembe
     },
@@ -112,7 +124,7 @@ function PremiumFeaturesSection() {
       title: "AI Renk Eşleştirme",
       description: "Kıyafetinize ve ten renginize en uygun tırnak renklerini bulun",
       icon: <Palette size={14} />,
-      onClick: () => navigate('/color-matcher'),
+      onClick: (e: React.MouseEvent) => handleNavigate(e, '/color-matcher'),
       available: true,
       gradient: "linear-gradient(135deg, #93c5fd 0%, #3b82f6 100%)" // Pastel mavi
     },
@@ -120,7 +132,7 @@ function PremiumFeaturesSection() {
       title: "Sadakat Puanları",
       description: "Her randevuda puan kazanın, özel indirimler ve hediyeler için kullanın",
       icon: <Medal size={14} />,
-      onClick: () => showComingSoon('Sadakat puanları'),
+      onClick: (e: React.MouseEvent) => showComingSoon(e, 'Sadakat puanları'),
       available: false,
       gradient: "linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%)" // Pastel sarı
     },
@@ -128,7 +140,7 @@ function PremiumFeaturesSection() {
       title: "Tema Kişiselleştirme",
       description: "Uygulama temasını kendi stilinize göre özelleştirin",
       icon: <MousePointerClick size={14} />,
-      onClick: () => showComingSoon('Tema kişiselleştirme'),
+      onClick: (e: React.MouseEvent) => showComingSoon(e, 'Tema kişiselleştirme'),
       available: false,
       gradient: "linear-gradient(135deg, #86efac 0%, #22c55e 100%)" // Pastel yeşil
     },
@@ -136,7 +148,7 @@ function PremiumFeaturesSection() {
       title: "Tırnak Mood Board",
       description: "Beğendiğiniz tasarımları kaydedin ve stilistinizle paylaşın",
       icon: <ImagePlus size={14} />,
-      onClick: () => showComingSoon('Mood board'),
+      onClick: (e: React.MouseEvent) => showComingSoon(e, 'Mood board'),
       available: false,
       gradient: "linear-gradient(135deg, #c4b5fd 0%, #8b5cf6 100%)" // Pastel mor
     },
@@ -144,7 +156,7 @@ function PremiumFeaturesSection() {
       title: "Kampanya Yönetimi",
       description: "Özel promosyon ve indirimlerden ilk siz haberdar olun",
       icon: <Megaphone size={14} />,
-      onClick: () => showComingSoon('Promosyon yönetimi'),
+      onClick: (e: React.MouseEvent) => showComingSoon(e, 'Promosyon yönetimi'),
       available: false,
       gradient: "linear-gradient(135deg, #fca5a5 0%, #ef4444 100%)" // Pastel kırmızı
     },
@@ -152,7 +164,7 @@ function PremiumFeaturesSection() {
       title: "Gelişmiş Filtreleme",
       description: "Fiyata, puana ve servis süresine göre en uygun salonu bulun",
       icon: <SlidersHorizontal size={14} />,
-      onClick: () => navigate('/search'),
+      onClick: (e: React.MouseEvent) => handleNavigate(e, '/search'),
       available: true,
       gradient: "linear-gradient(135deg, #a5b4fc 0%, #6366f1 100%)" // Pastel indigo
     },
@@ -160,7 +172,7 @@ function PremiumFeaturesSection() {
       title: "Takvim Entegrasyonu",
       description: "Sanatçı müsaitlik takvimine göre hızlıca randevu alın",
       icon: <Calendar size={14} />,
-      onClick: () => navigate('/salons/1'),
+      onClick: (e: React.MouseEvent) => handleNavigate(e, '/salons/1'),
       available: true,
       gradient: "linear-gradient(135deg, #f0abfc 0%, #d946ef 100%)" // Pastel fuşya
     }
