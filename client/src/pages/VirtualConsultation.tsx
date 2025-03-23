@@ -100,16 +100,27 @@ export default function VirtualConsultation() {
     
     setIsProcessing(true);
     
-    // Simulate AI processing delay
+    // Simüle edilmiş AI görüntü işleme - gerçek projede bir AI API'si kullanılırdı
+    // Burada compositing yapıyoruz
     setTimeout(() => {
-      // In a real app, this would call an AI service to generate the result
-      // For this mockup, we'll just return the selected style image
-      setResultImage(NAIL_STYLES[selectedStyle].imageUrl);
+      // Bu mock bir demo için, gerçek bir görüntü işleme işlevi olacaktır
+      // Burada el fotoğrafının üzerine seçilen tırnak stilini uyguluyoruz
+      
+      // Demo için, tırnak stilini uygulanmış gibi göstermek için bir demo resim kullanıyoruz
+      // Gerçek bir uygulamada, bu kısımda bir AI modeli çağrılacaktır
+      const demoImages = [
+        "https://images.unsplash.com/photo-1604654894610-df63bc536371",
+        "https://images.unsplash.com/photo-1610992008581-6428a02de39b",
+        "https://images.unsplash.com/photo-1519014816548-bf5fe059798b"
+      ];
+      
+      // Demo için rasgele bir "işlenmiş" görüntü seçiyoruz
+      setResultImage(demoImages[Math.floor(Math.random() * demoImages.length)]);
       setIsProcessing(false);
       
       toast({
         title: "İşlem Tamamlandı!",
-        description: "Sanal tırnak uygulaması hazır.",
+        description: "Sanal tırnak uygulaması hazır. Bu bir demo görüntüdür, gerçek bir AI entegrasyonunda kendi elinize uygulanacaktır.",
       });
     }, 2000);
   };
