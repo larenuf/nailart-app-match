@@ -48,8 +48,8 @@ export default function Search() {
     rating: number | null;
     distance: number | null;
     priceRange: string | null;
-    priceSlider: number[] | null;
-    serviceTime: number[] | null;
+    priceSlider: number[];
+    serviceTime: number[];
     hasDiscount: boolean;
     isPremium: boolean;
     availableToday: boolean;
@@ -58,7 +58,7 @@ export default function Search() {
     distance: null,
     priceRange: null,
     priceSlider: [0, 500],
-    serviceTime: null,
+    serviceTime: [30, 120],
     hasDiscount: false,
     isPremium: false,
     availableToday: false
@@ -194,7 +194,7 @@ export default function Search() {
       distance: null,
       priceRange: null,
       priceSlider: [0, 500],
-      serviceTime: null,
+      serviceTime: [30, 120],
       hasDiscount: false,
       isPremium: false,
       availableToday: false
@@ -412,11 +412,12 @@ export default function Search() {
                     Hizmet Süresi
                   </label>
                   <span className="text-xs text-gray-500">
-                    {selectedFilters.serviceTime ? `${selectedFilters.serviceTime[0]} dk` : 'Tümü'}
+                    {selectedFilters.serviceTime ? `${selectedFilters.serviceTime[0]} - ${selectedFilters.serviceTime[1]} dk` : 'Tümü'}
                   </span>
                 </div>
                 <Slider
-                  defaultValue={[30]}
+                  defaultValue={[30, 120]}
+                  min={15}
                   max={120}
                   step={15}
                   onValueChange={handleServiceTimeChange}
