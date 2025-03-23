@@ -1,31 +1,43 @@
 import { useQuery } from "@tanstack/react-query";
 import { Category } from "@/types";
 
-// Treatwell tarzı modern kategori görselleri - daha kaliteli ve profesyonel
-const treatwellStyleImages = {
-  "Manikür": {
-    image: "https://images.pexels.com/photos/3997383/pexels-photo-3997383.jpeg?auto=compress&cs=tinysrgb&w=800", 
-    color: "from-[#FFCDD2]/80" // Kategori renk tonları
+// Fresha tarzı gerçek insan fotoğraflı kategori görselleri
+const freshaStyleImages = {
+  "Hair & styling": {
+    image: "https://images.pexels.com/photos/3993398/pexels-photo-3993398.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
-  "Pedikür": {
-    image: "https://images.pexels.com/photos/3997386/pexels-photo-3997386.jpeg?auto=compress&cs=tinysrgb&w=800",
-    color: "from-[#BBDEFB]/80"
+  "Nails": {
+    image: "https://images.pexels.com/photos/939836/pexels-photo-939836.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
-  "Jel Tırnak": {
-    image: "https://images.pexels.com/photos/704815/pexels-photo-704815.jpeg?auto=compress&cs=tinysrgb&w=800",
-    color: "from-[#E1BEE7]/80"
+  "Eyebrows & eyelashes": {
+    image: "https://images.pexels.com/photos/3764013/pexels-photo-3764013.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
-  "Kalıcı Oje": {
-    image: "https://images.pexels.com/photos/9277008/pexels-photo-9277008.jpeg?auto=compress&cs=tinysrgb&w=800",
-    color: "from-[#C8E6C9]/80"
+  "Massage": {
+    image: "https://images.pexels.com/photos/5240696/pexels-photo-5240696.jpeg?auto=compress&cs=tinysrgb&w=800", 
   },
-  "French Manicure": {
-    image: "https://images.pexels.com/photos/4210665/pexels-photo-4210665.jpeg?auto=compress&cs=tinysrgb&w=800",
-    color: "from-[#FFE0B2]/80"
+  "Barbering": {
+    image: "https://images.pexels.com/photos/1319460/pexels-photo-1319460.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
-  "Nail Art": {
-    image: "https://images.pexels.com/photos/6691652/pexels-photo-6691652.jpeg?auto=compress&cs=tinysrgb&w=800",
-    color: "from-[#F8BBD0]/80"
+  "Hair removal": {
+    image: "https://images.pexels.com/photos/5069432/pexels-photo-5069432.jpeg?auto=compress&cs=tinysrgb&w=800",
+  },
+  "Facials & skincare": {
+    image: "https://images.pexels.com/photos/3997379/pexels-photo-3997379.jpeg?auto=compress&cs=tinysrgb&w=800",
+  },
+  "Injectables & fillers": {
+    image: "https://images.pexels.com/photos/7446147/pexels-photo-7446147.jpeg?auto=compress&cs=tinysrgb&w=800",
+  },
+  "Body": {
+    image: "https://images.pexels.com/photos/7446130/pexels-photo-7446130.jpeg?auto=compress&cs=tinysrgb&w=800",
+  },
+  "Tattoo & piercing": {
+    image: "https://images.pexels.com/photos/1264218/pexels-photo-1264218.jpeg?auto=compress&cs=tinysrgb&w=800",
+  },
+  "Makeup": {
+    image: "https://images.pexels.com/photos/2065195/pexels-photo-2065195.jpeg?auto=compress&cs=tinysrgb&w=800",
+  },
+  "Medical & dental": {
+    image: "https://images.pexels.com/photos/3881449/pexels-photo-3881449.jpeg?auto=compress&cs=tinysrgb&w=800",
   }
 };
 
@@ -34,24 +46,30 @@ export default function CategoriesSection() {
     queryKey: ["/api/categories"],
   });
 
-  // Ana kategoriler - Treatwell stil
+  // Ana kategoriler - Fresha stil
   const mainCategories = [
-    { id: 101, name: "Manikür", iconName: "hand-sparkles" },
-    { id: 102, name: "Pedikür", iconName: "shoe-prints" },
-    { id: 103, name: "Jel Tırnak", iconName: "magic" },
-    { id: 104, name: "Kalıcı Oje", iconName: "exchange-alt" },
-    { id: 105, name: "French Manicure", iconName: "paint-brush" },
-    { id: 106, name: "Nail Art", iconName: "palette" }
+    { id: 101, name: "Hair & styling", iconName: "cut" },
+    { id: 102, name: "Nails", iconName: "hand-sparkles" },
+    { id: 103, name: "Eyebrows & eyelashes", iconName: "eye" },
+    { id: 104, name: "Massage", iconName: "hands" },
+    { id: 105, name: "Barbering", iconName: "cut" },
+    { id: 106, name: "Hair removal", iconName: "feather" },
+    { id: 107, name: "Facials & skincare", iconName: "smile" },
+    { id: 108, name: "Injectables & fillers", iconName: "syringe" },
+    { id: 109, name: "Body", iconName: "user" },
+    { id: 110, name: "Tattoo & piercing", iconName: "paint-brush" },
+    { id: 111, name: "Makeup", iconName: "palette" },
+    { id: 112, name: "Medical & dental", iconName: "tooth" }
   ];
 
   if (isLoading) {
     return (
       <div className="px-4 py-3">
         <div className="mb-4 mt-2">
-          <div className="w-2/3 h-8 bg-gray-100 animate-pulse rounded-lg mb-5"></div>
+          <div className="w-1/3 h-8 bg-gray-100 animate-pulse rounded-lg mb-5"></div>
           <div className="grid grid-cols-2 gap-3">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="w-full h-24 bg-gray-100 animate-pulse rounded-xl"></div>
+              <div key={i} className="w-full h-32 bg-gray-100 animate-pulse rounded-lg"></div>
             ))}
           </div>
         </div>
@@ -64,41 +82,39 @@ export default function CategoriesSection() {
 
   return (
     <div className="px-4 py-4 bg-[#FAFAFA]">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold text-[#333333] tracking-tight">
-          Keşfet
+      <div className="flex justify-between items-center mb-5">
+        <h2 className="text-2xl font-bold text-[#333333] tracking-tight">
+          Kategoriler
         </h2>
         <button className="text-sm font-medium text-[#FF5864]">Tümünü Gör</button>
       </div>
       
       <div className="grid grid-cols-2 gap-3 mb-5">
-        {displayCategories.slice(0, 6).map((category) => {
-          const categoryStyle = treatwellStyleImages[category.name as keyof typeof treatwellStyleImages] || {
-            image: "https://images.pexels.com/photos/4210663/pexels-photo-4210663.jpeg?auto=compress&cs=tinysrgb&w=800",
-            color: "from-[#FFCCBC]/80"
+        {displayCategories.slice(0, 12).map((category) => {
+          const categoryStyle = freshaStyleImages[category.name as keyof typeof freshaStyleImages] || {
+            image: "https://images.pexels.com/photos/3997383/pexels-photo-3997383.jpeg?auto=compress&cs=tinysrgb&w=800"
           };
           
           return (
             <div
               key={category.id}
-              className="relative w-full h-24 rounded-xl overflow-hidden shadow-sm cursor-pointer group"
+              className="relative w-full h-32 bg-white rounded-lg overflow-hidden shadow-sm cursor-pointer flex"
             >
-              {/* Arkaplan resmi */}
-              <img 
-                src={categoryStyle.image}
-                alt={category.name}
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-              
-              {/* Renkli overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-r ${categoryStyle.color} to-transparent`}></div>
-              
               {/* Kategori adı */}
-              <div className="absolute inset-0 flex flex-col justify-center px-4">
-                <h3 className="text-lg font-bold text-white drop-shadow-sm">
+              <div className="absolute z-10 p-3 text-left">
+                <h3 className="text-base font-medium text-[#333333]">
                   {category.name}
                 </h3>
-                <div className="w-6 h-0.5 bg-white mt-1 rounded-full opacity-80"></div>
+              </div>
+              
+              {/* Resim */}
+              <div className="h-full w-full flex justify-end">
+                <img 
+                  src={categoryStyle.image}
+                  alt={category.name}
+                  className="h-full object-cover object-center"
+                  style={{ width: '60%' }}
+                />
               </div>
             </div>
           );
@@ -107,7 +123,7 @@ export default function CategoriesSection() {
       
       {/* Özel Teklifler Bölümü */}
       <div className="mt-6 mb-4">
-        <div className="bg-gradient-to-r from-[#FF5864] to-[#FF876C] p-4 rounded-xl text-white">
+        <div className="bg-gradient-to-r from-[#FF5864] to-[#FF876C] p-4 rounded-lg text-white">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-xl font-bold">Özel Teklifler 🎁</h3>
