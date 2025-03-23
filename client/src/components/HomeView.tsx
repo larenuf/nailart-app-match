@@ -19,40 +19,19 @@ function FeatureCard({ title, description, icon, onClick, available, gradient }:
   return (
     <div 
       onClick={onClick}
-      className={`rounded-xl overflow-hidden shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-300 cursor-pointer h-full border border-gray-100`}
+      className={`rounded-full overflow-hidden shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-300 cursor-pointer border border-gray-100 w-12 h-12 flex items-center justify-center`}
       style={{ background: gradient }}
+      title={title}
     >
-      <div className="p-4 h-full flex flex-col justify-between relative overflow-hidden">
-        {/* Decorative circle */}
-        <div className="absolute -right-6 -top-6 w-16 h-16 rounded-full bg-white/20"></div>
-        
-        <div className="relative z-10">
-          <div className="flex items-center justify-between mb-2">
-            <div className="bg-white rounded-lg p-2 w-10 h-10 flex items-center justify-center">
-              <div className="text-primary">{icon}</div>
-            </div>
-            {available ? (
-              <span className="bg-white/80 text-primary text-xs px-2 py-0.5 rounded-full font-medium flex items-center space-x-1">
-                <span className="w-1.5 h-1.5 bg-green-500 rounded-full block mr-1"></span>
-                <span>Aktif</span>
-              </span>
-            ) : (
-              <span className="bg-white/50 text-gray-600 text-xs px-2 py-0.5 rounded-full font-medium">
-                Yakında
-              </span>
-            )}
-          </div>
-          <h3 className="text-sm font-medium text-gray-800 mt-2">{title}</h3>
-          <p className="text-xs text-gray-600 mt-1 line-clamp-2">{description}</p>
-        </div>
-        <div className="mt-3 relative z-10">
-          <button 
-            className={`text-xs ${available ? 'bg-white/80 text-primary border border-primary/20' : 'bg-white/50 text-gray-600 border border-gray-200'} rounded-full px-3 py-1 font-medium hover:bg-white transition-colors`}
-          >
-            {available ? 'Kullan' : 'Bilgi Al'}
-          </button>
-        </div>
+      <div className="bg-white/80 rounded-full p-1.5 w-8 h-8 flex items-center justify-center">
+        <div className="text-primary">{icon}</div>
       </div>
+      {!available && (
+        <div className="absolute top-0 right-0 w-3 h-3 bg-gray-300 rounded-full border border-white"></div>
+      )}
+      {available && (
+        <div className="absolute top-0 right-0 w-3 h-3 bg-green-500 rounded-full border border-white"></div>
+      )}
     </div>
   );
 }
@@ -117,7 +96,7 @@ function PremiumFeaturesSection() {
     {
       title: "Sanal Danışmanlık",
       description: "Uzman stilist avatarımız ile kişiselleştirilmiş tırnak sanatı tavsiyeleri alın",
-      icon: <Sparkles size={20} />,
+      icon: <Sparkles size={14} />,
       onClick: () => navigate('/virtual-consultation'),
       available: true,
       gradient: "linear-gradient(135deg, #f9a8d4 0%, #ec4899 100%)" // Pastel pembe
@@ -125,7 +104,7 @@ function PremiumFeaturesSection() {
     {
       title: "AI Renk Eşleştirme",
       description: "Kıyafetinize ve ten renginize en uygun tırnak renklerini bulun",
-      icon: <Palette size={20} />,
+      icon: <Palette size={14} />,
       onClick: () => navigate('/color-matcher'),
       available: true,
       gradient: "linear-gradient(135deg, #93c5fd 0%, #3b82f6 100%)" // Pastel mavi
@@ -133,7 +112,7 @@ function PremiumFeaturesSection() {
     {
       title: "Sadakat Puanları",
       description: "Her randevuda puan kazanın, özel indirimler ve hediyeler için kullanın",
-      icon: <Medal size={20} />,
+      icon: <Medal size={14} />,
       onClick: () => showComingSoon('Sadakat puanları'),
       available: false,
       gradient: "linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%)" // Pastel sarı
@@ -141,7 +120,7 @@ function PremiumFeaturesSection() {
     {
       title: "Tema Kişiselleştirme",
       description: "Uygulama temasını kendi stilinize göre özelleştirin",
-      icon: <MousePointerClick size={20} />,
+      icon: <MousePointerClick size={14} />,
       onClick: () => showComingSoon('Tema kişiselleştirme'),
       available: false,
       gradient: "linear-gradient(135deg, #86efac 0%, #22c55e 100%)" // Pastel yeşil
@@ -149,7 +128,7 @@ function PremiumFeaturesSection() {
     {
       title: "Tırnak Mood Board",
       description: "Beğendiğiniz tasarımları kaydedin ve stilistinizle paylaşın",
-      icon: <ImagePlus size={20} />,
+      icon: <ImagePlus size={14} />,
       onClick: () => showComingSoon('Mood board'),
       available: false,
       gradient: "linear-gradient(135deg, #c4b5fd 0%, #8b5cf6 100%)" // Pastel mor
@@ -157,7 +136,7 @@ function PremiumFeaturesSection() {
     {
       title: "Kampanya Yönetimi",
       description: "Özel promosyon ve indirimlerden ilk siz haberdar olun",
-      icon: <Megaphone size={20} />,
+      icon: <Megaphone size={14} />,
       onClick: () => showComingSoon('Promosyon yönetimi'),
       available: false,
       gradient: "linear-gradient(135deg, #fca5a5 0%, #ef4444 100%)" // Pastel kırmızı
@@ -165,7 +144,7 @@ function PremiumFeaturesSection() {
     {
       title: "Gelişmiş Filtreleme",
       description: "Fiyata, puana ve servis süresine göre en uygun salonu bulun",
-      icon: <SlidersHorizontal size={20} />,
+      icon: <SlidersHorizontal size={14} />,
       onClick: () => navigate('/search'),
       available: true,
       gradient: "linear-gradient(135deg, #a5b4fc 0%, #6366f1 100%)" // Pastel indigo
@@ -173,7 +152,7 @@ function PremiumFeaturesSection() {
     {
       title: "Takvim Entegrasyonu",
       description: "Sanatçı müsaitlik takvimine göre hızlıca randevu alın",
-      icon: <Calendar size={20} />,
+      icon: <Calendar size={14} />,
       onClick: () => navigate('/salons/1'),
       available: true,
       gradient: "linear-gradient(135deg, #f0abfc 0%, #d946ef 100%)" // Pastel fuşya
@@ -181,27 +160,19 @@ function PremiumFeaturesSection() {
   ];
   
   return (
-    <div className="px-4 py-6 mt-4 bg-gradient-to-br from-slate-100 to-gray-50 rounded-t-3xl relative overflow-hidden shadow-sm">
-      {/* Dekoratif arka plan elementleri - daha yumuşak */}
-      <div className="absolute -top-12 -right-12 w-40 h-40 rounded-full bg-pink-200/20 blur-xl"></div>
-      <div className="absolute -bottom-20 -left-10 w-40 h-40 rounded-full bg-blue-200/20 blur-xl"></div>
-      <div className="absolute top-1/2 left-1/4 w-20 h-20 rounded-full bg-purple-200/20 blur-xl"></div>
+    <div className="px-4 py-2 mt-1 bg-gradient-to-br from-slate-100/60 to-gray-50/60 rounded-t-2xl relative overflow-hidden">
+      {/* Minimal background elements */}
+      <div className="absolute -top-8 -right-8 w-20 h-20 rounded-full bg-pink-200/10 blur-lg"></div>
+      <div className="absolute -bottom-8 -left-8 w-20 h-20 rounded-full bg-blue-200/10 blur-lg"></div>
       
-      <div className="flex items-center justify-between mb-5 relative z-10">
-        <div>
-          <h2 className="text-lg font-bold text-gray-800 flex items-center">
-            <Sparkles size={20} className="text-pink-500 mr-2" /> 
-            Premium Özellikler
-          </h2>
-          <p className="text-xs text-gray-600 mt-0.5">Nail Art Match'in özel özellikleriyle daha fazlasına erişin</p>
-        </div>
-        <button
-          className="text-xs font-medium text-primary bg-primary/10 px-3 py-1 rounded-full hover:bg-primary/20 transition-colors"
-        >
-          Tümü
-        </button>
+      <div className="flex items-center mb-2 relative z-10">
+        <h2 className="text-xs font-medium text-gray-700 flex items-center">
+          <Sparkles size={14} className="text-pink-500 mr-1" /> 
+          Premium 
+        </h2>
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      
+      <div className="flex gap-2 overflow-x-auto pb-2 hide-scrollbar">
         {features.map((feature, index) => (
           <FeatureCard 
             key={index}
