@@ -325,24 +325,91 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
       await storage.addChatMessage(userMessage);
       
-      // Generate AI response
+      // AI Güzellik Danışmanı - Gelişmiş Yanıt Sistemi
       setTimeout(async () => {
         let responseText = '';
         
-        // Simple pattern matching for demo purposes
+        // Gelişmiş pattern matching ve bağlam analizi
         const lowercaseMessage = message.toLowerCase();
-        if (lowercaseMessage.includes('merhaba') || lowercaseMessage.includes('selam') || lowercaseMessage.includes('hi')) {
-          responseText = 'Merhaba! Size nasıl yardımcı olabilirim?';
-        } else if (lowercaseMessage.includes('nail') || lowercaseMessage.includes('tırnak')) {
-          responseText = 'Tırnak bakımı için en iyi malzemeler jel ve akrilik ürünlerdir. Fresha üzerinden size uygun bir salon bulabiliriz!';
-        } else if (lowercaseMessage.includes('fiyat') || lowercaseMessage.includes('ücret') || lowercaseMessage.includes('price')) {
-          responseText = 'Fiyatlar hizmet türüne ve salona göre değişmektedir. Manikür işlemleri genelde 35-75 TL arasındadır. Size özel fiyat bilgisi için salon profillerini inceleyebilirsiniz.';
-        } else if (lowercaseMessage.includes('renk') || lowercaseMessage.includes('color')) {
-          responseText = 'Bu sezon en trend renkler pastel tonlar, özellikle lavanta, açık mavi ve soft pembe. Ayrıca metalik altın ve gümüş detaylar da çok popüler!';
-        } else if (lowercaseMessage.includes('nasıl') || lowercaseMessage.includes('how')) {
-          responseText = 'Uygulamamız üzerinden kolayca randevu alabilirsiniz. İstediğiniz salonu seçip, uygun saati belirleyip hemen rezervasyon yapabilirsiniz.';
-        } else {
-          responseText = 'Bu konuda size daha detaylı bilgi verebilmek için biraz daha açıklama yapabilir misiniz? Tırnak bakımı, oje renkleri veya nail art stilleri hakkında sorularınızı yanıtlamaktan memnuniyet duyarım.';
+        
+        // Selamlama mesajları
+        if (lowercaseMessage.includes('merhaba') || lowercaseMessage.includes('selam') || lowercaseMessage.includes('hi') || lowercaseMessage.includes('hello')) {
+          responseText = 'Merhaba! Ben AI Güzellik Danışmanınız. Tırnak bakımı, oje renkleri, nail art tasarımları veya en yakın salonlar hakkında sorularınızı yanıtlayabilirim. Size nasıl yardımcı olabilirim?';
+        }
+        
+        // Tırnak bakımı ve sağlığı hakkında
+        else if (lowercaseMessage.includes('tırnak bakım') || lowercaseMessage.includes('nail care') || lowercaseMessage.includes('tırnak sağlığı')) {
+          responseText = 'Sağlıklı tırnaklar için birkaç önemli ipucu:\n\n1. Düzenli olarak nemlendirici kullanın ve tırnak etlerini besleyin\n2. Asetonu sık kullanmaktan kaçının, tırnakları kurutur\n3. Protein açısından zengin gıdalar tüketin (yumurta, balık, baklagiller)\n4. Biotin ve E vitamini destekleri tırnak sağlığına yardımcı olabilir\n5. Eldivenle temizlik yapın, kimyasallar tırnaklara zarar verir\n\nÖzel bir konuda daha fazla bilgi ister misiniz?';
+        }
+        
+        // Tırnak trendleri ve stil önerileri
+        else if (lowercaseMessage.includes('trend') || lowercaseMessage.includes('popüler') || lowercaseMessage.includes('moda') || lowercaseMessage.includes('stil')) {
+          responseText = '2025 yılının en trend tırnak stilleri:\n\n1. Minimalist geometrik desenler\n2. "Glazed donut" parlak, inci efektli ojeler\n3. Mikro-gem ve üç boyutlu aplikasyonlar\n4. Matlaştırılmış, dokulu yüzeyler\n5. Neon ve canlı renklerde "French tip"\n6. Doğadan ilham alan organik desenler\n\nKişisel stiliniz ve ten renginize göre özelleştirilmiş öneriler için "ten rengime uygun" diye sorabilirsiniz.';
+        }
+        
+        // Kişiye özel renk önerileri
+        else if (lowercaseMessage.includes('ten reng') || lowercaseMessage.includes('cilt ton') || lowercaseMessage.includes('bana yakış') || lowercaseMessage.includes('benim için')) {
+          responseText = 'Kişiye özel renk önerileri için ten tonunuzu bilmem gerekiyor. Eğer:\n\n• Açık/soluk tenliyseniz: Soft pembe, açık leylak, buz mavisi veya nötr nude tonlar\n• Orta/buğday tenliyseniz: Mercan, turkuaz, zümrüt yeşili, lavanta\n• Koyu/esmer tenliyseniz: Canlı kırmızı, kobalt mavi, mor tonları, altın sarısı\n\nDaha detaylı kişiselleştirilmiş öneriler için "Color Matcher" özelliğimizi de kullanabilirsiniz.';
+        }
+        
+        // Nail art teknikleri
+        else if (lowercaseMessage.includes('nail art') || lowercaseMessage.includes('desen') || lowercaseMessage.includes('tasarım') || lowercaseMessage.includes('süsleme')) {
+          responseText = 'Nail art teknikleri çok çeşitli! İşte en popüler olanları:\n\n• Marble (mermer efekti): Su bazlı uygulamayla elde edilir\n• Foil (folyo): Metalik efekt için transfer folyoları kullanılır\n• Ombre: Renkler arasında yumuşak geçişler yapılır\n• French tip: Klasik beyaz uçlardan, renkli versiyonlara kadar değişebilir\n• Stamping: Özel kalıplarla desen transferi yapılır\n\nEvde hangi tekniği denemek istersiniz? Veya bir profesyonelden randevu almak için size yardımcı olabilirim.';
+        }
+        
+        // Tırnak ürünleri ve malzemeleri
+        else if (lowercaseMessage.includes('ürün') || lowercaseMessage.includes('malzeme') || lowercaseMessage.includes('oje') || lowercaseMessage.includes('jel') || lowercaseMessage.includes('product')) {
+          responseText = 'Tırnak bakımı için önerilen kaliteli ürünler:\n\n• Temel kat (base coat): OPI Natural Nail Base Coat, Essie Here To Stay\n• Üst kat (top coat): Seche Vite Dry Fast, Sally Hansen Insta-Dri\n• Jel sistem: CND Shellac, Gelish, OPI GelColor\n• Tırnak güçlendirici: OPI Nail Envy, Sally Hansen Hard As Nails\n• Nemlendirici: CND Solar Oil, Burt\'s Bees Lemon Butter Cuticle Cream\n\nSizin özel bir ihtiyacınız var mı?';
+        }
+        
+        // Problemler ve çözümleri
+        else if (lowercaseMessage.includes('kırıl') || lowercaseMessage.includes('zayıf') || lowercaseMessage.includes('sorun') || lowercaseMessage.includes('problem')) {
+          responseText = 'Tırnak problemleri için çözümler:\n\n• Kırılgan tırnaklar: Biotin takviyeleri, protein açısından zengin beslenme ve tırnak güçlendiriciler\n• Soyulan tırnaklar: Nemlendirme ve koruyucu baz katları kullanma\n• Tırnak yeme alışkanlığı: Acı tadı olan özel ojeler ve stres yönetimi teknikleri\n• Beyaz lekeler: Genellikle travma sonucu oluşur, zamanla büyüyerek kaybolur\n• Tırnak mantarı: Medikal tedavi gerektirir, bir dermatologa danışılmalıdır\n\nBu konulardan birinde daha fazla bilgiye ihtiyacınız var mı?';
+        }
+        
+        // Salonlar ve profesyoneller hakkında
+        else if (lowercaseMessage.includes('salon') || lowercaseMessage.includes('profesyonel') || lowercaseMessage.includes('randevu') || lowercaseMessage.includes('rezervasyon')) {
+          responseText = 'Uygulamamızda en iyi salonları ve nail artistleri bulabilirsiniz. Sadece konum bilginiz ve tercihlerinizi paylaşın, size en yakın ve en uygun profesyonelleri önerelim.\n\n"Salonlar" sekmesinden tüm listeyi görebilir, puanlamaları inceleyebilir ve doğrudan randevu alabilirsiniz.\n\nŞu anda özel bir hizmet mi arıyorsunuz? Mesela jel protez, kalıcı oje veya nail art?';
+        }
+        
+        // Fiyatlar
+        else if (lowercaseMessage.includes('fiyat') || lowercaseMessage.includes('ücret') || lowercaseMessage.includes('pahalı') || lowercaseMessage.includes('ucuz') || lowercaseMessage.includes('price')) {
+          responseText = 'Hizmet fiyatları salon ve işlem türüne göre değişir:\n\n• Klasik Manikür: 150-300 TL\n• Kalıcı Oje: 250-450 TL\n• Jel Tırnak Uygulaması: 400-800 TL\n• Protez Tırnak (Akrilik/Jel): 500-1200 TL\n• Nail Art (tasarıma göre): +50-300 TL\n\nTemel işlem + özel tasarım kombinasyonları fiyatları değiştirebilir. Size özel fiyat bilgisi için salon profillerini inceleyebilirsiniz. Ayrıca "Özel Teklifler" bölümünden indirimli fırsatları da görebilirsiniz.';
+        }
+        
+        // Süre ve işlem bilgileri
+        else if (lowercaseMessage.includes('ne kadar süre') || lowercaseMessage.includes('zaman') || lowercaseMessage.includes('sürer') || lowercaseMessage.includes('saat')) {
+          responseText = 'Nail işlemleri süresi:\n\n• Klasik Manikür: 30-45 dakika\n• Kalıcı Oje: 45-60 dakika\n• Jel Tırnak: 60-90 dakika\n• Protez Tırnak: 90-120 dakika\n• Detaylı Nail Art: +30-60 dakika\n\nRandevu planlamanız için tam süreyi salon profilinde görebilirsiniz. Önceden randevu almanızı öneririz, özellikle hafta sonları salonlar çok yoğun olabiliyor.';
+        }
+        
+        // Yeni başlayanlar için
+        else if (lowercaseMessage.includes('yeni başla') || lowercaseMessage.includes('ilk kez') || lowercaseMessage.includes('deneyim') || lowercaseMessage.includes('başlangıç')) {
+          responseText = 'Nail bakımına yeni başlıyorsanız, işte önerilerim:\n\n1. İlk deneyiminiz için klasik manikür veya kalıcı oje ile başlayın\n2. Çok uzun veya abartılı tasarımlardan kaçının, günlük hayatınıza alışmak için klasik şekiller tercih edin\n3. Hassas tırnaklarınız varsa, bunu önceden nail artistinize belirtin\n4. Tercihlerinizi ve beklentilerinizi açıkça ifade edin (şekil, uzunluk, renk)\n5. Evde bakım için önerileri mutlaka sorun\n\nDaha spesifik bilgiye ihtiyacınız var mı?';
+        }
+        
+        // Evde bakım önerileri
+        else if (lowercaseMessage.includes('evde') || lowercaseMessage.includes('kendin yap') || lowercaseMessage.includes('diy') || lowercaseMessage.includes('bakım')) {
+          responseText = 'Evde tırnak bakımı için 5 temel ipucu:\n\n1. Haftada bir kez düzenli manikür yapın (etleri geriye itin, törpüleyin, nemlendirin)\n2. Kaliteli bir törpü ve et itici kullanın\n3. Tırnaklarınızı sık sık nemlendirin ve güçlendirici ürünler kullanın\n4. Oje çıkarırken asetonsuz ürünleri tercih edin\n5. Ellerinizi her yıkadıktan sonra nemlendirin\n\nDaha detaylı evde bakım ipuçları için "Sanal Tırnak Danışmanı" özelliğimizi de kullanabilirsiniz.';
+        }
+        
+        // Kalıcılık ve dayanıklılık
+        else if (lowercaseMessage.includes('kalıcı') || lowercaseMessage.includes('dayanıklı') || lowercaseMessage.includes('ne kadar dayanır') || lowercaseMessage.includes('bozul')) {
+          responseText = 'Farklı nail uygulamalarının dayanıklılık süreleri:\n\n• Klasik Oje: 3-5 gün\n• Kalıcı Oje: 2-3 hafta\n• Jel Tırnak: 3-4 hafta\n• Akrilik/Protez: 3-4 hafta (dolgu gerekebilir)\n\nDayanıklılığı artırmak için:\n- Bulaşık ve temizlik işlerinde eldiven kullanın\n- Aşırı sıcak su temasından kaçının\n- Asetonu el temizleyici olarak kullanmayın\n- Tırnaklarınızı alet olarak kullanmaktan kaçının (kutu açma, çizme vb.)';
+        }
+        
+        // Ten tonuna uygun renkler
+        else if (lowercaseMessage.includes('kombin') || lowercaseMessage.includes('elbise') || lowercaseMessage.includes('kıyafet') || lowercaseMessage.includes('ayakkabı')) {
+          responseText = 'Kıyafet-oje kombinleri için öneriler:\n\n• Kırmızı elbise: Nötr nude tonları, klasik kırmızı veya siyah\n• Mavi tonları: Gümüş, pudra pembesi veya koyu lacivert\n• Pastel kıyafetler: Aynı rengin daha koyu tonları veya soft pembeler\n• Siyah: Her renk oje yakışır, özellikle metalik tonlar harika durur\n• Beyaz: Canlı renkler, mercan, turkuaz veya pastel tonlar\n\nDaha özel kombin önerileri için "Color Matcher" özelliğimizi kullanabilir, kıyafet fotoğrafınızı yükleyerek size özel öneriler alabilirsiniz.';
+        }
+        
+        // Vitamin ve besin önerileri
+        else if (lowercaseMessage.includes('vitamin') || lowercaseMessage.includes('beslenme') || lowercaseMessage.includes('besin') || lowercaseMessage.includes('yemek')) {
+          responseText = 'Güçlü tırnaklar için beslenme önerileri:\n\n• Biotin: Yumurta sarısı, badem, ceviz\n• Protein: Tavuk, balık, baklagiller\n• Demir: Kırmızı et, ıspanak, mercimek\n• Çinko: İstiridye, et, kabak çekirdeği\n• Silisyum: Tam tahıllar, salatalık, çilek\n• Kükürt: Soğan, sarımsak, brokoli\n\nAyrıca günde 2-3 litre su içmek de tırnak sağlığı için çok önemlidir. Multivitamin takviyeleri de düşünebilirsiniz.';
+        }
+        
+        // Default yanıt - anlayamadığı durumlar için
+        else {
+          responseText = 'Tırnak bakımı ve güzelliği konusunda size yardımcı olmak isterim. Aşağıdaki konularda bilgi alabilirim:\n\n• Tırnak bakımı ve sağlığı\n• En yeni tırnak trendleri\n• Ten renginize uygun oje renkleri\n• Nail art teknikleri\n• Salon seçimi ve rezervasyon\n• Kalıcı oje, jel ve protez tırnaklar\n• Evde tırnak bakımı\n• Özel durumlar için tırnak tasarımları\n\nHangi konuda size yardımcı olabilirim?';
         }
         
         const aiMessage: ChatMessage = {
