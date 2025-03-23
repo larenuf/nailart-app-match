@@ -44,7 +44,7 @@ export default function StorySection() {
           {stories?.map((story) => (
             <div 
               key={story.id} 
-              className="flex flex-col items-center cursor-pointer"
+              className="cursor-pointer flex flex-col items-center"
               onClick={() => handleStoryClick(story)}
             >
               <div

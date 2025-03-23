@@ -243,35 +243,35 @@ export class MemStorage implements IStorage {
       // Sample stories
       this.stories.set(1, {
         id: 1,
-        title: 'Popular',
+        title: 'Popüler',
         imageUrl: 'https://images.pexels.com/photos/4210665/pexels-photo-4210665.jpeg?auto=compress&cs=tinysrgb&w=800',
         highlighted: false
       });
       
       this.stories.set(2, {
         id: 2,
-        title: 'New',
+        title: 'Yeni',
         imageUrl: 'https://images.pexels.com/photos/704815/pexels-photo-704815.jpeg?auto=compress&cs=tinysrgb&w=800',
         highlighted: false
       });
       
       this.stories.set(3, {
         id: 3,
-        title: 'Today Only',
+        title: 'Bugüne Özel',
         imageUrl: 'https://images.pexels.com/photos/939835/pexels-photo-939835.jpeg?auto=compress&cs=tinysrgb&w=800',
         highlighted: true
       });
       
       this.stories.set(4, {
         id: 4,
-        title: 'Discounted',
+        title: 'İndirimli',
         imageUrl: 'https://images.pexels.com/photos/3997386/pexels-photo-3997386.jpeg?auto=compress&cs=tinysrgb&w=800',
         highlighted: false
       });
       
       this.stories.set(5, {
         id: 5,
-        title: 'New discounted',
+        title: 'Yeni İndirimler',
         imageUrl: 'https://images.pexels.com/photos/4210276/pexels-photo-4210276.jpeg?auto=compress&cs=tinysrgb&w=800',
         highlighted: false
       });
