@@ -18,7 +18,7 @@ export default function BottomNavigation() {
             <span className="text-xs mt-1 block">Keşfet</span>
           </Link>
         </div>
-        <div className={`flex flex-col items-center px-3 py-1 ${location === '/bookings' ? 'text-[#D6C3E5]' : 'text-gray-500'}`}>
+        <div className={`flex flex-col items-center px-3 py-1 ${location.startsWith('/booking') ? 'text-[#D6C3E5]' : 'text-gray-500'}`}>
           <Link href="/bookings">
             <i className="far fa-calendar-check text-lg"></i>
             <span className="text-xs mt-1 block">Randevular</span>
