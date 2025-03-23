@@ -3,6 +3,7 @@ import BottomNavigation from "./BottomNavigation";
 import StorySection from "./StorySection";
 import CategoriesSection from "./CategoriesSection";
 import FeaturedSalonsSection from "./FeaturedSalonsSection";
+import NearestSalonsMap from "./NearestSalonsMap";
 import { Sparkles, Palette, Medal, MousePointerClick, ImagePlus, Megaphone, SlidersHorizontal, Calendar, Sun, ArrowRight } from 'lucide-react';
 import { useCallback } from "react";
 import { useLocation } from "wouter";
@@ -242,6 +243,9 @@ export default function HomeView() {
         <CategoriesSection />
         <WeatherPromoBanner />
         <FeaturedSalonsSection />
+        <div className="px-4">
+          <NearestSalonsMap />
+        </div>
         <div className="mt-4"></div>
         <PremiumFeaturesSection />
       </div>
