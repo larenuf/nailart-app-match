@@ -28,6 +28,201 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // ---------- ADMİN API ENDPOİNTLERİ ----------
   
+  // Salon işlemleri
+  app.get("/api/admin/salons", async (req, res) => {
+    try {
+      const salons = await storage.getSalons();
+      res.json(salons);
+    } catch (error) {
+      res.status(500).json({ error: "Salonlar alınırken bir hata oluştu" });
+    }
+  });
+  
+  app.get("/api/admin/salons/:id", async (req, res) => {
+    try {
+      const salonId = parseInt(req.params.id);
+      const salon = await storage.getSalon(salonId);
+      
+      if (!salon) {
+        return res.status(404).json({ error: "Salon bulunamadı" });
+      }
+      
+      res.json(salon);
+    } catch (error) {
+      res.status(500).json({ error: "Salon bilgileri alınırken bir hata oluştu" });
+    }
+  });
+  
+  app.post("/api/admin/salons", async (req, res) => {
+    try {
+      const salon = await storage.createSalon(req.body);
+      res.status(201).json(salon);
+    } catch (error) {
+      res.status(500).json({ error: "Salon oluşturulurken bir hata oluştu" });
+    }
+  });
+  
+  app.put("/api/admin/salons/:id", async (req, res) => {
+    try {
+      const salonId = parseInt(req.params.id);
+      const salon = await storage.updateSalon(salonId, req.body);
+      res.json(salon);
+    } catch (error) {
+      res.status(500).json({ error: "Salon güncellenirken bir hata oluştu" });
+    }
+  });
+  
+  app.delete("/api/admin/salons/:id", async (req, res) => {
+    try {
+      const salonId = parseInt(req.params.id);
+      await storage.deleteSalon(salonId);
+      res.json({ success: true, message: "Salon başarıyla silindi" });
+    } catch (error) {
+      res.status(500).json({ error: "Salon silinirken bir hata oluştu" });
+    }
+  });
+  
+  // Sanatçı işlemleri
+  app.get("/api/admin/artists", async (req, res) => {
+    try {
+      const artists = await storage.getAllArtists();
+      res.json(artists);
+    } catch (error) {
+      res.status(500).json({ error: "Sanatçılar alınırken bir hata oluştu" });
+    }
+  });
+  
+  app.get("/api/admin/artists/:id", async (req, res) => {
+    try {
+      const artistId = parseInt(req.params.id);
+      const artist = await storage.getArtist(artistId);
+      
+      if (!artist) {
+        return res.status(404).json({ error: "Sanatçı bulunamadı" });
+      }
+      
+      res.json(artist);
+    } catch (error) {
+      res.status(500).json({ error: "Sanatçı bilgileri alınırken bir hata oluştu" });
+    }
+  });
+  
+  app.post("/api/admin/artists", async (req, res) => {
+    try {
+      const artist = await storage.createArtist(req.body);
+      res.status(201).json(artist);
+    } catch (error) {
+      res.status(500).json({ error: "Sanatçı oluşturulurken bir hata oluştu" });
+    }
+  });
+  
+  app.put("/api/admin/artists/:id", async (req, res) => {
+    try {
+      const artistId = parseInt(req.params.id);
+      const artist = await storage.updateArtist(artistId, req.body);
+      res.json(artist);
+    } catch (error) {
+      res.status(500).json({ error: "Sanatçı güncellenirken bir hata oluştu" });
+    }
+  });
+  
+  app.delete("/api/admin/artists/:id", async (req, res) => {
+    try {
+      const artistId = parseInt(req.params.id);
+      await storage.deleteArtist(artistId);
+      res.json({ success: true, message: "Sanatçı başarıyla silindi" });
+    } catch (error) {
+      res.status(500).json({ error: "Sanatçı silinirken bir hata oluştu" });
+    }
+  });
+  
+  // Hizmet işlemleri
+  app.get("/api/admin/services", async (req, res) => {
+    try {
+      const services = await storage.getAllServices();
+      res.json(services);
+    } catch (error) {
+      res.status(500).json({ error: "Hizmetler alınırken bir hata oluştu" });
+    }
+  });
+  
+  app.get("/api/admin/services/:id", async (req, res) => {
+    try {
+      const serviceId = parseInt(req.params.id);
+      const service = await storage.getService(serviceId);
+      
+      if (!service) {
+        return res.status(404).json({ error: "Hizmet bulunamadı" });
+      }
+      
+      res.json(service);
+    } catch (error) {
+      res.status(500).json({ error: "Hizmet bilgileri alınırken bir hata oluştu" });
+    }
+  });
+  
+  app.post("/api/admin/services", async (req, res) => {
+    try {
+      const service = await storage.createService(req.body);
+      res.status(201).json(service);
+    } catch (error) {
+      res.status(500).json({ error: "Hizmet oluşturulurken bir hata oluştu" });
+    }
+  });
+  
+  app.put("/api/admin/services/:id", async (req, res) => {
+    try {
+      const serviceId = parseInt(req.params.id);
+      const service = await storage.updateService(serviceId, req.body);
+      res.json(service);
+    } catch (error) {
+      res.status(500).json({ error: "Hizmet güncellenirken bir hata oluştu" });
+    }
+  });
+  
+  app.delete("/api/admin/services/:id", async (req, res) => {
+    try {
+      const serviceId = parseInt(req.params.id);
+      await storage.deleteService(serviceId);
+      res.json({ success: true, message: "Hizmet başarıyla silindi" });
+    } catch (error) {
+      res.status(500).json({ error: "Hizmet silinirken bir hata oluştu" });
+    }
+  });
+  
+  // Yorumları yönetme
+  app.get("/api/admin/reviews", async (req, res) => {
+    try {
+      const reviews = await storage.getAllReviews();
+      res.json(reviews);
+    } catch (error) {
+      res.status(500).json({ error: "Yorumlar alınırken bir hata oluştu" });
+    }
+  });
+  
+  app.put("/api/admin/reviews/:id", async (req, res) => {
+    try {
+      const reviewId = parseInt(req.params.id);
+      const review = await storage.updateReview(reviewId, {
+        ...req.body,
+        adminReviewed: true
+      });
+      res.json(review);
+    } catch (error) {
+      res.status(500).json({ error: "Yorum güncellenirken bir hata oluştu" });
+    }
+  });
+  
+  app.delete("/api/admin/reviews/:id", async (req, res) => {
+    try {
+      const reviewId = parseInt(req.params.id);
+      await storage.deleteReview(reviewId);
+      res.json({ success: true, message: "Yorum başarıyla silindi" });
+    } catch (error) {
+      res.status(500).json({ error: "Yorum silinirken bir hata oluştu" });
+    }
+  });
+  
   // Admin istatistikleri
   app.get("/api/admin/stats", async (req, res) => {
     try {

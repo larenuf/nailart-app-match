@@ -206,6 +206,20 @@ export class DatabaseStorage implements IStorage {
     const [createdSalon] = await db.insert(salons).values(salon).returning();
     return createdSalon;
   }
+  
+  async updateSalon(id: number, salonData: Partial<Salon>): Promise<Salon> {
+    const [updatedSalon] = await db
+      .update(salons)
+      .set(salonData)
+      .where(eq(salons.id, id))
+      .returning();
+    return updatedSalon;
+  }
+  
+  async deleteSalon(id: number): Promise<boolean> {
+    await db.delete(salons).where(eq(salons.id, id));
+    return true;
+  }
 
   // Artist operations
   async getAllArtists(): Promise<Artist[]> {
@@ -225,6 +239,20 @@ export class DatabaseStorage implements IStorage {
     const [createdArtist] = await db.insert(artists).values(artist).returning();
     return createdArtist;
   }
+  
+  async updateArtist(id: number, artistData: Partial<Artist>): Promise<Artist> {
+    const [updatedArtist] = await db
+      .update(artists)
+      .set(artistData)
+      .where(eq(artists.id, id))
+      .returning();
+    return updatedArtist;
+  }
+  
+  async deleteArtist(id: number): Promise<boolean> {
+    await db.delete(artists).where(eq(artists.id, id));
+    return true;
+  }
 
   // Service operations
   async getServicesByArtist(artistId: number): Promise<Service[]> {
@@ -240,6 +268,24 @@ export class DatabaseStorage implements IStorage {
     const [createdService] = await db.insert(services).values(service).returning();
     return createdService;
   }
+  
+  async updateService(id: number, serviceData: Partial<Service>): Promise<Service> {
+    const [updatedService] = await db
+      .update(services)
+      .set(serviceData)
+      .where(eq(services.id, id))
+      .returning();
+    return updatedService;
+  }
+  
+  async deleteService(id: number): Promise<boolean> {
+    await db.delete(services).where(eq(services.id, id));
+    return true;
+  }
+  
+  async getAllServices(): Promise<Service[]> {
+    return await db.select().from(services);
+  }
 
   // Portfolio operations
   async getPortfolioByArtist(artistId: number): Promise<PortfolioItem[]> {
@@ -249,6 +295,11 @@ export class DatabaseStorage implements IStorage {
   async createPortfolioItem(item: InsertPortfolioItem): Promise<PortfolioItem> {
     const [createdItem] = await db.insert(portfolioItems).values(item).returning();
     return createdItem;
+  }
+  
+  async deletePortfolioItem(id: number): Promise<boolean> {
+    await db.delete(portfolioItems).where(eq(portfolioItems.id, id));
+    return true;
   }
 
   // Category operations
@@ -260,6 +311,20 @@ export class DatabaseStorage implements IStorage {
     const [createdCategory] = await db.insert(categories).values(category).returning();
     return createdCategory;
   }
+  
+  async updateCategory(id: number, categoryData: Partial<Category>): Promise<Category> {
+    const [updatedCategory] = await db
+      .update(categories)
+      .set(categoryData)
+      .where(eq(categories.id, id))
+      .returning();
+    return updatedCategory;
+  }
+  
+  async deleteCategory(id: number): Promise<boolean> {
+    await db.delete(categories).where(eq(categories.id, id));
+    return true;
+  }
 
   // Story operations
   async getStories(): Promise<Story[]> {
@@ -269,6 +334,20 @@ export class DatabaseStorage implements IStorage {
   async createStory(story: InsertStory): Promise<Story> {
     const [createdStory] = await db.insert(stories).values(story).returning();
     return createdStory;
+  }
+  
+  async updateStory(id: number, storyData: Partial<Story>): Promise<Story> {
+    const [updatedStory] = await db
+      .update(stories)
+      .set(storyData)
+      .where(eq(stories.id, id))
+      .returning();
+    return updatedStory;
+  }
+  
+  async deleteStory(id: number): Promise<boolean> {
+    await db.delete(stories).where(eq(stories.id, id));
+    return true;
   }
 
   // Booking operations
@@ -378,6 +457,15 @@ export class DatabaseStorage implements IStorage {
       .values(timeSlot)
       .returning();
     return createdTimeSlot;
+  }
+  
+  async deleteTimeSlot(id: number): Promise<boolean> {
+    await db.delete(availableTimeSlots).where(eq(availableTimeSlots.id, id));
+    return true;
+  }
+  
+  async getAllTimeSlots(): Promise<TimeSlot[]> {
+    return await db.select().from(availableTimeSlots).orderBy(asc(availableTimeSlots.date));
   }
 
   // Chat operations
