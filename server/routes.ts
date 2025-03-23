@@ -4,6 +4,8 @@ import { storage } from "./storage";
 import { insertBookingSchema, insertReviewSchema, insertPromotionSchema } from "@shared/schema";
 import { v4 as uuidv4 } from 'uuid';
 import type { ChatMessage } from './storage';
+import { setupAuth } from "./auth";
+import { WebSocketServer } from 'ws';
 
 // Mock Stripe implementation for now
 const mockStripe = {
@@ -21,6 +23,8 @@ const mockStripe = {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Setup authentication routes
+  setupAuth(app);
   // Get all stories
   app.get("/api/stories", async (req, res) => {
     try {
@@ -506,6 +510,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const httpServer = createServer(app);
+  
+  // Set up WebSocket server
+  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  
+  wss.on('connection', (ws) => {
+    console.log('New WebSocket connection established');
+    
+    // Send welcome message
+    ws.send(JSON.stringify({
+      type: 'welcome',
+      message: 'Connected to Nail Art Match WebSocket server'
+    }));
+    
+    // Handle messages
+    ws.on('message', (message) => {
+      try {
+        const data = JSON.parse(message.toString());
+        console.log('Received message:', data);
+        
+        // Handle different message types
+        if (data.type === 'booking_update') {
+          // Broadcast booking updates to all connected clients
+          wss.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+              client.send(JSON.stringify({
+                type: 'booking_notification',
+                data: data.data
+              }));
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Error handling WebSocket message:', error);
+      }
+    });
+    
+    // Handle connection close
+    ws.on('close', () => {
+      console.log('WebSocket connection closed');
+    });
+  });
 
   return httpServer;
 }
