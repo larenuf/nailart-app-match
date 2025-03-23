@@ -14,7 +14,8 @@ import {
   SlidersHorizontal, 
   ChevronDown, 
   ChevronUp,
-  X
+  X,
+  Calendar
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
