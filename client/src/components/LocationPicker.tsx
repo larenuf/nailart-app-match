@@ -74,6 +74,7 @@ export default function LocationPicker({ open, onClose }: { open: boolean; onClo
     if (locationName) {
       setUserLocation(locationName);
       onClose();
+      console.log("Konum kaydedildi:", locationName);
     }
   };
 
@@ -149,7 +150,10 @@ export default function LocationPicker({ open, onClose }: { open: boolean; onClo
                 <div 
                   key={city}
                   className="rounded-lg border p-2 hover:bg-white dark:hover:bg-gray-700 cursor-pointer transition-colors"
-                  onClick={() => setLocationName(city)}
+                  onClick={() => {
+                    setLocationName(city);
+                    console.log("Şehir seçildi:", city);
+                  }}
                 >
                   <div className="flex items-center">
                     <i className="fas fa-map-marker-alt text-pink-500 mr-2"></i>
