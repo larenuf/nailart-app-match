@@ -6,7 +6,7 @@ export default function TopNavigation() {
   return (
     <div className="px-4 py-4 bg-[#FAFAFA]">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-[#FF5864]">NailMatch</h1>
+        <h1 className="text-2xl font-bold text-[#FF5864]">NAM <span className="text-xs font-medium align-text-top">NailArtMatch</span></h1>
         <div className="flex space-x-3">
           <button className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm text-[#333333]">
             <i className="fas fa-search"></i>
