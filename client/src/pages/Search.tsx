@@ -4,6 +4,19 @@ import { useToast } from "@/hooks/use-toast";
 import TopNavigation from "@/components/TopNavigation";
 import BottomNavigation from "@/components/BottomNavigation";
 import { useLocation } from "wouter";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { 
+  Clock, 
+  Star, 
+  MapPin, 
+  DollarSign,
+  SlidersHorizontal, 
+  ChevronDown, 
+  ChevronUp,
+  X
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Salon {
   id: number;
@@ -29,14 +42,23 @@ export default function Search() {
   const [, setLocation] = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState<{
     rating: number | null;
     distance: number | null;
     priceRange: string | null;
+    serviceTime: number[] | null;
+    hasDiscount: boolean;
+    isPremium: boolean;
+    availableToday: boolean;
   }>({
     rating: null,
     distance: null,
     priceRange: null,
+    serviceTime: null,
+    hasDiscount: false,
+    isPremium: false,
+    availableToday: false
   });
 
   const { toast } = useToast();
@@ -48,6 +70,22 @@ export default function Search() {
   const { data: categories, isLoading: isLoadingCategories } = useQuery<Category[]>({
     queryKey: ["/api/categories"],
   });
+
+  // Count active filters
+  const countActiveFilters = () => {
+    let count = 0;
+    if (selectedFilters.rating) count++;
+    if (selectedFilters.distance) count++;
+    if (selectedFilters.priceRange) count++;
+    if (selectedFilters.serviceTime) count++;
+    if (selectedFilters.hasDiscount) count++;
+    if (selectedFilters.isPremium) count++;
+    if (selectedFilters.availableToday) count++;
+    if (selectedCategory) count++;
+    return count;
+  };
+
+  const activeFilterCount = countActiveFilters();
 
   const getFilteredSalons = () => {
     if (!salons) return [];
@@ -71,9 +109,24 @@ export default function Search() {
       const matchesDistance = selectedFilters.distance 
         ? salon.distance <= selectedFilters.distance 
         : true;
+        
+      // Filter by premium status
+      const matchesPremium = selectedFilters.isPremium
+        ? salon.isPremium === true
+        : true;
+        
+      // Filter by discount availability
+      const matchesDiscount = selectedFilters.hasDiscount
+        ? salon.discount !== ""
+        : true;
 
       // Combined filters
-      return matchesSearch && matchesCategory && matchesRating && matchesDistance;
+      return matchesSearch && 
+             matchesCategory && 
+             matchesRating && 
+             matchesDistance && 
+             matchesPremium && 
+             matchesDiscount;
     });
   };
 
@@ -88,6 +141,36 @@ export default function Search() {
       ...prev,
       [filterType]: prev[filterType] === value ? null : value,
     }));
+  };
+  
+  const handleSwitchChange = (filterType: 'hasDiscount' | 'isPremium' | 'availableToday') => {
+    setSelectedFilters((prev) => ({
+      ...prev,
+      [filterType]: !prev[filterType],
+    }));
+  };
+  
+  const handleServiceTimeChange = (value: number[]) => {
+    setSelectedFilters((prev) => ({
+      ...prev,
+      serviceTime: value,
+    }));
+  };
+
+  const resetAllFilters = () => {
+    setSelectedCategory(null);
+    setSelectedFilters({
+      rating: null,
+      distance: null,
+      priceRange: null,
+      serviceTime: null,
+      hasDiscount: false,
+      isPremium: false,
+      availableToday: false
+    });
+    toast({
+      description: "Tüm filtreler temizlendi",
+    });
   };
 
   const handleSalonSelect = (salonId: number) => {
@@ -153,8 +236,45 @@ export default function Search() {
         
         {/* Filters */}
         <div className="mb-6">
-          <h3 className="font-medium mb-3">Filtreler</h3>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-medium">Filtreler
+              {activeFilterCount > 0 && (
+                <span className="ml-2 text-xs bg-primary text-white px-2 py-0.5 rounded-full">
+                  {activeFilterCount}
+                </span>
+              )}
+            </h3>
+            <div className="flex items-center gap-2">
+              {activeFilterCount > 0 && (
+                <button
+                  className="text-sm text-primary hover:underline flex items-center gap-1"
+                  onClick={resetAllFilters}
+                >
+                  <X size={14} />
+                  <span>Temizle</span>
+                </button>
+              )}
+              <button
+                className="text-sm text-primary hover:underline flex items-center gap-1"
+                onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+              >
+                {showAdvancedFilters ? (
+                  <>
+                    <ChevronUp size={16} />
+                    <span>Daha Az</span>
+                  </>
+                ) : (
+                  <>
+                    <SlidersHorizontal size={16} />
+                    <span>Gelişmiş Filtreler</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+          
+          {/* Basic Filters */}
+          <div className="flex flex-wrap gap-2 mb-4">
             <div className="flex flex-wrap gap-2 mb-2">
               <button
                 className={`px-3 py-1 rounded-full text-sm ${
@@ -222,6 +342,83 @@ export default function Search() {
               </button>
             </div>
           </div>
+          
+          {/* Advanced Filters */}
+          {showAdvancedFilters && (
+            <div className="border rounded-lg p-4 bg-gray-50 mb-4 space-y-4">
+              <h4 className="font-medium text-sm mb-3">Gelişmiş Filtreler</h4>
+              
+              {/* Service Time Filter */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm flex items-center gap-2">
+                    <Clock size={16} className="text-gray-500" />
+                    Hizmet Süresi
+                  </label>
+                  <span className="text-xs text-gray-500">
+                    {selectedFilters.serviceTime ? `${selectedFilters.serviceTime[0]} dk` : 'Tümü'}
+                  </span>
+                </div>
+                <Slider
+                  defaultValue={[30]}
+                  max={120}
+                  step={15}
+                  onValueChange={handleServiceTimeChange}
+                  className="my-2"
+                />
+                <div className="flex justify-between text-xs text-gray-500">
+                  <span>15 dk</span>
+                  <span>120 dk</span>
+                </div>
+              </div>
+              
+              {/* Toggle Filters */}
+              <div className="space-y-3 pt-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm flex items-center gap-2">
+                    <DollarSign size={16} className="text-gray-500" />
+                    İndirimli Salonlar
+                  </label>
+                  <Switch
+                    checked={selectedFilters.hasDiscount}
+                    onCheckedChange={() => handleSwitchChange('hasDiscount')}
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <label className="text-sm flex items-center gap-2">
+                    <Star size={16} className="text-gray-500" />
+                    Sadece Premium Salonlar
+                  </label>
+                  <Switch
+                    checked={selectedFilters.isPremium}
+                    onCheckedChange={() => handleSwitchChange('isPremium')}
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <label className="text-sm flex items-center gap-2">
+                    <Calendar size={16} className="text-gray-500" />
+                    Bugün Müsait Olanlar
+                  </label>
+                  <Switch
+                    checked={selectedFilters.availableToday}
+                    onCheckedChange={() => handleSwitchChange('availableToday')}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Filter Count & Results */}
+          {filteredSalons && (
+            <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+              <span>{filteredSalons.length} sonuç bulundu</span>
+              {activeFilterCount > 0 && (
+                <span>{activeFilterCount} filtre aktif</span>
+              )}
+            </div>
+          )}
         </div>
         
         {/* Results */}
