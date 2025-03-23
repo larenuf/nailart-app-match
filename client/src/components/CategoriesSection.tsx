@@ -105,17 +105,29 @@ export default function CategoriesSection() {
   };
 
   return (
-    <div className="px-4 py-6">
+    <div className="px-4 py-3">
       {/* Özel Teklifler Bölümü - Sabit, yan yana kartlar */}
       <div className="mb-6">
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-sm font-medium tracking-tight text-gray-700 flex items-center">
+            <SparklesIcon size={14} className="text-amber-500 mr-1" />
+            Özel Teklifler
+          </h2>
+          <button 
+            onClick={() => window.location.href = '/search?promo=all'}
+            className="text-xs font-medium text-primary flex items-center">
+            Tümünü Gör <FingerprintIcon size={10} className="ml-0.5" />
+          </button>
+        </div>
+        
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-gradient-to-r from-[#FFA5B5] to-[#FFB7B2] p-3 rounded-xl text-white shadow-sm">
             <div>
               <h3 className="text-base font-bold flex justify-between items-start">
-                <span>Özel Teklifler</span>
+                <span>Yeni Müşteri</span>
                 <span className="text-xl">✨</span>
               </h3>
-              <p className="text-xs mt-0.5 opacity-95">Yeni müşteriler için %20 indirim</p>
+              <p className="text-xs mt-0.5 opacity-95">İlk randevuda %20 indirim</p>
               <button 
                 onClick={() => window.location.href = '/search?promo=new20'}
                 className="mt-2 bg-white text-primary px-3 py-1 rounded-full text-xs font-medium shadow-sm hover:shadow-md transition-all duration-300 w-full">
@@ -141,14 +153,15 @@ export default function CategoriesSection() {
         </div>
       </div>
       
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-medium tracking-tight text-gray-900">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-sm font-medium tracking-tight text-gray-700 flex items-center">
+          <FingerprintIcon size={14} className="text-pink-500 mr-1" />
           Kategoriler
         </h2>
         <button 
           onClick={() => window.location.href = '/search'}
-          className="text-sm font-medium text-primary">
-          Tümünü Gör
+          className="text-xs font-medium text-primary flex items-center">
+          Tümünü Gör <FingerprintIcon size={10} className="ml-0.5" />
         </button>
       </div>
       
