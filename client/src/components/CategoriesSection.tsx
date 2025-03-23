@@ -3,6 +3,10 @@ import { useLocation } from "wouter";
 import { Category } from "@/types";
 
 export default function CategoriesSection() {
+  // Tıklama olaylarını durdur
+  const stopPropagation = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
   const [_, navigate] = useLocation();
   
   const { data: categories, isLoading } = useQuery<Category[]>({

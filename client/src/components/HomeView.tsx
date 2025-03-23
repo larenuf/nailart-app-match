@@ -235,15 +235,21 @@ function PremiumFeaturesSection() {
 
 export default function HomeView() {
   return (
-    <div className="max-w-md mx-auto bg-white dark:bg-gray-900 min-h-screen relative pb-16 transition-colors duration-200">
+    <div 
+      className="max-w-md mx-auto bg-white dark:bg-gray-900 min-h-screen relative pb-16 transition-colors duration-200"
+      onClick={(e) => {
+        // Ana etkinliği durdur, böylece tüm tıklamalar özgün hedeflerinde kalır
+        e.stopPropagation();
+      }}
+    >
       <TopNavigation />
       
-      <div className="pb-16">
+      <div className="pb-16" onClick={(e) => e.stopPropagation()}>
         <StorySection />
         <CategoriesSection />
         <WeatherPromoBanner />
         <FeaturedSalonsSection />
-        <div className="px-4">
+        <div className="px-4" onClick={(e) => e.stopPropagation()}>
           <NearestSalonsMap />
         </div>
         <div className="mt-4"></div>
