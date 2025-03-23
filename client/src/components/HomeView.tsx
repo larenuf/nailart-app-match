@@ -38,7 +38,9 @@ function FeatureCard({ title, description, icon, onClick, available, gradient }:
 
 // Weather-based promotional banner
 function WeatherPromoBanner() {
-  const navigate = () => {
+  const navigate = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     window.location.href = '/search';
   };
   
@@ -70,6 +72,7 @@ function WeatherPromoBanner() {
               <button 
                 onClick={navigate}
                 className="mt-3 flex items-center text-sm bg-white text-indigo-600 px-4 py-2 rounded-full font-medium shadow-sm hover:bg-white/90 transition-all"
+                type="button"
               >
                 Randevu Al
                 <ArrowRight className="ml-1.5 h-4 w-4" />
@@ -84,11 +87,15 @@ function WeatherPromoBanner() {
 
 // New section to showcase premium features
 function PremiumFeaturesSection() {
-  const navigate = (path: string) => {
+  const navigate = (e: React.MouseEvent, path: string) => {
+    e.preventDefault();
+    e.stopPropagation();
     window.location.href = path;
   };
   
-  const showComingSoon = (feature: string) => {
+  const showComingSoon = (e: React.MouseEvent, feature: string) => {
+    e.preventDefault();
+    e.stopPropagation();
     alert(`${feature} yakında geliyor! Bizi takip etmeye devam edin.`);
   };
   
