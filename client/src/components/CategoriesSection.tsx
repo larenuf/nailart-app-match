@@ -41,10 +41,10 @@ export default function CategoriesSection() {
             }}
           >
             <img 
-              src={category.id === 1 ? "https://i.imgur.com/lDRLXVu.jpg" : 
-                   category.id === 2 ? "https://i.imgur.com/fX0JMHs.jpg" :
-                   category.id === 3 ? "https://i.imgur.com/QdVQoYL.jpg" :
-                   "https://i.imgur.com/PGQrKuM.jpg"}
+              src={category.id === 1 ? "https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-1.2.1&q=80" : 
+                   category.id === 2 ? "https://images.unsplash.com/photo-1604902396830-aca29e19b067?ixlib=rb-1.2.1&q=80" :
+                   category.id === 3 ? "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?ixlib=rb-1.2.1&q=80" :
+                   "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?ixlib=rb-1.2.1&q=80"}
               alt={category.name}
               className="w-full h-full object-cover"
               onError={(e) => {
