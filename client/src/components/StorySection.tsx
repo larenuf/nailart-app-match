@@ -15,7 +15,9 @@ export default function StorySection() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Story'ye tıklandığında çağrılacak fonksiyon
-  const handleStoryClick = (story: Story) => {
+  const handleStoryClick = (e: React.MouseEvent, story: Story) => {
+    e.preventDefault();
+    e.stopPropagation();
     setSelectedStory(story);
     setIsStoryOpen(true);
   };
@@ -61,7 +63,7 @@ export default function StorySection() {
             <div 
               key={story.id} 
               className="cursor-pointer flex flex-col items-center"
-              onClick={() => handleStoryClick(story)}
+              onClick={(e) => handleStoryClick(e, story)}
             >
               <div
                 className={`w-[70px] h-[70px] rounded-full overflow-hidden ${
