@@ -95,6 +95,16 @@ export interface IStorage {
   getReviewsByArtist(artistId: number): Promise<Review[]>;
   getReviewsByUser(userId: number): Promise<Review[]>;
   getReview(id: number): Promise<Review | undefined>;
+  
+  // Promotion operations
+  getPromotions(): Promise<Promotion[]>;
+  getActivePromotions(): Promise<Promotion[]>;
+  getPromotion(id: number): Promise<Promotion | undefined>;
+  getPromotionByCode(code: string): Promise<Promotion | undefined>;
+  createPromotion(promotion: InsertPromotion): Promise<Promotion>;
+  updatePromotion(id: number, promotionData: Partial<Promotion>): Promise<Promotion>;
+  deletePromotion(id: number): Promise<boolean>;
+  incrementPromotionUsage(id: number): Promise<Promotion>;
 }
 
 export class MemStorage implements IStorage {
@@ -108,6 +118,7 @@ export class MemStorage implements IStorage {
   private bookings: Map<number, Booking>;
   private timeSlots: Map<number, TimeSlot>;
   private reviews: Map<number, Review>;
+  private promotions: Map<number, Promotion>;
   private chatMessages: ChatMessage[];
   
   private userIdCounter: number;
@@ -120,6 +131,7 @@ export class MemStorage implements IStorage {
   private bookingIdCounter: number;
   private timeSlotIdCounter: number;
   private reviewIdCounter: number;
+  private promotionIdCounter: number;
 
   constructor() {
     this.users = new Map();
