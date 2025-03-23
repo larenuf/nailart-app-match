@@ -62,11 +62,36 @@ export default function FeaturedSalonsSection() {
   }
 
   return (
-    <div className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
+    <div 
+      className="px-4 py-4"  
+      // Tıklama olayını burada durdur
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+    >
       {/* Tırnak Ürünleri Satış Alanı */}
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-3">
-          <h2 className="text-sm font-medium tracking-tight text-gray-700 dark:text-gray-300 flex items-center">
+      <div 
+        className="mb-6" 
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
+        <div 
+          className="flex justify-between items-center mb-3"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          <h2 
+            className="text-sm font-medium tracking-tight text-gray-700 dark:text-gray-300 flex items-center"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
             <ShoppingCart size={14} className="text-purple-500 mr-1"/>
             Tırnak Ürünleri
           </h2>
@@ -83,11 +108,21 @@ export default function FeaturedSalonsSection() {
           </button>
         </div>
         
-        <div className="grid grid-cols-2 gap-3">
+        <div 
+          className="grid grid-cols-2 gap-3"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
           {/* Tırnak Bakım Ürünleri */}
           <div 
             className="cursor-pointer group" 
-            onClick={(e) => handleProductCategory(e, 'nail-care')}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleProductCategory(e, 'nail-care');
+            }}
           >
             <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02] bg-gradient-to-b from-slate-100 via-slate-200 to-slate-400">
               <div className="absolute inset-0 flex items-center justify-center">
@@ -107,7 +142,11 @@ export default function FeaturedSalonsSection() {
           {/* Nail Art Kitleri */}
           <div 
             className="cursor-pointer group" 
-            onClick={(e) => handleProductCategory(e, 'nail-art-kits')}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleProductCategory(e, 'nail-art-kits');
+            }}
           >
             <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02] bg-gradient-to-b from-slate-100 via-slate-200 to-slate-400">
               <div className="absolute inset-0 flex items-center justify-center">
@@ -126,35 +165,82 @@ export default function FeaturedSalonsSection() {
         </div>
       </div>
       
-      <div className="flex justify-between items-center mb-3">
-        <h2 className="text-sm font-medium tracking-tight text-gray-700 dark:text-gray-300 flex items-center">
+      <div 
+        className="flex justify-between items-center mb-3"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
+        <h2 
+          className="text-sm font-medium tracking-tight text-gray-700 dark:text-gray-300 flex items-center"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
           <Sparkles size={14} className="text-amber-500 mr-1"/>
           Öne Çıkan Salonlar
         </h2>
         <button 
           className="text-xs font-medium text-primary dark:text-pink-400 flex items-center"
-          onClick={handleViewAll}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleViewAll(e);
+          }}
           type="button"
         >
           Tümünü Gör <ArrowRight size={10} className="ml-0.5"/>
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div 
+        className="space-y-4"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
         {salons?.map((salon) => (
           <div
             key={salon.id}
             className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer"
-            onClick={(e) => handleSelectSalon(e, salon)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleSelectSalon(e, salon);
+            }}
           >
             <img
               src={salon.imageUrl}
               alt={salon.name}
               className="w-full h-40 object-cover"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
             />
-            <div className="p-3">
-              <div className="flex justify-between items-start">
-                <div>
+            <div 
+              className="p-3"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
+              <div 
+                className="flex justify-between items-start"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                <div
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                >
                   <h3 className="font-bold text-[#333333] dark:text-white">{salon.name}</h3>
                   <div className="flex items-center mt-1">
                     <div className="flex text-[#FFD700]">
@@ -181,7 +267,13 @@ export default function FeaturedSalonsSection() {
                   </span>
                 )}
               </div>
-              <div className="flex items-center mt-2 text-xs text-gray-600 dark:text-gray-400">
+              <div 
+                className="flex items-center mt-2 text-xs text-gray-600 dark:text-gray-400"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
                 <i className="fas fa-map-marker-alt mr-1"></i>
                 <span>{salon.distance} km uzaklıkta</span>
                 <div className="mx-2 h-1 w-1 rounded-full bg-gray-300 dark:bg-gray-600"></div>

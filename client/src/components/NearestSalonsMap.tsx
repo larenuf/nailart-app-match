@@ -19,6 +19,12 @@ type Coordinates = {
 };
 
 export default function NearestSalonsMap() {
+  // stopPropagation handler
+  const stopPropagation = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+  
   const [_, navigate] = useLocation();
   const { setSelectedSalon } = useAppContext();
   
@@ -73,14 +79,28 @@ export default function NearestSalonsMap() {
 
   // Geçici bir çözüm olarak harita yerine kart gösterimi
   return (
-    <Card className="mt-4">
-      <CardContent className="p-3">
-        <h2 className="font-bold mb-2">Yakındaki Salonlar</h2>
+    <Card 
+      className="mt-4" 
+      onClick={stopPropagation}
+    >
+      <CardContent 
+        className="p-3"
+        onClick={stopPropagation}
+      >
+        <h2 
+          className="font-bold mb-2"
+          onClick={stopPropagation}
+        >
+          Yakındaki Salonlar
+        </h2>
         
         {/* API anahtarı sorunu düzeltilene kadar salon listesi göster */}
-        <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-3 flex items-start dark:bg-amber-900/30 dark:border-amber-700">
+        <div 
+          className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-3 flex items-start dark:bg-amber-900/30 dark:border-amber-700"
+          onClick={stopPropagation}
+        >
           <AlertCircle className="h-5 w-5 text-amber-500 mr-2 flex-shrink-0 mt-0.5" />
-          <div>
+          <div onClick={stopPropagation}>
             <h3 className="text-sm font-medium text-amber-800 dark:text-amber-200">Harita yüklenemiyor</h3>
             <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
               Geçerli bir Google Maps API anahtarı gerekiyor. Şimdilik size normal liste görünümü sunuyoruz.
@@ -88,22 +108,35 @@ export default function NearestSalonsMap() {
           </div>
         </div>
         
-        <div className="space-y-2 mt-3">
+        <div 
+          className="space-y-2 mt-3"
+          onClick={stopPropagation}
+        >
           {salons?.map((salon) => (
             <div 
               key={salon.id} 
               className="border rounded-lg p-2 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
-              onClick={() => handleViewSalon(salon)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleViewSalon(salon);
+              }}
             >
-              <div className="flex items-start">
-                <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center bg-pink-100 dark:bg-pink-900/30 rounded-full mr-3">
+              <div 
+                className="flex items-start"
+                onClick={stopPropagation}
+              >
+                <div 
+                  className="h-10 w-10 flex-shrink-0 flex items-center justify-center bg-pink-100 dark:bg-pink-900/30 rounded-full mr-3"
+                  onClick={stopPropagation}
+                >
                   {salon.isPremium ? (
                     <span className="text-yellow-500 text-lg">★</span>
                   ) : (
                     <span className="text-pink-500">💅</span>
                   )}
                 </div>
-                <div>
+                <div onClick={stopPropagation}>
                   <h3 className="font-medium text-sm">{salon.name}</h3>
                   <p className="text-xs text-gray-600 dark:text-gray-400">{salon.address}</p>
                   <div className="flex items-center mt-1">
