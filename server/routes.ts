@@ -82,6 +82,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Salon durumunu güncelleme (aktif/pasif)
+  app.patch("/api/admin/salons/:id/status", async (req, res) => {
+    try {
+      const salonId = parseInt(req.params.id);
+      const { isActive } = req.body;
+      
+      if (isActive === undefined) {
+        return res.status(400).json({ error: "isActive değeri gereklidir" });
+      }
+      
+      const salon = await storage.getSalon(salonId);
+      
+      if (!salon) {
+        return res.status(404).json({ error: "Salon bulunamadı" });
+      }
+      
+      // İki şekilde de durum güncellenebilmesi için
+      const updatedSalon = await storage.updateSalon(salonId, { 
+        isActive: isActive, 
+        status: isActive ? "active" : "inactive" 
+      });
+      
+      res.json(updatedSalon);
+    } catch (error) {
+      res.status(500).json({ error: "Salon durumu güncellenirken bir hata oluştu" });
+    }
+  });
+  
   // Sanatçı işlemleri
   app.get("/api/admin/artists", async (req, res) => {
     try {
