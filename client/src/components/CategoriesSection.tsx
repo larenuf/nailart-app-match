@@ -98,22 +98,22 @@ export default function CategoriesSection() {
           return (
             <div
               key={category.id}
-              className="relative w-full h-32 bg-white rounded-lg overflow-hidden shadow-sm cursor-pointer flex"
+              className="relative w-full h-[88px] bg-[#F5F5F5] rounded-lg overflow-hidden shadow-sm cursor-pointer flex"
             >
               {/* Kategori adı */}
-              <div className="absolute z-10 p-3 text-left">
-                <h3 className="text-base font-medium text-[#333333]">
+              <div className="absolute z-10 p-4 text-left">
+                <h3 className="text-[15px] font-medium text-black">
                   {category.name}
                 </h3>
               </div>
               
               {/* Resim */}
-              <div className="h-full w-full flex justify-end">
+              <div className="absolute right-0 top-0 h-full overflow-hidden">
                 <img 
                   src={categoryStyle.image}
                   alt={category.name}
-                  className="h-full object-cover object-center"
-                  style={{ width: '60%' }}
+                  className="h-full object-cover object-right"
+                  style={{ width: '120px', marginLeft: 'auto' }}
                 />
               </div>
             </div>
