@@ -2,7 +2,7 @@ import TopNavigation from "./TopNavigation";
 import BottomNavigation from "./BottomNavigation";
 import StorySection from "./StorySection";
 import CategoriesSection from "./CategoriesSection";
-import FeaturedSalonsSection from "./FeaturedSalonsSection";
+import FeaturedSalonsSectionNew from "./FeaturedSalonsSectionNew";
 import NearestSalonsMap from "./NearestSalonsMap";
 import { Sparkles, Palette, Medal, MousePointerClick, ImagePlus, Megaphone, SlidersHorizontal, Calendar, Sun, ArrowRight } from 'lucide-react';
 import { useCallback } from "react";
@@ -248,7 +248,7 @@ export default function HomeView() {
         <StorySection />
         <CategoriesSection />
         <WeatherPromoBanner />
-        <FeaturedSalonsSection />
+        <FeaturedSalonsSectionNew />
         <div className="px-4" onClick={(e) => e.stopPropagation()}>
           <NearestSalonsMap />
         </div>
