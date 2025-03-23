@@ -6,6 +6,7 @@ import LocationPicker from "./LocationPicker";
 
 export default function TopNavigation() {
   const { userLocation } = useAppContext();
+  const displayLocation = userLocation || "New York";
   const { darkMode, toggleDarkMode } = useTheme();
   const [locationPickerOpen, setLocationPickerOpen] = useState(false);
 
@@ -77,7 +78,7 @@ export default function TopNavigation() {
           onClick={handleLocationClick}
         >
           <i className="fas fa-map-marker-alt text-[#FF5864] mr-2"></i>
-          <span className="font-medium">{userLocation}</span>
+          <span className="font-medium">{displayLocation}</span>
           <i className="fas fa-chevron-down text-xs ml-1 text-gray-400 dark:text-gray-500"></i>
         </div>
       </div>
