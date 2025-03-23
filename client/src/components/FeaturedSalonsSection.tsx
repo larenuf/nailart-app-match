@@ -22,17 +22,17 @@ export default function FeaturedSalonsSection() {
     return (
       <div className="px-4 py-4">
         <div className="flex justify-between items-center mb-3">
-          <h2 className="text-lg font-bold font-playfair">Öne Çıkan Salonlar</h2>
-          <div className="w-16 h-4 bg-gray-200 animate-pulse rounded"></div>
+          <h2 className="text-lg font-bold font-playfair dark:text-gray-300">Öne Çıkan Salonlar</h2>
+          <div className="w-16 h-4 bg-gray-200 dark:bg-gray-700 animate-pulse rounded"></div>
         </div>
         <div className="space-y-4">
           {[...Array(2)].map((_, i) => (
-            <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="w-full h-40 bg-gray-200 animate-pulse"></div>
+            <div key={i} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+              <div className="w-full h-40 bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
               <div className="p-3">
-                <div className="w-2/3 h-5 bg-gray-200 animate-pulse rounded mb-2"></div>
-                <div className="w-1/3 h-4 bg-gray-200 animate-pulse rounded mb-2"></div>
-                <div className="w-full h-4 bg-gray-200 animate-pulse rounded"></div>
+                <div className="w-2/3 h-5 bg-gray-200 dark:bg-gray-700 animate-pulse rounded mb-2"></div>
+                <div className="w-1/3 h-4 bg-gray-200 dark:bg-gray-700 animate-pulse rounded mb-2"></div>
+                <div className="w-full h-4 bg-gray-200 dark:bg-gray-700 animate-pulse rounded"></div>
               </div>
             </div>
           ))}
@@ -46,11 +46,11 @@ export default function FeaturedSalonsSection() {
       {/* Tırnak Ürünleri Satış Alanı */}
       <div className="mb-6">
         <div className="flex justify-between items-center mb-3">
-          <h2 className="text-sm font-medium tracking-tight text-gray-700 flex items-center">
+          <h2 className="text-sm font-medium tracking-tight text-gray-700 dark:text-gray-300 flex items-center">
             <ShoppingCart size={14} className="text-purple-500 mr-1"/>
             Tırnak Ürünleri
           </h2>
-          <a href="#" className="text-xs font-medium text-primary flex items-center">
+          <a href="#" className="text-xs font-medium text-primary dark:text-pink-400 flex items-center">
             Mağazaya Git <ShoppingCart size={10} className="ml-0.5"/>
           </a>
         </div>
@@ -93,13 +93,13 @@ export default function FeaturedSalonsSection() {
       </div>
       
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-sm font-medium tracking-tight text-gray-700 flex items-center">
+        <h2 className="text-sm font-medium tracking-tight text-gray-700 dark:text-gray-300 flex items-center">
           <Sparkles size={14} className="text-amber-500 mr-1"/>
           Öne Çıkan Salonlar
         </h2>
         <a 
           href="/search" 
-          className="text-xs font-medium text-primary flex items-center"
+          className="text-xs font-medium text-primary dark:text-pink-400 flex items-center"
           onClick={(e) => {
             e.preventDefault();
             navigate('/search');
