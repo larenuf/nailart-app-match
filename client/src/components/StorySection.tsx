@@ -110,15 +110,14 @@ export default function StorySection() {
             
             {/* Ana İçerik - Video veya Resim */}
             {selectedStory.videoUrl ? (
-              <video 
-                ref={videoRef}
-                src={selectedStory.videoUrl}
-                poster={selectedStory.imageUrl}
-                className="w-full h-full object-cover"
-                controls
-                playsInline
-                loop
-              ></video>
+              <div className="w-full h-full">
+                <iframe
+                  src={selectedStory.videoUrl}
+                  className="w-full h-full"
+                  allowFullScreen
+                  frameBorder="0"
+                ></iframe>
+              </div>
             ) : (
               <img 
                 src={selectedStory.imageUrl} 
