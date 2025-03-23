@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertBookingSchema } from "@shared/schema";
 import { v4 as uuidv4 } from 'uuid';
+import type { ChatMessage } from './storage';
 
 // Mock Stripe implementation for now
 const mockStripe = {
