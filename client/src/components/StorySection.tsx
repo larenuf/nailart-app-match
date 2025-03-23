@@ -3,6 +3,14 @@ import { useState, useRef, useEffect } from "react";
 import { Story } from "@/types";
 
 export default function StorySection() {
+  // Olay yayılımı problemini çözmek için
+  const handleComponentClick = (e: React.MouseEvent) => {
+    // Sadece direkt bu bileşene yapılan tıklamaları durdur
+    if (e.currentTarget === e.target) {
+      e.stopPropagation();
+    }
+  };
+  
   const { data: stories, isLoading } = useQuery<Story[]>({
     queryKey: ["/api/stories"],
   });
