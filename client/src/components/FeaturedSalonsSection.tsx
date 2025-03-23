@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAppContext } from "@/context/AppContext";
 import { useLocation } from "wouter";
 import { Salon } from "@/types";
-import { ShoppingCart, Sparkles, FingerprintIcon } from "lucide-react";
+import { ShoppingCart, Sparkles, Fingerprint, ArrowRight } from "lucide-react";
 
 export default function FeaturedSalonsSection() {
   const { setSelectedSalon } = useAppContext();
@@ -105,7 +105,7 @@ export default function FeaturedSalonsSection() {
             navigate('/search');
           }}
         >
-          Tümünü Gör <FingerprintIcon size={10} className="ml-0.5"/>
+          Tümünü Gör <ArrowRight size={10} className="ml-0.5"/>
         </a>
       </div>
 
