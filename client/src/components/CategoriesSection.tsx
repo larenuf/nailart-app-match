@@ -146,16 +146,15 @@ export default function CategoriesSection() {
         </button>
       </div>
       
-      {/* Kategori Scroll - Yatay Kaydırma */}
-      <div className="flex overflow-x-auto gap-3 mb-8 hide-scrollbar pb-4">
-        {displayCategories.map((category) => {
+      {/* Kategori Grid - Grid layout */}
+      <div className="grid grid-cols-4 gap-3 mb-8">
+        {displayCategories.slice(0, 8).map((category) => {
           const categoryStyle = categoryImages[category.name as keyof typeof categoryImages] || defaultStyle;
           
           return (
             <div
               key={category.id}
-              className="flex flex-col items-center cursor-pointer group flex-shrink-0"
-              style={{ width: '80px' }}
+              className="flex flex-col items-center cursor-pointer group"
             >
               <div 
                 className="relative overflow-hidden aspect-square rounded-lg mb-2 w-16 h-16 shadow-sm transition-transform duration-300 group-hover:scale-105"
