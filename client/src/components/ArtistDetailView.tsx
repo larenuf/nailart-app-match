@@ -1,13 +1,19 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useAppContext } from "@/context/AppContext";
-import { Service, PortfolioItem } from "@/types";
+import { Service, PortfolioItem, TimeSlot } from "@/types";
 import BottomNavigation from "./BottomNavigation";
 import ReviewSystem from "./ReviewSystem";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Calendar } from "@/components/ui/calendar";
+import { format, isSameDay, addDays, isToday } from "date-fns";
+import { tr } from "date-fns/locale";
+import { Calendar as CalendarIcon, Clock, CheckCircle2 } from "lucide-react";
 
 export default function ArtistDetailView() {
-  const { selectedArtist, selectedSalon, setSelectedArtist, setSelectedService } = useAppContext();
+  const { selectedArtist, selectedSalon, setSelectedArtist, setSelectedService, setSelectedDate, setSelectedTime } = useAppContext();
+  const [calendarDate, setCalendarDate] = useState<Date>(new Date());
 
   const { data: services, isLoading: servicesLoading } = useQuery<Service[]>({
     queryKey: [`/api/artists/${selectedArtist?.id}/services`],
@@ -17,6 +23,11 @@ export default function ArtistDetailView() {
   const { data: portfolioItems, isLoading: portfolioLoading } = useQuery<PortfolioItem[]>({
     queryKey: [`/api/artists/${selectedArtist?.id}/portfolio`],
     enabled: !!selectedArtist,
+  });
+  
+  const { data: availableTimeSlots, isLoading: timeSlotsLoading } = useQuery<TimeSlot[]>({
+    queryKey: [`/api/artists/${selectedArtist?.id}/timeslots`, calendarDate?.toISOString().split('T')[0]],
+    enabled: !!selectedArtist && !!calendarDate,
   });
 
   // Benzer çalışmalar - gerçek veritabanından gelecek
@@ -92,10 +103,11 @@ export default function ArtistDetailView() {
       {/* Sekme Yapısı */}
       <Tabs defaultValue="about" className="w-full">
         <div className="px-4 border-b">
-          <TabsList className="grid grid-cols-4 h-10">
+          <TabsList className="grid grid-cols-5 h-10">
             <TabsTrigger value="about" className="text-xs">Hakkında</TabsTrigger>
             <TabsTrigger value="portfolio" className="text-xs">Portfolyo</TabsTrigger>
             <TabsTrigger value="services" className="text-xs">Hizmetler</TabsTrigger>
+            <TabsTrigger value="availability" className="text-xs">Takvim</TabsTrigger>
             <TabsTrigger value="reviews" className="text-xs">Yorumlar</TabsTrigger>
           </TabsList>
         </div>
@@ -255,6 +267,116 @@ export default function ArtistDetailView() {
               Tüm hizmetlerimiz, kullanılan malzemeleri ve gerekli bakımı içerir. 
               İptal ve değişiklikler için lütfen en az 24 saat önceden haber veriniz.
             </p>
+          </div>
+        </TabsContent>
+
+        {/* Takvim ve Müsaitlik Sekmesi */}
+        <TabsContent value="availability" className="px-4 py-3">
+          <div className="space-y-4">
+            <h3 className="font-bold">Müsaitlik Takvimi</h3>
+            
+            <div className="bg-white border rounded-lg overflow-hidden">
+              <Calendar
+                mode="single"
+                selected={calendarDate}
+                onSelect={(date) => date && setCalendarDate(date)}
+                className="rounded-md"
+                locale={tr}
+                disabled={(date) => 
+                  date < new Date(new Date().setHours(0, 0, 0, 0)) ||
+                  date > addDays(new Date(), 30)
+                }
+                components={{
+                  DayContent: ({ day }) => {
+                    // Örnek için rastgele müsaitlik statüsü
+                    const date = day.date;
+                    const isAvailable = !isToday(date) || Math.random() > 0.3;
+                    const isBusy = !isAvailable && Math.random() > 0.5;
+                    
+                    return (
+                      <div className="relative w-full h-full flex items-center justify-center">
+                        {format(date, 'd')}
+                        {isAvailable && (
+                          <div className="absolute bottom-1 h-1 w-1 rounded-full bg-green-500"></div>
+                        )}
+                        {isBusy && (
+                          <div className="absolute bottom-1 h-1 w-1 rounded-full bg-orange-500"></div>
+                        )}
+                        {!isAvailable && !isBusy && (
+                          <div className="absolute bottom-1 h-1 w-1 rounded-full bg-red-500"></div>
+                        )}
+                      </div>
+                    );
+                  },
+                }}
+              />
+            </div>
+            
+            <div className="mt-4">
+              <h4 className="font-medium mb-2">
+                {format(calendarDate, 'dd MMMM yyyy, EEEE', { locale: tr })}
+              </h4>
+              
+              {timeSlotsLoading ? (
+                <div className="grid grid-cols-4 gap-2">
+                  {[...Array(8)].map((_, i) => (
+                    <div key={i} className="bg-gray-100 animate-pulse h-9 rounded-md"></div>
+                  ))}
+                </div>
+              ) : availableTimeSlots && availableTimeSlots.length > 0 ? (
+                <div className="grid grid-cols-4 gap-2">
+                  {availableTimeSlots.map((slot) => (
+                    <button
+                      key={slot.id}
+                      className={`
+                        py-2 rounded-md text-sm transition
+                        ${slot.isBooked ? "bg-gray-100 text-gray-400 cursor-not-allowed" : 
+                          "bg-[#F5F1EB] bg-opacity-40 hover:bg-[#F9E0E7] hover:bg-opacity-30 text-gray-700"
+                        }
+                      `}
+                      disabled={slot.isBooked}
+                    >
+                      {slot.startTime}
+                      {slot.isBooked && (
+                        <span className="ml-1 inline-block w-2 h-2 bg-red-500 rounded-full"></span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="bg-gray-50 p-6 text-center rounded-lg">
+                  <CalendarIcon className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+                  <p className="text-gray-500">Bu tarih için müsait saat bulunmuyor</p>
+                  <p className="text-xs text-gray-400 mt-1">Lütfen başka bir gün seçin</p>
+                </div>
+              )}
+            </div>
+            
+            <div className="mt-4 flex items-center justify-center space-x-4 text-sm text-gray-500">
+              <div className="flex items-center">
+                <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+                <span>Müsait</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 rounded-full bg-orange-500 mr-2"></div>
+                <span>Kısmen Müsait</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+                <span>Müsait Değil</span>
+              </div>
+            </div>
+            
+            <div className="mt-4 bg-[#FBF7FA] p-4 rounded-lg">
+              <h4 className="font-medium flex items-center">
+                <CalendarIcon className="h-4 w-4 mr-2 text-[#6A0DAD]" />
+                Randevu Bilgisi
+              </h4>
+              <p className="text-sm text-gray-600 mt-1">
+                Randevu almak için lütfen önce bir hizmet seçin, ardından uygun bir tarih ve saat belirleyin.
+                İptal ve değişiklikler için en az 24 saat önceden haber vermeniz gerekmektedir.
+              </p>
+            </div>
           </div>
         </TabsContent>
 
