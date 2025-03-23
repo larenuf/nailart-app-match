@@ -41,8 +41,12 @@ export default function ArtistDetailView() {
     setSelectedArtist(null);
   };
 
-  const handleServiceSelect = (service: Service) => {
-    setSelectedService(service);
+  const handleServiceSelect = (service: Service | undefined) => {
+    if (service) {
+      setSelectedService(service);
+      // Redirect to booking page
+      window.location.href = `/booking/${service.id}`;
+    }
   };
 
   if (!selectedArtist || !selectedSalon) return null;
@@ -89,7 +93,9 @@ export default function ArtistDetailView() {
             </div>
             
             <div className="mt-2 flex space-x-2">
-              <button className="bg-[#F9E0E7] text-[#333333] px-4 py-1.5 rounded-full text-sm font-medium">
+              <button 
+                onClick={() => handleServiceSelect(services?.[0])}
+                className="bg-[#F9E0E7] text-[#333333] px-4 py-1.5 rounded-full text-sm font-medium">
                 <i className="far fa-calendar-check mr-1"></i> Randevu Al
               </button>
               <button className="bg-white border border-gray-200 p-2 rounded-full">
@@ -248,7 +254,12 @@ export default function ArtistDetailView() {
                     </div>
                     <div className="text-right">
                       <p className="font-bold text-lg">${service.price}</p>
-                      <button className="text-xs bg-[#F9E0E7] hover:bg-[#F9E0E7]/80 text-[#333333] px-3 py-1 rounded-full mt-1">
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleServiceSelect(service);
+                        }}
+                        className="text-xs bg-[#F9E0E7] hover:bg-[#F9E0E7]/80 text-[#333333] px-3 py-1 rounded-full mt-1">
                         Randevu Al
                       </button>
                     </div>
@@ -286,18 +297,27 @@ export default function ArtistDetailView() {
                   date < new Date(new Date().setHours(0, 0, 0, 0)) ||
                   date > addDays(new Date(), 30)
                 }
-                getDayClassNames={(date, { disabled }) => {
-                  // Örnek için rastgele müsaitlik statüsü
-                  const isAvailable = !isToday(date) || Math.random() > 0.3;
-                  const isBusy = !isAvailable && Math.random() > 0.5;
-                  
-                  return {
-                    'relative': true,
-                    'availability-day': true,
-                    'availability-available': isAvailable && !disabled,
-                    'availability-busy': isBusy && !disabled,
-                    'availability-unavailable': !isAvailable && !isBusy && !disabled,
-                  };
+                components={{
+                  DayContent: ({ date }: { date: Date }) => {
+                    // Örnek için rastgele müsaitlik statüsü
+                    const isAvailable = !isToday(date) || Math.random() > 0.3;
+                    const isBusy = !isAvailable && Math.random() > 0.5;
+                    
+                    return (
+                      <div className="relative w-full h-full flex items-center justify-center">
+                        {format(date, 'd')}
+                        {isAvailable && (
+                          <div className="absolute bottom-0 h-1 w-1 rounded-full bg-green-500"></div>
+                        )}
+                        {isBusy && (
+                          <div className="absolute bottom-0 h-1 w-1 rounded-full bg-orange-500"></div>
+                        )}
+                        {!isAvailable && !isBusy && (
+                          <div className="absolute bottom-0 h-1 w-1 rounded-full bg-red-500"></div>
+                        )}
+                      </div>
+                    );
+                  },
                 }}
               />
             </div>

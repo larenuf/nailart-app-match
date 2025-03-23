@@ -92,7 +92,14 @@ export default function FeaturedSalonsSection() {
       
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-lg font-bold font-playfair">Öne Çıkan Salonlar</h2>
-        <a href="#" className="text-sm text-[#D6C3E5]">
+        <a 
+          href="/search" 
+          className="text-sm text-[#D6C3E5]"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate('/search');
+          }}
+        >
           Tümünü Gör
         </a>
       </div>
