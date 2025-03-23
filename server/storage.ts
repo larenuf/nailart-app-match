@@ -88,6 +88,12 @@ export interface IStorage {
   // Chat operations
   getChatMessages(): Promise<ChatMessage[]>;
   addChatMessage(message: ChatMessage): Promise<ChatMessage>;
+  
+  // Review operations
+  createReview(review: InsertReview): Promise<Review>;
+  getReviewsByArtist(artistId: number): Promise<Review[]>;
+  getReviewsByUser(userId: number): Promise<Review[]>;
+  getReview(id: number): Promise<Review | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -100,6 +106,7 @@ export class MemStorage implements IStorage {
   private stories: Map<number, Story>;
   private bookings: Map<number, Booking>;
   private timeSlots: Map<number, TimeSlot>;
+  private reviews: Map<number, Review>;
   private chatMessages: ChatMessage[];
   
   private userIdCounter: number;
@@ -111,6 +118,7 @@ export class MemStorage implements IStorage {
   private storyIdCounter: number;
   private bookingIdCounter: number;
   private timeSlotIdCounter: number;
+  private reviewIdCounter: number;
 
   constructor() {
     this.users = new Map();
@@ -122,6 +130,7 @@ export class MemStorage implements IStorage {
     this.stories = new Map();
     this.bookings = new Map();
     this.timeSlots = new Map();
+    this.reviews = new Map();
     this.chatMessages = [];
     
     this.userIdCounter = 1;
@@ -133,6 +142,7 @@ export class MemStorage implements IStorage {
     this.storyIdCounter = 1;
     this.bookingIdCounter = 1;
     this.timeSlotIdCounter = 1;
+    this.reviewIdCounter = 1;
     
     // Initialize with sample data
     this.initSampleData();
@@ -502,6 +512,35 @@ export class MemStorage implements IStorage {
   async addChatMessage(message: ChatMessage): Promise<ChatMessage> {
     this.chatMessages.push(message);
     return message;
+  }
+  
+  // Review operations
+  async createReview(review: InsertReview): Promise<Review> {
+    const id = this.reviewIdCounter++;
+    const now = new Date();
+    const newReview: Review = {
+      ...review,
+      id,
+      createdAt: now
+    };
+    this.reviews.set(id, newReview);
+    return newReview;
+  }
+
+  async getReviewsByArtist(artistId: number): Promise<Review[]> {
+    return Array.from(this.reviews.values()).filter(
+      (review) => review.artistId === artistId
+    );
+  }
+
+  async getReviewsByUser(userId: number): Promise<Review[]> {
+    return Array.from(this.reviews.values()).filter(
+      (review) => review.userId === userId
+    );
+  }
+
+  async getReview(id: number): Promise<Review | undefined> {
+    return this.reviews.get(id);
   }
 }
 
