@@ -64,12 +64,8 @@ function WeatherPromoBanner() {
   };
   
   return (
-    <div className="px-4 py-6 mt-4 bg-gradient-to-br from-blue-50 to-white rounded-t-3xl relative overflow-hidden shadow-sm">
-      {/* Dekoratif arka plan elementleri */}
-      <div className="absolute -top-12 -right-12 w-40 h-40 rounded-full bg-blue-200/20 blur-xl"></div>
-      <div className="absolute -bottom-20 -left-10 w-40 h-40 rounded-full bg-indigo-200/20 blur-xl"></div>
-      
-      <div className="flex items-center justify-between mb-3 relative z-10">
+    <div className="px-4 pt-3 pb-4">
+      <div className="flex items-center justify-between mb-2">
         <div>
           <h2 className="text-lg font-bold text-gray-800 flex items-center">
             <Sun size={20} className="text-amber-500 mr-2" /> 
@@ -79,30 +75,34 @@ function WeatherPromoBanner() {
         </div>
       </div>
       
-      <div className="bg-gradient-to-r from-blue-50 to-white rounded-xl shadow-sm border border-blue-100 overflow-hidden relative mt-2">
-        <div className="absolute top-0 right-0 w-24 h-24 bg-blue-400/10 rounded-full -mr-8 -mt-8"></div>
-        <div className="absolute bottom-0 right-12 w-16 h-16 bg-blue-300/10 rounded-full -mb-8"></div>
+      <div className="bg-gradient-to-r from-sky-400 to-indigo-500 rounded-xl shadow-md overflow-hidden relative mt-2">
+        {/* Dekoratif arka plan elementleri */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-300/20 rounded-full -mr-10 -mt-10"></div>
+        <div className="absolute bottom-0 left-0 w-24 h-24 bg-pink-300/20 rounded-full -ml-6 -mb-6"></div>
         
         <div className="p-4 relative">
           <div className="flex items-start">
+            <div className="bg-white/20 backdrop-blur-sm rounded-full p-2.5 flex items-center justify-center mr-4">
+              <Sun className="h-6 w-6 text-white" />
+            </div>
             <div className="flex-1">
-              <h3 className="text-sm font-medium text-gray-800">Güne Uygun Şık Başlangıç</h3>
-              <div className="mt-1.5 text-xs text-gray-600 space-y-1">
+              <h3 className="text-base font-semibold text-white drop-shadow-sm">Güne Uygun Şık Başlangıç</h3>
+              <div className="mt-2 text-sm text-white/90 space-y-1.5">
                 <p className="flex items-center">
-                  <span className="text-amber-500 mr-1">☀️</span> Bugün İstanbul'da hava çok güzel...
+                  <span className="mr-1.5">☀️</span> Bugün İstanbul'da hava çok güzel...
                 </p>
                 <p className="flex items-center">
-                  <span className="text-pink-500 mr-1">💅</span> Tırnakların da en az senin kadar parlasın!
+                  <span className="mr-1.5">💅</span> Tırnakların da en az senin kadar parlasın!
                 </p>
-                <p className="font-medium text-gray-700">NAM ile randevunu al, tarzını yansıt.</p>
+                <p className="font-medium text-white mt-1">NAM ile randevunu al, tarzını yansıt.</p>
               </div>
               
               <button 
                 onClick={navigate}
-                className="mt-3 flex items-center text-xs bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-3 py-1.5 rounded-full font-medium hover:shadow-sm transition-all"
+                className="mt-3 flex items-center text-sm bg-white text-indigo-600 px-4 py-2 rounded-full font-medium shadow-sm hover:bg-white/90 transition-all"
               >
                 Randevu Al
-                <ArrowRight className="ml-1 h-3 w-3" />
+                <ArrowRight className="ml-1.5 h-4 w-4" />
               </button>
             </div>
           </div>
@@ -234,9 +234,9 @@ export default function HomeView() {
       
       <div className="pb-16">
         <StorySection />
+        <WeatherPromoBanner />
         <CategoriesSection />
         <FeaturedSalonsSection />
-        <WeatherPromoBanner />
         <PremiumFeaturesSection />
       </div>
       
