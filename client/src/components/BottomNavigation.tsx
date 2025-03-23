@@ -30,12 +30,21 @@ export default function BottomNavigation() {
             <span className="text-xs mt-1 block">Cüzdan</span>
           </Link>
         </div>
-        <div className={`flex flex-col items-center px-3 py-1 ${location === '/profile' ? 'text-[#D6C3E5] dark:text-[#D3B5E8]' : 'text-gray-500 dark:text-gray-400'}`}>
+        <div className={`flex flex-col items-center px-3 py-1 ${location === '/profile' || location.startsWith('/admin') ? 'text-[#D6C3E5] dark:text-[#D3B5E8]' : 'text-gray-500 dark:text-gray-400'}`}>
           <Link href="/profile">
             <i className="far fa-user text-lg"></i>
             <span className="text-xs mt-1 block">Profil</span>
           </Link>
         </div>
+      </div>
+      
+      {/* Yönetim Paneli Kısayolu */}
+      <div className="max-w-md mx-auto mt-1 text-center">
+        <Link href="/admin/dashboard">
+          <span className="text-xs text-gray-500 dark:text-gray-400 hover:text-[#D6C3E5] dark:hover:text-[#D3B5E8]">
+            Yönetim Paneli
+          </span>
+        </Link>
       </div>
     </div>
   );
