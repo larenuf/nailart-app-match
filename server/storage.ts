@@ -262,14 +262,16 @@ export class MemStorage implements IStorage {
         id: 1,
         title: 'Popüler',
         imageUrl: 'https://loremflickr.com/150/150/nails',
-        highlighted: false
+        highlighted: false,
+        videoUrl: null
       });
       
       this.stories.set(2, {
         id: 2,
         title: 'Yeni',
         imageUrl: 'https://loremflickr.com/150/150/manicure',
-        highlighted: false
+        highlighted: false,
+        videoUrl: null
       });
       
       this.stories.set(3, {
@@ -284,14 +286,16 @@ export class MemStorage implements IStorage {
         id: 4,
         title: 'İndirimli',
         imageUrl: 'https://loremflickr.com/150/150/nail,art',
-        highlighted: false
+        highlighted: false,
+        videoUrl: null
       });
       
       this.stories.set(5, {
         id: 5,
         title: 'Yeni İndirimler',
         imageUrl: 'https://loremflickr.com/150/150/polish,nails',
-        highlighted: false
+        highlighted: false,
+        videoUrl: null
       });
       
       this.storyIdCounter = 6;
