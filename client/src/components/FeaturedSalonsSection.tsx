@@ -59,9 +59,9 @@ export default function FeaturedSalonsSection() {
             <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02] bg-gradient-to-b from-gray-200 to-gray-400">
               <div className="absolute inset-0">
                 <img 
-                  src="https://images.unsplash.com/photo-1604654894610-df63bc536372?q=80&w=600" 
+                  src="/images/tirnak-urunleri.svg" 
                   alt="Tırnak Bakım Ürünleri"
-                  className="w-full h-full object-cover opacity-75"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
@@ -79,7 +79,7 @@ export default function FeaturedSalonsSection() {
           <div className="cursor-pointer group">
             <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02]">
               <img 
-                src="https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=1000"
+                src="/images/nail-art-kitleri.svg"
                 alt="Nail Art Kitleri"
                 className="w-full h-full object-cover"
               />
