@@ -15,6 +15,8 @@ import Profile from "@/pages/Profile";
 import Search from "@/pages/Search";
 import VirtualConsultation from "@/pages/VirtualConsultation";
 import ColorMatcher from "@/pages/ColorMatcher";
+import Dashboard from "@/pages/admin/Dashboard";
+import CreateSalon from "@/pages/admin/CreateSalon";
 import AiChat from "@/components/AiChat";
 
 function Router() {
@@ -32,6 +34,11 @@ function Router() {
       <Route path="/search" component={Search} />
       <Route path="/virtual-consultation" component={VirtualConsultation} />
       <Route path="/color-matcher" component={ColorMatcher} />
+      
+      {/* Salon Yönetim Sayfaları */}
+      <Route path="/admin/dashboard" component={Dashboard} />
+      <Route path="/admin/create-salon" component={CreateSalon} />
+      
       <Route component={NotFound} />
     </Switch>
   );
