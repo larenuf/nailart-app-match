@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,17 +26,21 @@ export default function Dashboard() {
     retry: false,
   });
 
-  // Oturum yoksa giriş sayfasına yönlendir
-  if (!isLoading && !user) {
-    navigate("/auth");
-    return null;
-  }
-
-  // Kullanıcı salon sahibi değilse ana sayfaya yönlendir
-  if (user && user.role !== "salon_owner" && user.role !== "admin") {
-    navigate("/");
-    return null;
-  }
+  // useEffect ile yönlendirme yapılması, render sırasında yönlendirme yapmanın daha güvenli bir yoludur
+  useEffect(() => {
+    // Oturum yoksa giriş sayfasına yönlendir
+    if (!isLoading && !user) {
+      navigate("/auth");
+    }
+    
+    // Kullanıcı salon sahibi değilse ve bir rol tanımlanmışsa ana sayfaya yönlendir
+    // NOT: Bu kısım demoda kapalı, gerçek uygulamada açılabilir
+    /* 
+    if (user && user.role && user.role !== "salon_owner" && user.role !== "admin") {
+      navigate("/");
+    }
+    */
+  }, [isLoading, user, navigate]);
 
   if (isLoading) {
     return (
@@ -77,7 +81,7 @@ export default function Dashboard() {
       <header className="mb-6">
         <h1 className="text-2xl font-bold">Salon Yönetim Paneli</h1>
         <p className="text-gray-500 dark:text-gray-400">
-          {salon ? salon.name : "Yeni Salon"} - Salon bilgilerinizi, çalışanlarınızı ve hizmetlerinizi yönetin
+          {salon && typeof salon === 'object' && 'name' in salon ? salon.name : "Yeni Salon"} - Salon bilgilerinizi, çalışanlarınızı ve hizmetlerinizi yönetin
         </p>
       </header>
 
@@ -119,27 +123,27 @@ export default function Dashboard() {
         </TabsList>
 
         <TabsContent value="overview">
-          <SalonAnalytics salon={salon} />
+          {salon && <SalonAnalytics salon={salon} />}
         </TabsContent>
 
         <TabsContent value="salon">
-          <SalonDetailsForm salon={salon} />
+          {salon && <SalonDetailsForm salon={salon} />}
         </TabsContent>
 
         <TabsContent value="artists">
-          <ArtistManagement salonId={salon?.id} />
+          {salon && salon.id && <ArtistManagement salonId={salon.id} />}
         </TabsContent>
 
         <TabsContent value="services">
-          <ServiceManagement salonId={salon?.id} />
+          {salon && salon.id && <ServiceManagement salonId={salon.id} />}
         </TabsContent>
 
         <TabsContent value="appointments">
-          <AppointmentManagement salonId={salon?.id} />
+          {salon && salon.id && <AppointmentManagement salonId={salon.id} />}
         </TabsContent>
 
         <TabsContent value="promotions">
-          <PromotionManagement salonId={salon?.id} />
+          {salon && salon.id && <PromotionManagement salonId={salon.id} />}
         </TabsContent>
 
         <TabsContent value="settings">
