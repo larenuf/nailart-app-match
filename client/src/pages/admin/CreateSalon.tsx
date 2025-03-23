@@ -89,16 +89,9 @@ export default function CreateSalon() {
   // Salon oluşturma mutasyonu
   const createSalonMutation = useMutation({
     mutationFn: async (values: any) => {
-      // Demo amacıyla API çağrısı yapmadan başarılı sonuç dönüyoruz
-      // Gerçek uygulamada bu kısım aşağıdaki gibi olur:
-      // const response = await apiRequest("POST", "/api/salons", values);
-      // return response.json();
-      
-      // Demo başarılı sonuç
-      return {
-        id: Math.floor(Math.random() * 1000) + 1,
-        ...values
-      };
+      // Gerçek API çağrısı yapılıyor
+      const response = await apiRequest("POST", "/api/admin/salons", values);
+      return response.json();
     },
     onSuccess: (data) => {
       toast({

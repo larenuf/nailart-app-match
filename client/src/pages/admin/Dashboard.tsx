@@ -34,16 +34,18 @@ export default function Dashboard() {
   const [_, navigate] = useLocation();
 
   // Platformu yönetmek için API istatistiklerini getir
-  const { data: stats, isLoading } = useQuery({
-    queryKey: ["/api/admin/stats"],
-    // Geçici olarak 401 hatalarında sessiz kalıyor
-    // Gerçek API tamamlandığında kaldırılacak
-    onError: () => {
-      console.log("İstatistikler yüklenirken hata oluştu - demo modunda devam ediliyor");
-    }
+  const { data: stats, isLoading, error } = useQuery({
+    queryKey: ["/api/admin/stats"]
   });
 
-  // Demo verisi (gerçek API bağlantısı olmadığında)
+  // API hatası varsa logla
+  useEffect(() => {
+    if (error) {
+      console.error("İstatistikler yüklenirken hata oluştu:", error);
+    }
+  }, [error]);
+
+  // API henüz sonuç döndürmediyse veya hata olduysa demo verisi kullan
   const demoStats = {
     totalSalons: 24,
     activeSalons: 22,
