@@ -7,11 +7,9 @@ export default function StorySection() {
     queryKey: ["/api/stories"],
   });
 
-  // Seçilen story'yi izlemek için state
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
   const [isStoryOpen, setIsStoryOpen] = useState(false);
   
-  // Video referansı
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Story'ye tıklandığında çağrılacak fonksiyon
@@ -29,7 +27,6 @@ export default function StorySection() {
       e.stopPropagation();
     }
     setIsStoryOpen(false);
-    // Video oynatılıyorsa durdur
     if (videoRef.current) {
       videoRef.current.pause();
     }
@@ -61,7 +58,10 @@ export default function StorySection() {
 
   return (
     <>
-      <div className="px-4 py-3 bg-[#FAFAFA] dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+      <div 
+        className="px-4 py-3 bg-[#FAFAFA] dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex space-x-4 overflow-x-auto pb-2 no-scrollbar">
           {stories?.map((story) => (
             <div 
@@ -95,11 +95,17 @@ export default function StorySection() {
         </div>
       </div>
       
-      {/* Story Görüntüleme Modalı - Özel modal yapısı kullanıyoruz (Dialog yerine) */}
+      {/* Story Modal */}
       {isStoryOpen && selectedStory && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center" onClick={(e) => closeStoryModal(e)}>
-          <div className="relative h-[80vh] w-full max-w-md bg-black rounded-xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
-            {/* Üst Bilgi Bölümü */}
+        <div 
+          className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center" 
+          onClick={(e) => closeStoryModal(e)}
+        >
+          <div 
+            className="relative h-[80vh] w-full max-w-md bg-black rounded-xl overflow-hidden" 
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Üst Bilgi */}
             <div className="absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-black/80 to-transparent p-4">
               <div className="flex items-center">
                 <img 
@@ -114,7 +120,7 @@ export default function StorySection() {
               </div>
             </div>
             
-            {/* Ana İçerik - Video veya Resim */}
+            {/* Ana İçerik */}
             {selectedStory.videoUrl ? (
               <div className="w-full h-full">
                 <iframe
@@ -139,6 +145,7 @@ export default function StorySection() {
                   type="text" 
                   placeholder="Mesaj gönder..." 
                   className="bg-white/20 text-white rounded-full px-4 py-2 text-sm w-full" 
+                  onClick={(e) => e.stopPropagation()} 
                 />
                 <button 
                   onClick={(e) => closeStoryModal(e)} 
