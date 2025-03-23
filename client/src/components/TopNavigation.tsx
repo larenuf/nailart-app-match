@@ -6,6 +6,12 @@ export default function TopNavigation() {
   const { userLocation } = useAppContext();
   const { darkMode, toggleDarkMode } = useTheme();
 
+  const handleToggleDarkMode = (e: React.MouseEvent) => {
+    e.preventDefault(); // Link davranışını engelle
+    e.stopPropagation(); // Event bubbling'i engelle
+    toggleDarkMode();
+  };
+
   return (
     <div className="px-4 py-4 bg-[#FAFAFA] dark:bg-gray-900 transition-colors duration-200">
       <div className="flex justify-between items-center">
@@ -13,12 +19,16 @@ export default function TopNavigation() {
         <div className="flex space-x-3">
           <button 
             className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm text-[#333333] dark:bg-gray-700 dark:text-white"
-            onClick={toggleDarkMode}
+            onClick={handleToggleDarkMode}
             aria-label={darkMode ? "Açık moda geç" : "Koyu moda geç"}
+            type="button"
           >
             {darkMode ? <Sun size={18} /> : <Moon size={18} />}
           </button>
-          <button className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm text-[#333333] dark:bg-gray-700 dark:text-white">
+          <button 
+            className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm text-[#333333] dark:bg-gray-700 dark:text-white"
+            type="button"
+          >
             <i className="fas fa-search"></i>
           </button>
           <div className="relative w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm dark:bg-gray-700 dark:text-white">
