@@ -36,9 +36,11 @@ export const salons = pgTable("salons", {
   isPremium: boolean("is_premium").default(false),
   description: text("description"),
   city: text("city"),
+  district: text("district"),
   email: text("email"),
   website: text("website"),
   status: text("status").default("active"), // active, inactive, pending
+  isActive: boolean("is_active").default(true), // quick flag for active/inactive status
   featuredPosition: integer("featured_position"), // for ordering in featured list
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at"),
@@ -128,6 +130,7 @@ export const reviews = pgTable("reviews", {
   rating: integer("rating").notNull(),
   comment: text("comment"),
   imageUrl: text("image_url"),
+  adminReviewed: boolean("admin_reviewed").default(false),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
