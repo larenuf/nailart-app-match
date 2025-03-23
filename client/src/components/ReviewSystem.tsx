@@ -1,7 +1,10 @@
-import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useToast } from "@/hooks/use-toast";
+import { useEffect, useState } from "react";
+import { Star, MessageSquare, Upload, Loader2 } from "lucide-react";
+import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
 import { apiRequest } from "@/lib/queryClient";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
 
 interface Review {
   id: number;
@@ -19,175 +22,272 @@ interface ReviewSystemProps {
 }
 
 export default function ReviewSystem({ artistId }: ReviewSystemProps) {
-  const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
-  const [hoveredRating, setHoveredRating] = useState(0);
-  const queryClient = useQueryClient();
+  const [selectedRating, setSelectedRating] = useState(5);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  // Fetch existing reviews
-  const { data: reviews, isLoading } = useQuery<Review[]>({
-    queryKey: [`/api/artists/${artistId}/reviews`],
-    // This endpoint doesn't exist yet, so we'll just return an empty array for now
-    enabled: false,
+  const {
+    data: reviews,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["/api/artists", artistId, "reviews"],
+    queryFn: async () => {
+      const res = await apiRequest("GET", `/api/artists/${artistId}/reviews`);
+      
+      if (!res.ok) {
+        throw new Error("Failed to fetch reviews");
+      }
+      
+      const reviewsData = await res.json();
+      
+      // For demo purposes, we'll add some mock user data since we're not 
+      // doing a join on the backend
+      return reviewsData.map((review: any) => ({
+        ...review,
+        userName: `User ${review.userId}`,
+        userImage: null
+      }));
+    },
   });
 
-  // Submit a new review
   const createReviewMutation = useMutation({
-    mutationFn: async (reviewData: { rating: number; comment: string }) => {
-      return apiRequest("POST", `/api/artists/${artistId}/reviews`, reviewData);
+    mutationFn: async (data: { userId: number; artistId: number; rating: number; comment: string; imageUrl: string | null }) => {
+      const res = await apiRequest("POST", "/api/reviews", data);
+      if (!res.ok) {
+        throw new Error("Failed to create review");
+      }
+      return res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`/api/artists/${artistId}/reviews`] });
-      queryClient.invalidateQueries({ queryKey: [`/api/artists/${artistId}`] });
-      
-      toast({
-        title: "Değerlendirme Gönderildi",
-        description: "Değerlendirmeniz için teşekkür ederiz!",
-      });
-      
-      // Reset form
-      setRating(0);
+      queryClient.invalidateQueries({ queryKey: ["/api/artists", artistId, "reviews"] });
       setComment("");
-    },
-    onError: (error: any) => {
+      setSelectedRating(5);
+      setImageUrl(null);
       toast({
-        title: "Hata",
-        description: error.message || "Değerlendirme gönderilirken bir hata oluştu.",
+        title: "Success",
+        description: "Your review has been posted!",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error",
+        description: error.message,
         variant: "destructive",
       });
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (rating === 0) {
-      toast({
-        title: "Yıldız Seçiniz",
-        description: "Lütfen bir yıldız değerlendirmesi seçin.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    createReviewMutation.mutate({ rating, comment });
+  const handleSubmitReview = () => {
+    // For demo purposes, we're using a hardcoded user ID (1)
+    // In a real app, this would come from auth state
+    createReviewMutation.mutate({
+      userId: 1, 
+      artistId: artistId,
+      rating: selectedRating,
+      comment,
+      imageUrl
+    });
   };
 
-  // This would use real data in a complete implementation
-  const mockReviews: Review[] = [
-    {
-      id: 1,
-      userId: 1,
-      artistId,
-      rating: 5,
-      comment: "Harika bir deneyimdi! Tırnaklar mükemmel oldu ve sanatçı çok profesyoneldi.",
-      createdAt: new Date(),
-      userName: "Ayşe Y.",
-      userImage: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=40&h=40&fit=crop",
-    },
-    {
-      id: 2,
-      userId: 2,
-      artistId,
-      rating: 4,
-      comment: "Çok güzel bir iş çıkardı, çok memnun kaldım. Sadece biraz gecikmeli başladık.",
-      createdAt: new Date(Date.now() - 86400000),
-      userName: "Melis K.",
-      userImage: null,
-    },
-  ];
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // In a real app, this would upload to a server and get a URL back
+      // For demo purposes, we'll use a local URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-4 text-red-500">
+        Failed to load reviews. Please try again later.
+      </div>
+    );
+  }
 
   return (
-    <div className="mt-6">
-      <h3 className="text-lg font-bold mb-4">Değerlendirmeler ve Yorumlar</h3>
+    <div className="w-full space-y-6">
+      <h3 className="text-xl font-semibold">Reviews & Ratings</h3>
       
-      {/* Submit Review Form */}
-      <div className="bg-[#F5F1EB] bg-opacity-30 p-4 rounded-lg mb-6">
-        <h4 className="font-medium mb-3">Değerlendirme Yap</h4>
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <div className="flex items-center">
+      {/* Rating overview */}
+      <div className="bg-accent/30 p-4 rounded-lg">
+        <div className="flex items-center space-x-2">
+          <span className="text-3xl font-bold">
+            {reviews && reviews.length > 0
+              ? (reviews.reduce((acc: number, review: Review) => acc + review.rating, 0) / reviews.length).toFixed(1)
+              : "0.0"}
+          </span>
+          <div className="flex">
             {[1, 2, 3, 4, 5].map((star) => (
-              <button
+              <Star
                 key={star}
-                type="button"
-                className="text-2xl mr-1 focus:outline-none"
-                onClick={() => setRating(star)}
-                onMouseEnter={() => setHoveredRating(star)}
-                onMouseLeave={() => setHoveredRating(0)}
-              >
-                {(hoveredRating || rating) >= star ? (
-                  <i className="fas fa-star text-yellow-400"></i>
-                ) : (
-                  <i className="far fa-star text-yellow-400"></i>
-                )}
-              </button>
+                className={`h-5 w-5 ${
+                  reviews && reviews.length > 0 && 
+                  star <= Math.round(reviews.reduce((acc: number, review: Review) => acc + review.rating, 0) / reviews.length)
+                    ? "text-yellow-400 fill-yellow-400"
+                    : "text-gray-300"
+                }`}
+              />
             ))}
-            <span className="text-sm text-gray-500 ml-2">
-              {rating > 0 ? `${rating}/5 yıldız` : "Yıldız seçiniz"}
-            </span>
+          </div>
+          <span className="text-muted-foreground">
+            ({reviews ? reviews.length : 0} reviews)
+          </span>
+        </div>
+      </div>
+
+      {/* Write a review */}
+      <div className="border rounded-lg p-4 space-y-4">
+        <h4 className="font-medium">Write a Review</h4>
+        
+        <div className="flex items-center space-x-1">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <Star
+              key={star}
+              className={`h-6 w-6 cursor-pointer ${
+                star <= selectedRating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"
+              }`}
+              onClick={() => setSelectedRating(star)}
+            />
+          ))}
+        </div>
+        
+        <Textarea
+          placeholder="Share your experience..."
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          className="min-h-[100px]"
+        />
+        
+        <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => document.getElementById('photo-upload')?.click()}
+              className="flex items-center space-x-1"
+            >
+              <Upload className="h-4 w-4" />
+              <span>Add Photo</span>
+            </Button>
+            <input
+              id="photo-upload"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileUpload}
+            />
+            {imageUrl && (
+              <div className="relative h-10 w-10">
+                <img
+                  src={imageUrl}
+                  alt="Review"
+                  className="h-full w-full object-cover rounded"
+                />
+                <button
+                  onClick={() => setImageUrl(null)}
+                  className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-destructive text-white flex items-center justify-center text-xs"
+                >
+                  ×
+                </button>
+              </div>
+            )}
           </div>
           
-          <textarea
-            className="w-full px-3 py-2 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-[#D6C3E5] focus:border-[#D6C3E5]"
-            placeholder="Yorumunuzu yazın (opsiyonel)"
-            rows={3}
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-          ></textarea>
-          
-          <button
-            type="submit"
-            disabled={createReviewMutation.isPending}
-            className="bg-[#D6C3E5] text-white py-2 px-4 rounded-md font-medium hover:bg-[#D6C3E5]/90 transition disabled:opacity-70"
+          <Button 
+            onClick={handleSubmitReview} 
+            className="bg-primary" 
+            disabled={comment.trim() === "" || createReviewMutation.isPending}
           >
-            {createReviewMutation.isPending ? "Gönderiliyor..." : "Gönder"}
-          </button>
-        </form>
+            {createReviewMutation.isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Posting...
+              </>
+            ) : (
+              <>
+                <MessageSquare className="mr-2 h-4 w-4" />
+                Post Review
+              </>
+            )}
+          </Button>
+        </div>
       </div>
-      
-      {/* Reviews List */}
+
+      {/* Reviews list */}
       <div className="space-y-4">
-        {mockReviews.map((review) => (
-          <div key={review.id} className="border-b border-gray-100 pb-4 last:border-0">
-            <div className="flex items-start">
-              <div className="w-10 h-10 bg-gray-100 rounded-full flex-shrink-0 overflow-hidden mr-3">
-                {review.userImage ? (
-                  <img
-                    src={review.userImage}
-                    alt={review.userName}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-400">
-                    <i className="fas fa-user"></i>
-                  </div>
-                )}
-              </div>
-              <div className="flex-1">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="font-medium">{review.userName}</h4>
-                    <div className="flex text-yellow-400 text-sm">
-                      {[...Array(5)].map((_, i) => (
-                        <i
-                          key={i}
-                          className={`${
-                            i < review.rating ? "fas fa-star" : "far fa-star"
-                          } mr-0.5`}
-                        ></i>
-                      ))}
-                      <span className="text-gray-500 ml-1 text-xs">
-                        {new Date(review.createdAt).toLocaleDateString()}
+        {reviews && reviews.length > 0 ? (
+          reviews.map((review: Review) => (
+            <div key={review.id} className="border rounded-lg p-4 space-y-2">
+              <div className="flex justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
+                    {review.userImage ? (
+                      <img
+                        src={review.userImage}
+                        alt={review.userName}
+                        className="h-full w-full rounded-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-primary font-medium">
+                        {review.userName.charAt(0).toUpperCase()}
                       </span>
+                    )}
+                  </div>
+                  <div>
+                    <div className="font-medium">{review.userName}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {new Date(review.createdAt).toLocaleDateString()}
                     </div>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600 mt-2">{review.comment}</p>
+                
+                <div className="flex">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      className={`h-4 w-4 ${
+                        star <= review.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
+              
+              <p className="text-sm text-foreground/80">{review.comment}</p>
+              
+              {review.imageUrl && (
+                <div className="mt-2">
+                  <img
+                    src={review.imageUrl}
+                    alt="Review"
+                    className="rounded max-h-40 object-cover"
+                  />
+                </div>
+              )}
             </div>
+          ))
+        ) : (
+          <div className="text-center py-8 text-muted-foreground">
+            No reviews yet. Be the first to leave a review!
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

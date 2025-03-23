@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertBookingSchema } from "@shared/schema";
+import { insertBookingSchema, insertReviewSchema } from "@shared/schema";
 import { v4 as uuidv4 } from 'uuid';
 import type { ChatMessage } from './storage';
 
@@ -344,6 +344,84 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }, 1000);
       
       res.status(201).json(userMessage);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Reviews API endpoints
+  app.get("/api/artists/:id/reviews", async (req, res) => {
+    try {
+      const artistId = parseInt(req.params.id);
+      const artist = await storage.getArtist(artistId);
+      
+      if (!artist) {
+        return res.status(404).json({ message: "Artist not found" });
+      }
+      
+      const reviews = await storage.getReviewsByArtist(artistId);
+      res.json(reviews);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/users/:id/reviews", async (req, res) => {
+    try {
+      const userId = parseInt(req.params.id);
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const reviews = await storage.getReviewsByUser(userId);
+      res.json(reviews);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/reviews", async (req, res) => {
+    try {
+      const result = insertReviewSchema.safeParse(req.body);
+      
+      if (!result.success) {
+        return res.status(400).json({ 
+          message: "Invalid review data", 
+          errors: result.error.errors 
+        });
+      }
+      
+      // Verify artist exists
+      const artist = await storage.getArtist(result.data.artistId);
+      if (!artist) {
+        return res.status(404).json({ message: "Artist not found" });
+      }
+      
+      // Verify user exists
+      const user = await storage.getUser(result.data.userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const review = await storage.createReview(result.data);
+      res.status(201).json(review);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/reviews/:id", async (req, res) => {
+    try {
+      const reviewId = parseInt(req.params.id);
+      const review = await storage.getReview(reviewId);
+      
+      if (!review) {
+        return res.status(404).json({ message: "Review not found" });
+      }
+      
+      res.json(review);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
