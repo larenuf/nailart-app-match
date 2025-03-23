@@ -74,6 +74,7 @@ export const stories = pgTable("stories", {
   title: text("title").notNull(),
   imageUrl: text("image_url").notNull(),
   highlighted: boolean("highlighted").default(false),
+  videoUrl: text("video_url"),
 });
 
 // Booking model

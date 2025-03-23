@@ -276,7 +276,8 @@ export class MemStorage implements IStorage {
         id: 3,
         title: 'Bugüne Özel',
         imageUrl: 'https://loremflickr.com/150/150/pedicure',
-        highlighted: true
+        highlighted: true,
+        videoUrl: 'https://sora.com/g/gen_01jq210yk3fkts4yyx120kqy2x'
       });
       
       this.stories.set(4, {
