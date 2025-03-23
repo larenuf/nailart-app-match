@@ -25,7 +25,10 @@ import {
   type InsertBooking,
   availableTimeSlots,
   type TimeSlot,
-  type InsertTimeSlot
+  type InsertTimeSlot,
+  reviews,
+  type Review,
+  type InsertReview
 } from "@shared/schema";
 
 // AI Chat message type
