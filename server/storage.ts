@@ -53,6 +53,7 @@ export interface IStorage {
   createSalon(salon: InsertSalon): Promise<Salon>;
   
   // Artist operations
+  getAllArtists(): Promise<Artist[]>;
   getArtistsBySalon(salonId: number): Promise<Artist[]>;
   getArtist(id: number): Promise<Artist | undefined>;
   createArtist(artist: InsertArtist): Promise<Artist>;
@@ -415,6 +416,10 @@ export class MemStorage implements IStorage {
   }
   
   // Artist operations
+  async getAllArtists(): Promise<Artist[]> {
+    return Array.from(this.artists.values());
+  }
+  
   async getArtistsBySalon(salonId: number): Promise<Artist[]> {
     return Array.from(this.artists.values()).filter(
       (artist) => artist.salonId === salonId

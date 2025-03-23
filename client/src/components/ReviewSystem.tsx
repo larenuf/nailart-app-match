@@ -11,7 +11,8 @@ interface Review {
   userId: number;
   artistId: number;
   rating: number;
-  comment: string;
+  comment: string | null;
+  imageUrl: string | null;
   createdAt: Date;
   userName: string;
   userImage: string | null;

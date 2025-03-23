@@ -71,15 +71,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/salons/:id/artists", async (req, res) => {
     try {
       const salonId = parseInt(req.params.id);
-      const salon = await storage.getSalon(salonId);
+      console.log(`Getting artists for salon ID: ${salonId}`);
       
+      const salon = await storage.getSalon(salonId);
       if (!salon) {
         return res.status(404).json({ message: "Salon not found" });
       }
+      console.log(`Found salon: ${salon.name}`);
       
+      // Get all artists for debugging
+      const allArtists = await storage.getAllArtists();
+      console.log(`Total artists in system: ${allArtists.length}`);
+      console.log(`All artists:`, allArtists.map(a => ({ id: a.id, name: a.name, salonId: a.salonId })));
+      
+      // Get filtered artists
       const artists = await storage.getArtistsBySalon(salonId);
+      console.log(`Found ${artists.length} artists for salon ID ${salonId}`);
+      
       res.json(artists);
     } catch (error: any) {
+      console.error(`Error getting artists for salon ID ${req.params.id}:`, error);
       res.status(500).json({ message: error.message });
     }
   });
