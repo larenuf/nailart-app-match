@@ -4,6 +4,7 @@ import { Artist, Service } from "@/types";
 import BottomNavigation from "./BottomNavigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { useLocation } from "wouter";
 
 export default function SalonDetailView() {
   const { selectedSalon, setSelectedSalon, setSelectedArtist } = useAppContext();
@@ -39,8 +40,12 @@ export default function SalonDetailView() {
     setSelectedSalon(null);
   };
 
+  const [_, navigate] = useLocation();
+
   const handleArtistSelect = (artist: Artist) => {
     setSelectedArtist(artist);
+    // Sanatçı detay sayfasına yönlendir - Wouter navigate kullan
+    navigate(`/artists/${artist.id}`);
   };
 
   if (!selectedSalon) return null;
