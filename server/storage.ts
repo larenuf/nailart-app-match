@@ -150,232 +150,211 @@ export class MemStorage implements IStorage {
   
   private initSampleData() {
     // Sample categories - Fresha stil
-    const categories = [
-      { name: 'Hair & styling', iconName: 'cut', backgroundColor: 'white' },
-      { name: 'Nails', iconName: 'hand-sparkles', backgroundColor: 'white' },
-      { name: 'Eyebrows & eyelashes', iconName: 'eye', backgroundColor: 'white' },
-      { name: 'Massage', iconName: 'hands', backgroundColor: 'white' },
-      { name: 'Barbering', iconName: 'cut', backgroundColor: 'white' },
-      { name: 'Hair removal', iconName: 'feather', backgroundColor: 'white' },
-      { name: 'Facials & skincare', iconName: 'smile', backgroundColor: 'white' },
-      { name: 'Injectables & fillers', iconName: 'syringe', backgroundColor: 'white' },
-      { name: 'Body', iconName: 'user', backgroundColor: 'white' },
-      { name: 'Tattoo & piercing', iconName: 'paint-brush', backgroundColor: 'white' },
-      { name: 'Makeup', iconName: 'palette', backgroundColor: 'white' },
-      { name: 'Medical & dental', iconName: 'tooth', backgroundColor: 'white' }
-    ];
+    this.createCategory({ name: 'Hair & styling', iconName: 'cut', backgroundColor: 'white' });
+    this.createCategory({ name: 'Nails', iconName: 'hand-sparkles', backgroundColor: 'white' });
+    this.createCategory({ name: 'Eyebrows & eyelashes', iconName: 'eye', backgroundColor: 'white' });
+    this.createCategory({ name: 'Massage', iconName: 'hands', backgroundColor: 'white' });
+    this.createCategory({ name: 'Barbering', iconName: 'cut', backgroundColor: 'white' });
+    this.createCategory({ name: 'Hair removal', iconName: 'feather', backgroundColor: 'white' });
+    this.createCategory({ name: 'Facials & skincare', iconName: 'smile', backgroundColor: 'white' });
+    this.createCategory({ name: 'Injectables & fillers', iconName: 'syringe', backgroundColor: 'white' });
+    this.createCategory({ name: 'Body', iconName: 'user', backgroundColor: 'white' });
+    this.createCategory({ name: 'Tattoo & piercing', iconName: 'paint-brush', backgroundColor: 'white' });
+    this.createCategory({ name: 'Makeup', iconName: 'palette', backgroundColor: 'white' });
+    this.createCategory({ name: 'Medical & dental', iconName: 'tooth', backgroundColor: 'white' });
     
-    categories.forEach(cat => {
-      this.createCategory({
-        name: cat.name,
-        iconName: cat.iconName,
-        backgroundColor: cat.backgroundColor
-      });
+    // Sample stories
+    this.createStory({ title: 'Popular', imageUrl: 'https://images.pexels.com/photos/4210665/pexels-photo-4210665.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false });
+    this.createStory({ title: 'New', imageUrl: 'https://images.pexels.com/photos/704815/pexels-photo-704815.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false });
+    this.createStory({ title: 'Today Only', imageUrl: 'https://images.pexels.com/photos/939835/pexels-photo-939835.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: true });
+    this.createStory({ title: 'Discounted', imageUrl: 'https://images.pexels.com/photos/3997386/pexels-photo-3997386.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false });
+    this.createStory({ title: 'New discounted', imageUrl: 'https://images.pexels.com/photos/4210276/pexels-photo-4210276.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false });
+    
+    // Sample data for first salon and its artists
+    
+    // Create first salon
+    const salon1 = this.createSalon({
+      name: 'Glossy Nails Salon',
+      address: '123 Fashion Ave, New York',
+      latitude: 40.7128,
+      longitude: -74.0060,
+      phoneNumber: '(212) 555-1234',
+      rating: 4.8,
+      reviewCount: 124,
+      openTime: '9:00 AM',
+      closeTime: '7:00 PM',
+      imageUrl: 'https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=600&h=300&fit=crop&crop=focalpoint&auto=format',
+      discount: '20% Off for New Clients',
+      distance: 0.8,
+      isPremium: false
     });
     
-    // Sample stories - yüksek kaliteli nail art resimleri
-    const stories = [
-      { title: 'Popular', imageUrl: 'https://images.pexels.com/photos/4210665/pexels-photo-4210665.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false },
-      { title: 'New', imageUrl: 'https://images.pexels.com/photos/704815/pexels-photo-704815.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false },
-      { title: 'Today Only', imageUrl: 'https://images.pexels.com/photos/939835/pexels-photo-939835.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: true },
-      { title: 'Discounted', imageUrl: 'https://images.pexels.com/photos/3997386/pexels-photo-3997386.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false },
-      { title: 'New discounted', imageUrl: 'https://images.pexels.com/photos/4210276/pexels-photo-4210276.jpeg?auto=compress&cs=tinysrgb&w=800', highlighted: false }
-    ];
-    
-    stories.forEach(story => {
-      this.createStory({
-        title: story.title,
-        imageUrl: story.imageUrl,
-        highlighted: story.highlighted
-      });
+    // Create first artist for first salon
+    const artist1 = this.createArtist({
+      salonId: salon1.id,
+      name: 'Emma Thompson',
+      specialty: 'Nail Art Specialist',
+      experience: '5+ years experience',
+      rating: 5.0,
+      reviewCount: 48,
+      imageUrl: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=200&h=200&fit=crop&crop=faces&auto=format'
     });
     
-    // Sample salons
-    const salons = [
-      {
-        name: 'Glossy Nails Salon',
-        address: '123 Fashion Ave, New York',
-        latitude: 40.7128,
-        longitude: -74.0060,
-        phoneNumber: '(212) 555-1234',
-        rating: 4.5,
-        reviewCount: 128,
-        openTime: '10AM',
-        closeTime: '8PM',
-        imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&h=300&fit=crop&crop=focalpoint&auto=format',
-        discount: '20% OFF',
-        distance: 0.8,
-        isPremium: false
-      },
-      {
-        name: 'Luxe Nail Bar',
-        address: '456 Style Blvd, New York',
-        latitude: 40.7282,
-        longitude: -74.0776,
-        phoneNumber: '(212) 555-5678',
-        rating: 5.0,
-        reviewCount: 94,
-        openTime: '9AM',
-        closeTime: '9PM',
-        imageUrl: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=600&h=300&fit=crop&crop=focalpoint&auto=format',
-        discount: '',
-        distance: 1.2,
-        isPremium: true
-      }
-    ];
+    // Services for first artist
+    this.createService({
+      artistId: artist1.id,
+      name: 'Gel Manicure',
+      price: 35,
+      durationMinutes: 45,
+      description: 'Long-lasting gel polish that won\'t chip for 2-3 weeks'
+    });
     
-    const salonIds = salons.map(salon => this.createSalon(salon).id);
+    this.createService({
+      artistId: artist1.id,
+      name: 'Nail Art (Basic)',
+      price: 50,
+      durationMinutes: 60,
+      description: 'Custom designs on 2-4 accent nails'
+    });
     
-    // Sample artists
-    const artists = [
-      {
-        salonId: salonIds[0],
-        name: 'Emma Thompson',
-        specialty: 'Nail Art Specialist',
-        experience: '5+ years experience',
-        rating: 5.0,
-        reviewCount: 48,
-        imageUrl: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=200&h=200&fit=crop&crop=faces&auto=format'
-      },
-      {
-        salonId: salonIds[0],
-        name: 'Sophia Chen',
-        specialty: 'Gel Expert',
-        experience: '3+ years experience',
-        rating: 4.0,
-        reviewCount: 32,
-        imageUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=faces&auto=format'
-      },
-      // Artists for the second salon
-      {
-        salonId: salonIds[1],
-        name: 'Olivia Parker',
-        specialty: 'Nail Art Designer',
-        experience: '7+ years experience',
-        rating: 4.9,
-        reviewCount: 56,
-        imageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=faces&auto=format'
-      },
-      {
-        salonId: salonIds[1],
-        name: 'Isabella Martinez',
-        specialty: 'Acrylics Expert',
-        experience: '4+ years experience',
-        rating: 4.7,
-        reviewCount: 38,
-        imageUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=faces&auto=format'
-      }
-    ];
+    this.createService({
+      artistId: artist1.id,
+      name: 'Full Set Acrylics',
+      price: 75,
+      durationMinutes: 90,
+      description: 'Complete acrylic nail extension with gel polish'
+    });
     
-    const artistIds = artists.map(artist => this.createArtist(artist).id);
+    // Portfolio for first artist
+    this.createPortfolioItem({ artistId: artist1.id, imageUrl: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=200&h=200&fit=crop&auto=format' });
+    this.createPortfolioItem({ artistId: artist1.id, imageUrl: 'https://images.unsplash.com/photo-1613452707901-1160c8010239?w=200&h=200&fit=crop&auto=format' });
+    this.createPortfolioItem({ artistId: artist1.id, imageUrl: 'https://images.unsplash.com/photo-1604902394631-2ce5401662b8?w=200&h=200&fit=crop&auto=format' });
+    this.createPortfolioItem({ artistId: artist1.id, imageUrl: 'https://images.unsplash.com/photo-1604902396636-da5aea655eca?w=200&h=200&fit=crop&auto=format' });
+    this.createPortfolioItem({ artistId: artist1.id, imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798c?w=200&h=200&fit=crop&auto=format' });
+    this.createPortfolioItem({ artistId: artist1.id, imageUrl: 'https://images.unsplash.com/photo-1610992932411-f200e69c841c?w=200&h=200&fit=crop&auto=format' });
     
-    // Sample services
-    const services = [
-      // Services for the first artist
-      {
-        artistId: artistIds[0],
-        name: 'Gel Manicure',
-        price: 35,
-        durationMinutes: 45,
-        description: 'Long-lasting gel polish that won\'t chip for 2-3 weeks'
-      },
-      {
-        artistId: artistIds[0],
-        name: 'Nail Art (Basic)',
-        price: 50,
-        durationMinutes: 60,
-        description: 'Custom designs on 2-4 accent nails'
-      },
-      {
-        artistId: artistIds[0],
-        name: 'Full Set Acrylics',
-        price: 75,
-        durationMinutes: 90,
-        description: 'Complete acrylic nail extension with gel polish'
-      },
-      // Services for the third artist (first artist in the second salon)
-      {
-        artistId: artistIds[2],
-        name: 'Premium Gel Manicure',
-        price: 45,
-        durationMinutes: 60,
-        description: 'High-end gel polish with luxury hand treatment'
-      },
-      {
-        artistId: artistIds[2],
-        name: 'Advanced Nail Art',
-        price: 65,
-        durationMinutes: 75,
-        description: 'Custom designs with crystals and 3D elements'
-      },
-      // Services for the fourth artist (second artist in the second salon)
-      {
-        artistId: artistIds[3],
-        name: 'Acrylic Full Set',
-        price: 80,
-        durationMinutes: 90,
-        description: 'Premium acrylic extensions with custom shapes'
-      },
-      {
-        artistId: artistIds[3],
-        name: 'Acrylic Fill',
-        price: 45,
-        durationMinutes: 60,
-        description: 'Maintenance for existing acrylic nails'
-      }
-    ];
+    // Create second artist for first salon
+    const artist2 = this.createArtist({
+      salonId: salon1.id,
+      name: 'Sophia Chen',
+      specialty: 'Gel Expert',
+      experience: '3+ years experience',
+      rating: 4.0,
+      reviewCount: 32,
+      imageUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=faces&auto=format'
+    });
     
-    services.forEach(service => this.createService(service));
+    // Portfolio for second artist
+    this.createPortfolioItem({ artistId: artist2.id, imageUrl: 'https://images.unsplash.com/photo-1630283784711-011b115748c4?w=200&h=200&fit=crop&auto=format' });
+    this.createPortfolioItem({ artistId: artist2.id, imageUrl: 'https://images.unsplash.com/photo-1632344593064-cf34f59eef89?w=200&h=200&fit=crop&auto=format' });
+    this.createPortfolioItem({ artistId: artist2.id, imageUrl: 'https://images.unsplash.com/photo-1600416553849-26fe8f143d53?w=200&h=200&fit=crop&auto=format' });
     
-    // Sample portfolio items
-    const portfolioItems = [
-      // Portfolio for the first artist
-      { artistId: artistIds[0], imageUrl: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=200&h=200&fit=crop&auto=format' },
-      { artistId: artistIds[0], imageUrl: 'https://images.unsplash.com/photo-1613452707901-1160c8010239?w=200&h=200&fit=crop&auto=format' },
-      { artistId: artistIds[0], imageUrl: 'https://images.unsplash.com/photo-1604902394631-2ce5401662b8?w=200&h=200&fit=crop&auto=format' },
-      { artistId: artistIds[0], imageUrl: 'https://images.unsplash.com/photo-1604902396636-da5aea655eca?w=200&h=200&fit=crop&auto=format' },
-      { artistId: artistIds[0], imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798c?w=200&h=200&fit=crop&auto=format' },
-      { artistId: artistIds[0], imageUrl: 'https://images.unsplash.com/photo-1610992932411-f200e69c841c?w=200&h=200&fit=crop&auto=format' },
-      
-      // Portfolio for the second artist
-      { artistId: artistIds[1], imageUrl: 'https://images.unsplash.com/photo-1630283784711-011b115748c4?w=200&h=200&fit=crop&auto=format' },
-      { artistId: artistIds[1], imageUrl: 'https://images.unsplash.com/photo-1632344593064-cf34f59eef89?w=200&h=200&fit=crop&auto=format' },
-      { artistId: artistIds[1], imageUrl: 'https://images.unsplash.com/photo-1600416553849-26fe8f143d53?w=200&h=200&fit=crop&auto=format' },
-      
-      // Portfolio for the third artist (first artist in second salon)
-      { artistId: artistIds[2], imageUrl: 'https://images.unsplash.com/photo-1551753103-7d6305be5c5b?w=200&h=200&fit=crop&auto=format' },
-      { artistId: artistIds[2], imageUrl: 'https://images.unsplash.com/photo-1632344905301-0d41b7848750?w=200&h=200&fit=crop&auto=format' },
-      { artistId: artistIds[2], imageUrl: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=200&h=200&fit=crop&auto=format' },
-      { artistId: artistIds[2], imageUrl: 'https://images.unsplash.com/photo-1565885548167-80bb3c7b0a28?w=200&h=200&fit=crop&auto=format' },
-      
-      // Portfolio for the fourth artist (second artist in second salon)
-      { artistId: artistIds[3], imageUrl: 'https://images.unsplash.com/photo-1635107123353-33a5b3e268fe?w=200&h=200&fit=crop&auto=format' },
-      { artistId: artistIds[3], imageUrl: 'https://images.unsplash.com/photo-1640885988958-ae5d17ebf1a7?w=200&h=200&fit=crop&auto=format' },
-      { artistId: artistIds[3], imageUrl: 'https://images.unsplash.com/photo-1601065750844-720d7dcd780b?w=200&h=200&fit=crop&auto=format' },
-      { artistId: artistIds[3], imageUrl: 'https://images.unsplash.com/photo-1645237455554-d0003f0ffd67?w=200&h=200&fit=crop&auto=format' }
-    ];
+    // Sample data for second salon and its artists
     
-    portfolioItems.forEach(item => this.createPortfolioItem(item));
+    // Create second salon
+    const salon2 = this.createSalon({
+      name: 'Luxe Nail Bar',
+      address: '456 Style Blvd, New York',
+      latitude: 40.7282,
+      longitude: -73.9942,
+      phoneNumber: '(212) 555-5678',
+      rating: 5.0,
+      reviewCount: 94,
+      openTime: '9:00 AM',
+      closeTime: '9:00 PM',
+      imageUrl: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=600&h=300&fit=crop&crop=focalpoint&auto=format',
+      discount: '',
+      distance: 1.2,
+      isPremium: true
+    });
     
-    // Sample time slots for booking
+    // Create first artist for second salon
+    const artist3 = this.createArtist({
+      salonId: salon2.id,
+      name: 'Olivia Parker',
+      specialty: 'Nail Art Designer',
+      experience: '7+ years experience',
+      rating: 4.9,
+      reviewCount: 56,
+      imageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=faces&auto=format'
+    });
+    
+    // Services for third artist
+    this.createService({
+      artistId: artist3.id,
+      name: 'Premium Gel Manicure',
+      price: 45,
+      durationMinutes: 60,
+      description: 'High-end gel polish with luxury hand treatment'
+    });
+    
+    this.createService({
+      artistId: artist3.id,
+      name: 'Advanced Nail Art',
+      price: 65,
+      durationMinutes: 75,
+      description: 'Custom designs with crystals and 3D elements'
+    });
+    
+    // Portfolio for third artist
+    this.createPortfolioItem({ artistId: artist3.id, imageUrl: 'https://images.unsplash.com/photo-1551753103-7d6305be5c5b?w=200&h=200&fit=crop&auto=format' });
+    this.createPortfolioItem({ artistId: artist3.id, imageUrl: 'https://images.unsplash.com/photo-1632344905301-0d41b7848750?w=200&h=200&fit=crop&auto=format' });
+    this.createPortfolioItem({ artistId: artist3.id, imageUrl: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=200&h=200&fit=crop&auto=format' });
+    this.createPortfolioItem({ artistId: artist3.id, imageUrl: 'https://images.unsplash.com/photo-1565885548167-80bb3c7b0a28?w=200&h=200&fit=crop&auto=format' });
+    
+    // Create second artist for second salon
+    const artist4 = this.createArtist({
+      salonId: salon2.id,
+      name: 'Isabella Martinez',
+      specialty: 'Acrylics Expert',
+      experience: '4+ years experience',
+      rating: 4.7,
+      reviewCount: 38,
+      imageUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=faces&auto=format'
+    });
+    
+    // Services for fourth artist
+    this.createService({
+      artistId: artist4.id,
+      name: 'Acrylic Full Set',
+      price: 80,
+      durationMinutes: 90,
+      description: 'Premium acrylic extensions with custom shapes'
+    });
+    
+    this.createService({
+      artistId: artist4.id,
+      name: 'Acrylic Fill',
+      price: 45,
+      durationMinutes: 60,
+      description: 'Maintenance for existing acrylic nails'
+    });
+    
+    // Portfolio for fourth artist
+    this.createPortfolioItem({ artistId: artist4.id, imageUrl: 'https://images.unsplash.com/photo-1635107123353-33a5b3e268fe?w=200&h=200&fit=crop&auto=format' });
+    this.createPortfolioItem({ artistId: artist4.id, imageUrl: 'https://images.unsplash.com/photo-1640885988958-ae5d17ebf1a7?w=200&h=200&fit=crop&auto=format' });
+    this.createPortfolioItem({ artistId: artist4.id, imageUrl: 'https://images.unsplash.com/photo-1601065750844-720d7dcd780b?w=200&h=200&fit=crop&auto=format' });
+    this.createPortfolioItem({ artistId: artist4.id, imageUrl: 'https://images.unsplash.com/photo-1645237455554-d0003f0ffd67?w=200&h=200&fit=crop&auto=format' });
+    
+    // Sample time slots for all artists
     const today = new Date();
+    const times = ['10:00 AM', '11:00 AM', '12:30 PM', '2:00 PM', '3:30 PM', '5:00 PM'];
+    const artists = [artist1, artist2, artist3, artist4];
+    
     for (let i = 0; i < 5; i++) {
       const date = new Date(today);
       date.setDate(today.getDate() + i);
       
-      const times = ['10:00 AM', '11:00 AM', '12:30 PM', '2:00 PM', '3:30 PM', '5:00 PM'];
-      
-      // Time slots for all artists
-      artistIds.forEach(artistId => {
-        times.forEach(time => {
+      for (const artist of artists) {
+        for (const time of times) {
           this.createTimeSlot({
-            artistId,
+            artistId: artist.id,
             date,
             startTime: time,
             isBooked: false
           });
-        });
-      });
+        }
+      }
     }
   }
 
