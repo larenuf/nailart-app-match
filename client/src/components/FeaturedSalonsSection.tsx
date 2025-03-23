@@ -55,7 +55,7 @@ export default function FeaturedSalonsSection() {
         
         <div className="grid grid-cols-2 gap-3">
           {/* Tırnak Bakım Ürünleri - Doğrudan gradient ile */}
-          <div className="cursor-pointer group">
+          <div className="cursor-pointer group" onClick={() => navigate('/product-category/nail-care')}>
             <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02] bg-gradient-to-b from-slate-100 via-slate-200 to-slate-400">
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-slate-500 text-2xl font-medium">Tırnak Bakım Ürünleri</div>
@@ -72,7 +72,7 @@ export default function FeaturedSalonsSection() {
           </div>
           
           {/* Nail Art Kitleri - Doğrudan gradient ile */}
-          <div className="cursor-pointer group">
+          <div className="cursor-pointer group" onClick={() => navigate('/product-category/nail-art-kits')}>
             <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02] bg-gradient-to-b from-slate-100 via-slate-200 to-slate-400">
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-slate-500 text-2xl font-medium">Nail Art Kitleri</div>

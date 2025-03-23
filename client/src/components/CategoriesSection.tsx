@@ -116,7 +116,9 @@ export default function CategoriesSection() {
                 <span className="text-xl">✨</span>
               </h3>
               <p className="text-xs mt-0.5 opacity-95">Yeni müşteriler için %20 indirim</p>
-              <button className="mt-2 bg-white text-primary px-3 py-1 rounded-full text-xs font-medium shadow-sm hover:shadow-md transition-all duration-300 w-full">
+              <button 
+                onClick={() => window.location.href = '/search?promo=new20'}
+                className="mt-2 bg-white text-primary px-3 py-1 rounded-full text-xs font-medium shadow-sm hover:shadow-md transition-all duration-300 w-full">
                 Şimdi Keşfet
               </button>
             </div>
@@ -129,7 +131,9 @@ export default function CategoriesSection() {
                 <span className="text-xl">🎁</span>
               </h3>
               <p className="text-xs mt-0.5 opacity-95">Tüm hizmetlerde %15 indirim</p>
-              <button className="mt-2 bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-medium shadow-sm hover:shadow-md transition-all duration-300 w-full">
+              <button 
+                onClick={() => window.location.href = '/search?promo=weekend15'}
+                className="mt-2 bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-medium shadow-sm hover:shadow-md transition-all duration-300 w-full">
                 Detaylar
               </button>
             </div>
@@ -141,7 +145,9 @@ export default function CategoriesSection() {
         <h2 className="text-xl font-medium tracking-tight text-gray-900">
           Kategoriler
         </h2>
-        <button className="text-sm font-medium text-primary">
+        <button 
+          onClick={() => window.location.href = '/search'}
+          className="text-sm font-medium text-primary">
           Tümünü Gör
         </button>
       </div>
@@ -155,6 +161,7 @@ export default function CategoriesSection() {
             <div
               key={category.id}
               className="cursor-pointer group"
+              onClick={() => window.location.href = `/search?category=${encodeURIComponent(category.name)}`}
             >
               <div 
                 className="relative overflow-hidden rounded-lg aspect-[3/2] mb-1 shadow-sm transition-transform duration-300 group-hover:scale-[1.02]"
