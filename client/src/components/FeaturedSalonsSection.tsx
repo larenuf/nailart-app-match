@@ -13,19 +13,9 @@ export default function FeaturedSalonsSection() {
     queryKey: ["/api/salons/featured"],
   });
 
-  // Salon seçimi için güvenli tıklama işleyicisi - preventDefault kullanmadan!
-  const handleSelectSalon = useCallback((e: React.MouseEvent, salon: Salon) => {
-    // Sadece yayılımı önle
-    e.stopPropagation();
-    
+  // Basitleştirilmiş salon seçimi işleyicisi
+  const handleSelectSalon = useCallback((salon: Salon) => {
     console.log("Salon seçildi, yönlendiriliyor:", salon.name);
-    
-    // Debug: Seçilen salonu göster
-    console.log("Salon bilgileri:", {
-      id: salon.id,
-      name: salon.name,
-      image: salon.imageUrl
-    });
     
     // Hem context'i güncelle hem de URL'yi doğrudan değiştir
     setSelectedSalon(salon);
@@ -214,21 +204,23 @@ export default function FeaturedSalonsSection() {
           <div
             key={salon.id}
             className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer"
-            onClick={(e) => {
-              // Yönlendirme için preventDefault kullanmıyoruz, sadece yayılımı durduracağız
-              e.stopPropagation();
-              handleSelectSalon(e, salon);
+            onClick={() => {
+              // Çok basit tıklama işleyicisi
+              handleSelectSalon(salon);
             }}
           >
             <img
-              src={salon.imageUrl || 'https://placekitten.com/400/300'}
+              src={salon.id === 1 ? "https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80" : 
+                   salon.id === 2 ? "https://images.unsplash.com/photo-1604902396830-aca29e19b067?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80" :
+                   salon.id === 3 ? "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80" :
+                   "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80"}
               alt={salon.name}
               className="w-full h-40 object-cover"
               onClick={(e) => {
                 e.stopPropagation(); // Sadece yayılımı durduruyoruz
               }}
               onError={(e) => {
-                console.error("Salon resmi yüklenemedi:", salon.imageUrl);
+                console.error("Salon resmi yüklenemedi:", salon.id);
                 // Yedek resim göster
                 (e.target as HTMLImageElement).src = 'https://placekitten.com/400/300';
               }}
