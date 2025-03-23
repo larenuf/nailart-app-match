@@ -28,6 +28,14 @@ import {
   type InsertTimeSlot
 } from "@shared/schema";
 
+// AI Chat message type
+export type ChatMessage = {
+  id: string;
+  text: string;
+  isUser: boolean;
+  timestamp: Date;
+};
+
 export interface IStorage {
   // User operations
   getUser(id: number): Promise<User | undefined>;
@@ -73,6 +81,10 @@ export interface IStorage {
   getAvailableTimeSlots(artistId: number, date: Date): Promise<TimeSlot[]>;
   bookTimeSlot(id: number): Promise<TimeSlot>;
   createTimeSlot(timeSlot: InsertTimeSlot): Promise<TimeSlot>;
+  
+  // Chat operations
+  getChatMessages(): Promise<ChatMessage[]>;
+  addChatMessage(message: ChatMessage): Promise<ChatMessage>;
 }
 
 export class MemStorage implements IStorage {
@@ -85,6 +97,7 @@ export class MemStorage implements IStorage {
   private stories: Map<number, Story>;
   private bookings: Map<number, Booking>;
   private timeSlots: Map<number, TimeSlot>;
+  private chatMessages: ChatMessage[];
   
   private userIdCounter: number;
   private salonIdCounter: number;
@@ -106,6 +119,7 @@ export class MemStorage implements IStorage {
     this.stories = new Map();
     this.bookings = new Map();
     this.timeSlots = new Map();
+    this.chatMessages = [];
     
     this.userIdCounter = 1;
     this.salonIdCounter = 1;
@@ -475,6 +489,16 @@ export class MemStorage implements IStorage {
     const newTimeSlot: TimeSlot = { ...timeSlot, id };
     this.timeSlots.set(id, newTimeSlot);
     return newTimeSlot;
+  }
+  
+  // Chat operations
+  async getChatMessages(): Promise<ChatMessage[]> {
+    return this.chatMessages;
+  }
+  
+  async addChatMessage(message: ChatMessage): Promise<ChatMessage> {
+    this.chatMessages.push(message);
+    return message;
   }
 }
 

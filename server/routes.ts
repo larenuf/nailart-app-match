@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertBookingSchema } from "@shared/schema";
+import { v4 as uuidv4 } from 'uuid';
 
 // Mock Stripe implementation for now
 const mockStripe = {
@@ -283,6 +284,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ clientSecret: paymentIntent.client_secret });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
+    }
+  });
+  
+  // Chat API endpoints
+  app.get("/api/chat/messages", async (req, res) => {
+    try {
+      const messages = await storage.getChatMessages();
+      res.json(messages);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
+  app.post("/api/chat/messages", async (req, res) => {
+    try {
+      const { message } = req.body;
+      if (!message) {
+        return res.status(400).json({ message: "Message text is required" });
+      }
+      
+      // Add user message
+      const userMessage: ChatMessage = {
+        id: uuidv4(),
+        text: message,
+        isUser: true,
+        timestamp: new Date()
+      };
+      await storage.addChatMessage(userMessage);
+      
+      // Generate AI response
+      setTimeout(async () => {
+        let responseText = '';
+        
+        // Simple pattern matching for demo purposes
+        const lowercaseMessage = message.toLowerCase();
+        if (lowercaseMessage.includes('merhaba') || lowercaseMessage.includes('selam') || lowercaseMessage.includes('hi')) {
+          responseText = 'Merhaba! Size nasıl yardımcı olabilirim?';
+        } else if (lowercaseMessage.includes('nail') || lowercaseMessage.includes('tırnak')) {
+          responseText = 'Tırnak bakımı için en iyi malzemeler jel ve akrilik ürünlerdir. Fresha üzerinden size uygun bir salon bulabiliriz!';
+        } else if (lowercaseMessage.includes('fiyat') || lowercaseMessage.includes('ücret') || lowercaseMessage.includes('price')) {
+          responseText = 'Fiyatlar hizmet türüne ve salona göre değişmektedir. Manikür işlemleri genelde 35-75 TL arasındadır. Size özel fiyat bilgisi için salon profillerini inceleyebilirsiniz.';
+        } else if (lowercaseMessage.includes('renk') || lowercaseMessage.includes('color')) {
+          responseText = 'Bu sezon en trend renkler pastel tonlar, özellikle lavanta, açık mavi ve soft pembe. Ayrıca metalik altın ve gümüş detaylar da çok popüler!';
+        } else if (lowercaseMessage.includes('nasıl') || lowercaseMessage.includes('how')) {
+          responseText = 'Uygulamamız üzerinden kolayca randevu alabilirsiniz. İstediğiniz salonu seçip, uygun saati belirleyip hemen rezervasyon yapabilirsiniz.';
+        } else {
+          responseText = 'Bu konuda size daha detaylı bilgi verebilmek için biraz daha açıklama yapabilir misiniz? Tırnak bakımı, oje renkleri veya nail art stilleri hakkında sorularınızı yanıtlamaktan memnuniyet duyarım.';
+        }
+        
+        const aiMessage: ChatMessage = {
+          id: uuidv4(),
+          text: responseText,
+          isUser: false,
+          timestamp: new Date()
+        };
+        await storage.addChatMessage(aiMessage);
+      }, 1000);
+      
+      res.status(201).json(userMessage);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
     }
   });
 
