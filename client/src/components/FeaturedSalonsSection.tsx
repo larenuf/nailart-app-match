@@ -3,6 +3,7 @@ import { useAppContext } from "@/context/AppContext";
 import { useLocation } from "wouter";
 import { Salon } from "@/types";
 import { ShoppingCart, Sparkles, Fingerprint, ArrowRight } from "lucide-react";
+import { useCallback } from "react";
 
 export default function FeaturedSalonsSection() {
   const { setSelectedSalon } = useAppContext();
@@ -12,11 +13,30 @@ export default function FeaturedSalonsSection() {
     queryKey: ["/api/salons/featured"],
   });
 
-  const handleSelectSalon = (salon: Salon) => {
+  // Salon seçimi için güvenli tıklama işleyicisi
+  const handleSelectSalon = useCallback((e: React.MouseEvent, salon: Salon) => {
+    // Event propagation'ı engelle
+    e.preventDefault();
+    e.stopPropagation();
+    
     // Hem context'i güncelle hem de URL'yi doğrudan değiştir
     setSelectedSalon(salon);
     navigate(`/salons/${salon.id}`);
-  };
+  }, [setSelectedSalon, navigate]);
+
+  // Tümünü Gör butonu işleyicisi
+  const handleViewAll = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate('/search');
+  }, [navigate]);
+
+  // Ürün kategorisine yönlendirme işleyicisi
+  const handleProductCategory = useCallback((e: React.MouseEvent, category: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(`/product-category/${category}`);
+  }, [navigate]);
 
   if (isLoading) {
     return (
@@ -42,7 +62,7 @@ export default function FeaturedSalonsSection() {
   }
 
   return (
-    <div className="px-4 py-4">
+    <div className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
       {/* Tırnak Ürünleri Satış Alanı */}
       <div className="mb-6">
         <div className="flex justify-between items-center mb-3">
@@ -50,14 +70,25 @@ export default function FeaturedSalonsSection() {
             <ShoppingCart size={14} className="text-purple-500 mr-1"/>
             Tırnak Ürünleri
           </h2>
-          <a href="#" className="text-xs font-medium text-primary dark:text-pink-400 flex items-center">
+          <button 
+            className="text-xs font-medium text-primary dark:text-pink-400 flex items-center"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              navigate('/shop');
+            }}
+          >
             Mağazaya Git <ShoppingCart size={10} className="ml-0.5"/>
-          </a>
+          </button>
         </div>
         
         <div className="grid grid-cols-2 gap-3">
-          {/* Tırnak Bakım Ürünleri - Doğrudan gradient ile */}
-          <div className="cursor-pointer group" onClick={() => navigate('/product-category/nail-care')}>
+          {/* Tırnak Bakım Ürünleri */}
+          <div 
+            className="cursor-pointer group" 
+            onClick={(e) => handleProductCategory(e, 'nail-care')}
+          >
             <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02] bg-gradient-to-b from-slate-100 via-slate-200 to-slate-400">
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-slate-500 text-2xl font-medium">Tırnak Bakım Ürünleri</div>
@@ -73,8 +104,11 @@ export default function FeaturedSalonsSection() {
             </div>
           </div>
           
-          {/* Nail Art Kitleri - Doğrudan gradient ile */}
-          <div className="cursor-pointer group" onClick={() => navigate('/product-category/nail-art-kits')}>
+          {/* Nail Art Kitleri */}
+          <div 
+            className="cursor-pointer group" 
+            onClick={(e) => handleProductCategory(e, 'nail-art-kits')}
+          >
             <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02] bg-gradient-to-b from-slate-100 via-slate-200 to-slate-400">
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-slate-500 text-2xl font-medium">Nail Art Kitleri</div>
@@ -97,16 +131,13 @@ export default function FeaturedSalonsSection() {
           <Sparkles size={14} className="text-amber-500 mr-1"/>
           Öne Çıkan Salonlar
         </h2>
-        <a 
-          href="/search" 
+        <button 
           className="text-xs font-medium text-primary dark:text-pink-400 flex items-center"
-          onClick={(e) => {
-            e.preventDefault();
-            navigate('/search');
-          }}
+          onClick={handleViewAll}
+          type="button"
         >
           Tümünü Gör <ArrowRight size={10} className="ml-0.5"/>
-        </a>
+        </button>
       </div>
 
       <div className="space-y-4">
@@ -114,7 +145,7 @@ export default function FeaturedSalonsSection() {
           <div
             key={salon.id}
             className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer"
-            onClick={() => handleSelectSalon(salon)}
+            onClick={(e) => handleSelectSalon(e, salon)}
           >
             <img
               src={salon.imageUrl}
