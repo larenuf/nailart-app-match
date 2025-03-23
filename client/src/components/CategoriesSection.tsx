@@ -83,10 +83,10 @@ export default function CategoriesSection() {
     return (
       <div className="px-4 py-3">
         <div className="mb-4 mt-2">
-          <div className="w-1/3 h-8 bg-gray-100 animate-pulse rounded-lg mb-5"></div>
+          <div className="w-1/3 h-8 bg-gray-100 dark:bg-gray-700 animate-pulse rounded-lg mb-5"></div>
           <div className="grid grid-cols-4 gap-4">
             {[...Array(8)].map((_, i) => (
-              <div key={i} className="aspect-square bg-gray-100 animate-pulse rounded-xl"></div>
+              <div key={i} className="aspect-square bg-gray-100 dark:bg-gray-700 animate-pulse rounded-xl"></div>
             ))}
           </div>
         </div>

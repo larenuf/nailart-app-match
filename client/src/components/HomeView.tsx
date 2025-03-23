@@ -19,18 +19,18 @@ function FeatureCard({ title, description, icon, onClick, available, gradient }:
   return (
     <div 
       onClick={onClick}
-      className={`rounded-full overflow-hidden shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-300 cursor-pointer border border-gray-100 w-12 h-12 flex items-center justify-center relative`}
+      className={`rounded-full overflow-hidden shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-300 cursor-pointer border border-gray-100 dark:border-gray-700 w-12 h-12 flex items-center justify-center relative`}
       style={{ background: gradient }}
       title={`${title}${!available ? ' (Yakında)' : ''}`}
     >
-      <div className="bg-white/90 rounded-full p-1.5 w-8 h-8 flex items-center justify-center">
-        <div className="text-primary">{icon}</div>
+      <div className="bg-white/90 dark:bg-gray-800/90 rounded-full p-1.5 w-8 h-8 flex items-center justify-center">
+        <div className="text-primary dark:text-white">{icon}</div>
       </div>
       {!available && (
-        <div className="absolute top-0 right-0 w-3 h-3 bg-gray-300 rounded-full border border-white"></div>
+        <div className="absolute top-0 right-0 w-3 h-3 bg-gray-300 dark:bg-gray-600 rounded-full border border-white dark:border-gray-800"></div>
       )}
       {available && (
-        <div className="absolute top-0 right-0 w-3 h-3 bg-green-500 rounded-full border border-white"></div>
+        <div className="absolute top-0 right-0 w-3 h-3 bg-green-500 rounded-full border border-white dark:border-gray-800"></div>
       )}
     </div>
   );
@@ -160,17 +160,17 @@ function PremiumFeaturesSection() {
   ];
   
   return (
-    <div className="px-4 py-2 mt-1 bg-gradient-to-br from-slate-100/60 to-gray-50/60 rounded-t-2xl relative overflow-hidden">
+    <div className="px-4 py-2 mt-1 bg-gradient-to-br from-slate-100/60 to-gray-50/60 dark:from-gray-800/60 dark:to-gray-900/60 rounded-t-2xl relative overflow-hidden transition-colors duration-200">
       {/* Minimal background elements */}
-      <div className="absolute -top-8 -right-8 w-20 h-20 rounded-full bg-pink-200/10 blur-lg"></div>
-      <div className="absolute -bottom-8 -left-8 w-20 h-20 rounded-full bg-blue-200/10 blur-lg"></div>
+      <div className="absolute -top-8 -right-8 w-20 h-20 rounded-full bg-pink-200/10 dark:bg-pink-700/10 blur-lg"></div>
+      <div className="absolute -bottom-8 -left-8 w-20 h-20 rounded-full bg-blue-200/10 dark:bg-blue-700/10 blur-lg"></div>
       
       <div className="flex items-center justify-between mb-2 relative z-10">
-        <h2 className="text-xs font-medium text-gray-700 flex items-center">
-          <Sparkles size={14} className="text-pink-500 mr-1" /> 
+        <h2 className="text-xs font-medium text-gray-700 dark:text-gray-300 flex items-center">
+          <Sparkles size={14} className="text-pink-500 dark:text-pink-400 mr-1" /> 
           Premium Özellikler
         </h2>
-        <span className="text-[10px] text-pink-600 font-medium flex items-center">
+        <span className="text-[10px] text-pink-600 dark:text-pink-400 font-medium flex items-center">
           Tümünü Gör <ArrowRight size={10} className="ml-0.5" />
         </span>
       </div>
@@ -188,7 +188,7 @@ function PremiumFeaturesSection() {
                 available={feature.available}
                 gradient={feature.gradient}
               />
-              <span className="text-[9px] mt-1 text-center text-gray-500 font-medium">{feature.title}</span>
+              <span className="text-[9px] mt-1 text-center text-gray-500 dark:text-gray-400 font-medium">{feature.title}</span>
             </div>
           ))}
         </div>
@@ -204,7 +204,7 @@ function PremiumFeaturesSection() {
                 available={feature.available}
                 gradient={feature.gradient}
               />
-              <span className="text-[9px] mt-1 text-center text-gray-500 font-medium">{feature.title}</span>
+              <span className="text-[9px] mt-1 text-center text-gray-500 dark:text-gray-400 font-medium">{feature.title}</span>
             </div>
           ))}
         </div>
@@ -215,7 +215,7 @@ function PremiumFeaturesSection() {
 
 export default function HomeView() {
   return (
-    <div className="max-w-md mx-auto bg-white min-h-screen relative pb-16">
+    <div className="max-w-md mx-auto bg-white dark:bg-gray-900 min-h-screen relative pb-16 transition-colors duration-200">
       <TopNavigation />
       
       <div className="pb-16">
