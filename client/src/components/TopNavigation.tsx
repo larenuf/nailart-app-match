@@ -14,7 +14,7 @@ export default function TopNavigation() {
   const [_, navigate] = useLocation();
   
   // Kullanıcı bilgisini al
-  const { data: user } = useQuery({
+  const { data: user } = useQuery<{ id: number; username: string; email: string; role?: string }>({
     queryKey: ["/api/user"],
     retry: false,
   });
@@ -88,7 +88,7 @@ export default function TopNavigation() {
               </span>
             </button>
             {/* Salon sahipleri ve yöneticiler için yönetim paneli butonu */}
-            {user && (user.role === "salon_owner" || user.role === "admin") && (
+            {user && user.role && (user.role === "salon_owner" || user.role === "admin") && (
               <button 
                 className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm text-[#333333] dark:bg-gray-700 dark:text-white"
                 onClick={handleAdminClick}
