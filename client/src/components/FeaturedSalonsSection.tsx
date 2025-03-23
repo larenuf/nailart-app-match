@@ -56,12 +56,12 @@ export default function FeaturedSalonsSection() {
         <div className="grid grid-cols-2 gap-3">
           {/* Tırnak Bakım Ürünleri */}
           <div className="cursor-pointer group">
-            <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02] bg-gradient-to-b from-gray-100 to-gray-300">
-              <div className="absolute inset-0 flex items-center justify-center">
+            <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02] bg-gradient-to-b from-gray-200 to-gray-400">
+              <div className="absolute inset-0">
                 <img 
-                  src="https://i.imgur.com/6uj5YgZ.png" 
+                  src="https://images.unsplash.com/photo-1604654894610-df63bc536372?q=80&w=600" 
                   alt="Tırnak Bakım Ürünleri"
-                  className="w-full h-full object-contain p-2"
+                  className="w-full h-full object-cover opacity-75"
                 />
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
