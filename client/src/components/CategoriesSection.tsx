@@ -1,6 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { Category } from "@/types";
-import { ScissorsIcon, FingerprintIcon, EyeIcon, WavesIcon, HeartPulseIcon, FeatherIcon, SmileIcon, SparklesIcon, PaintbrushIcon } from "lucide-react";
+import { 
+  ScissorsIcon, 
+  FingerprintIcon, 
+  EyeIcon, 
+  WavesIcon, 
+  HeartPulseIcon, 
+  FeatherIcon, 
+  SmileIcon, 
+  SparklesIcon, 
+  PaintbrushIcon 
+} from "lucide-react";
 
 // Modern minimalist kategori görselleri
 const categoryImages = {
@@ -87,6 +97,13 @@ export default function CategoriesSection() {
   // Gerçek veya demo kategorileri göster
   const displayCategories = categories?.length ? categories : mainCategories;
 
+  // Default fallback stil
+  const defaultStyle = {
+    image: "https://images.pexels.com/photos/3997383/pexels-photo-3997383.jpeg",
+    color: "#F2F5F7",
+    icon: <FingerprintIcon size={20} />
+  };
+
   return (
     <div className="px-4 py-6">
       <div className="flex justify-between items-center mb-6">
@@ -101,11 +118,7 @@ export default function CategoriesSection() {
       {/* Kategori Grid - Modern Minimalist */}
       <div className="grid grid-cols-4 gap-3 mb-8">
         {displayCategories.slice(0, 8).map((category) => {
-          const categoryStyle = categoryImages[category.name as keyof typeof categoryImages] || {
-            image: "https://images.pexels.com/photos/3997383/pexels-photo-3997383.jpeg",
-            color: "#F2F5F7",
-            icon: <FingerprintIcon size={20} />
-          };
+          const categoryStyle = categoryImages[category.name as keyof typeof categoryImages] || defaultStyle;
           
           return (
             <div
@@ -140,11 +153,7 @@ export default function CategoriesSection() {
       {/* Daha büyük kartlar - Çift sütun */}
       <div className="grid grid-cols-2 gap-4 mb-8">
         {displayCategories.slice(0, 2).map((category) => {
-          const categoryStyle = categoryImages[category.name as keyof typeof categoryImages] || {
-            image: "https://images.pexels.com/photos/3997383/pexels-photo-3997383.jpeg",
-            color: "#F2F5F7",
-            icon: <FingerprintIcon size={20} />
-          };
+          const categoryStyle = categoryImages[category.name as keyof typeof categoryImages] || defaultStyle;
           
           return (
             <div
