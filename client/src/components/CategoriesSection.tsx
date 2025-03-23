@@ -13,12 +13,9 @@ export default function CategoriesSection() {
     return (
       <div className="px-4 py-4 bg-white dark:bg-gray-800">
         <h2 className="text-lg font-bold mb-4 dark:text-gray-300">Kategoriler</h2>
-        <div className="grid grid-cols-4 gap-3">
-          {[...Array(8)].map((_, i) => (
-            <div key={i} className="flex flex-col items-center">
-              <div className="w-14 h-14 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
-              <div className="mt-2 w-12 h-3 bg-gray-200 dark:bg-gray-700 animate-pulse rounded"></div>
-            </div>
+        <div className="grid grid-cols-2 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="rounded-lg overflow-hidden h-28 bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
           ))}
         </div>
       </div>
@@ -28,25 +25,29 @@ export default function CategoriesSection() {
   return (
     <div className="px-4 py-4 bg-white dark:bg-gray-800">
       <h2 className="text-lg font-bold mb-4 dark:text-gray-300">Kategoriler</h2>
-      <div className="grid grid-cols-4 gap-3">
-        {categories?.map((category) => (
+      <div className="grid grid-cols-2 gap-4">
+        {categories?.slice(0, 4).map((category) => (
           <div 
             key={category.id} 
-            className="flex flex-col items-center cursor-pointer" 
+            className="relative rounded-lg overflow-hidden h-28 cursor-pointer shadow-sm" 
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               navigate(`/search?category=${category.id}`);
             }}
           >
-            <div 
-              className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-sm dark:bg-gray-700"
-            >
-              <i className={`fas fa-${category.iconName} text-[#FF5864] text-lg dark:text-pink-400`}></i>
+            <img 
+              src={category.id === 1 ? "https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80" : 
+                   category.id === 2 ? "https://images.unsplash.com/photo-1604902396830-aca29e19b067?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80" :
+                   category.id === 3 ? "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80" :
+                   "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80"}
+              alt={category.name}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center flex-col p-4">
+              <h3 className="text-white text-lg font-semibold text-center">{category.name}</h3>
+              <p className="text-white text-xs mt-1 text-center">En Popüler</p>
             </div>
-            <p className="mt-2 text-xs font-medium text-center text-[#333333] dark:text-gray-300">
-              {category.name}
-            </p>
           </div>
         ))}
       </div>
