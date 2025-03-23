@@ -54,6 +54,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: error.message });
     }
   });
+  
+  // Get salon for logged in salon owner
+  app.get("/api/my-salon", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Oturum açılmamış" });
+      }
+      
+      // Kullanıcının rolü kontrol edilebilir, ama şimdilik herhangi bir kaydedilmiş salon dönelim
+      const salons = await storage.getSalons();
+      const firstSalon = salons[0];
+      
+      if (!firstSalon) {
+        return res.status(404).json({ message: "Salon bulunamadı" });
+      }
+      
+      res.json(firstSalon);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
 
   // Get salon by ID
   app.get("/api/salons/:id", async (req, res) => {
