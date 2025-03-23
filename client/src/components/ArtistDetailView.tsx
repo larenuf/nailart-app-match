@@ -286,28 +286,18 @@ export default function ArtistDetailView() {
                   date < new Date(new Date().setHours(0, 0, 0, 0)) ||
                   date > addDays(new Date(), 30)
                 }
-                components={{
-                  DayContent: ({ day }) => {
-                    // Örnek için rastgele müsaitlik statüsü
-                    const date = day.date;
-                    const isAvailable = !isToday(date) || Math.random() > 0.3;
-                    const isBusy = !isAvailable && Math.random() > 0.5;
-                    
-                    return (
-                      <div className="relative w-full h-full flex items-center justify-center">
-                        {format(date, 'd')}
-                        {isAvailable && (
-                          <div className="absolute bottom-1 h-1 w-1 rounded-full bg-green-500"></div>
-                        )}
-                        {isBusy && (
-                          <div className="absolute bottom-1 h-1 w-1 rounded-full bg-orange-500"></div>
-                        )}
-                        {!isAvailable && !isBusy && (
-                          <div className="absolute bottom-1 h-1 w-1 rounded-full bg-red-500"></div>
-                        )}
-                      </div>
-                    );
-                  },
+                getDayClassNames={(date, { disabled }) => {
+                  // Örnek için rastgele müsaitlik statüsü
+                  const isAvailable = !isToday(date) || Math.random() > 0.3;
+                  const isBusy = !isAvailable && Math.random() > 0.5;
+                  
+                  return {
+                    'relative': true,
+                    'availability-day': true,
+                    'availability-available': isAvailable && !disabled,
+                    'availability-busy': isBusy && !disabled,
+                    'availability-unavailable': !isAvailable && !isBusy && !disabled,
+                  };
                 }}
               />
             </div>

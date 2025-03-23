@@ -48,6 +48,7 @@ export default function Search() {
     rating: number | null;
     distance: number | null;
     priceRange: string | null;
+    priceSlider: number[] | null;
     serviceTime: number[] | null;
     hasDiscount: boolean;
     isPremium: boolean;
@@ -56,6 +57,7 @@ export default function Search() {
     rating: null,
     distance: null,
     priceRange: null,
+    priceSlider: [0, 500],
     serviceTime: null,
     hasDiscount: false,
     isPremium: false,
@@ -78,6 +80,8 @@ export default function Search() {
     if (selectedFilters.rating) count++;
     if (selectedFilters.distance) count++;
     if (selectedFilters.priceRange) count++;
+    if (selectedFilters.priceSlider && 
+        (selectedFilters.priceSlider[0] > 0 || selectedFilters.priceSlider[1] < 500)) count++;
     if (selectedFilters.serviceTime) count++;
     if (selectedFilters.hasDiscount) count++;
     if (selectedFilters.isPremium) count++;
@@ -120,6 +124,22 @@ export default function Search() {
       const matchesDiscount = selectedFilters.hasDiscount
         ? salon.discount !== ""
         : true;
+        
+      // Price Range Filter - this would need more accurate data in a real app
+      // Here we're making a simplification just for UI demonstration
+      const hasPriceInRange = selectedFilters.priceSlider &&
+        (selectedFilters.priceSlider[0] > 0 || selectedFilters.priceSlider[1] < 500);
+      
+      // This is a mock implementation since we don't have real price data in the salon model
+      // In a real app, we would filter based on actual service prices
+      const matchesPriceRange = hasPriceInRange
+        ? (salon.discount ? true : !salon.isPremium) // Just for demonstration
+        : true;
+        
+      // Filter by availability today
+      const matchesAvailability = selectedFilters.availableToday
+        ? true // In a real app, we would check if the salon has any available time slots today
+        : true;
 
       // Combined filters
       return matchesSearch && 
@@ -127,7 +147,9 @@ export default function Search() {
              matchesRating && 
              matchesDistance && 
              matchesPremium && 
-             matchesDiscount;
+             matchesDiscount &&
+             matchesPriceRange &&
+             matchesAvailability;
     });
   };
 
@@ -158,12 +180,20 @@ export default function Search() {
     }));
   };
 
+  const handlePriceRangeChange = (value: number[]) => {
+    setSelectedFilters((prev) => ({
+      ...prev,
+      priceSlider: value,
+    }));
+  };
+  
   const resetAllFilters = () => {
     setSelectedCategory(null);
     setSelectedFilters({
       rating: null,
       distance: null,
       priceRange: null,
+      priceSlider: [0, 500],
       serviceTime: null,
       hasDiscount: false,
       isPremium: false,
@@ -349,8 +379,33 @@ export default function Search() {
             <div className="border rounded-lg p-4 bg-gray-50 mb-4 space-y-4">
               <h4 className="font-medium text-sm mb-3">Gelişmiş Filtreler</h4>
               
-              {/* Service Time Filter */}
+              {/* Price Range Filter */}
               <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm flex items-center gap-2">
+                    <DollarSign size={16} className="text-gray-500" />
+                    Fiyat Aralığı
+                  </label>
+                  <span className="text-xs text-gray-500">
+                    {selectedFilters.priceSlider ? `${selectedFilters.priceSlider[0]}₺ - ${selectedFilters.priceSlider[1]}₺` : 'Tümü'}
+                  </span>
+                </div>
+                <Slider
+                  defaultValue={[0, 500]}
+                  min={0}
+                  max={500}
+                  step={10}
+                  onValueChange={handlePriceRangeChange}
+                  className="my-2"
+                />
+                <div className="flex justify-between text-xs text-gray-500">
+                  <span>0₺</span>
+                  <span>500₺</span>
+                </div>
+              </div>
+              
+              {/* Service Time Filter */}
+              <div className="space-y-2 mt-4">
                 <div className="flex items-center justify-between">
                   <label className="text-sm flex items-center gap-2">
                     <Clock size={16} className="text-gray-500" />
