@@ -165,11 +165,14 @@ function PremiumFeaturesSection() {
       <div className="absolute -top-8 -right-8 w-20 h-20 rounded-full bg-pink-200/10 blur-lg"></div>
       <div className="absolute -bottom-8 -left-8 w-20 h-20 rounded-full bg-blue-200/10 blur-lg"></div>
       
-      <div className="flex items-center mb-2 relative z-10">
+      <div className="flex items-center justify-between mb-2 relative z-10">
         <h2 className="text-xs font-medium text-gray-700 flex items-center">
           <Sparkles size={14} className="text-pink-500 mr-1" /> 
-          Premium 
+          Premium Özellikler
         </h2>
+        <span className="text-[10px] text-pink-600 font-medium flex items-center">
+          Tümünü Gör <ArrowRight size={10} className="ml-0.5" />
+        </span>
       </div>
       
       {/* Alt alta 2 satır, her satırda 4 özellik */}

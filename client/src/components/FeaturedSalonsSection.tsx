@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAppContext } from "@/context/AppContext";
 import { useLocation } from "wouter";
 import { Salon } from "@/types";
-import { ShoppingCart, Sparkles } from "lucide-react";
+import { ShoppingCart, Sparkles, FingerprintIcon } from "lucide-react";
 
 export default function FeaturedSalonsSection() {
   const { setSelectedSalon } = useAppContext();
@@ -46,10 +46,12 @@ export default function FeaturedSalonsSection() {
       {/* Tırnak Ürünleri Satış Alanı */}
       <div className="mb-6">
         <div className="flex justify-between items-center mb-3">
-          <h2 className="text-lg font-bold font-playfair">Tırnak Ürünleri</h2>
-          <a href="#" className="text-sm text-[#D6C3E5] flex items-center">
-            <ShoppingCart size={14} className="mr-1"/>
-            Mağaza
+          <h2 className="text-sm font-medium tracking-tight text-gray-700 flex items-center">
+            <ShoppingCart size={14} className="text-purple-500 mr-1"/>
+            Tırnak Ürünleri
+          </h2>
+          <a href="#" className="text-xs font-medium text-primary flex items-center">
+            Mağazaya Git <ShoppingCart size={10} className="ml-0.5"/>
           </a>
         </div>
         
@@ -91,16 +93,19 @@ export default function FeaturedSalonsSection() {
       </div>
       
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-lg font-bold font-playfair">Öne Çıkan Salonlar</h2>
+        <h2 className="text-sm font-medium tracking-tight text-gray-700 flex items-center">
+          <Sparkles size={14} className="text-amber-500 mr-1"/>
+          Öne Çıkan Salonlar
+        </h2>
         <a 
           href="/search" 
-          className="text-sm text-[#D6C3E5]"
+          className="text-xs font-medium text-primary flex items-center"
           onClick={(e) => {
             e.preventDefault();
             navigate('/search');
           }}
         >
-          Tümünü Gör
+          Tümünü Gör <FingerprintIcon size={10} className="ml-0.5"/>
         </a>
       </div>
 
