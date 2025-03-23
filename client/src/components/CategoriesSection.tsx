@@ -106,6 +106,22 @@ export default function CategoriesSection() {
 
   return (
     <div className="px-4 py-6">
+      {/* Özel Teklifler Bölümü */}
+      <div className="mb-6">
+        <div className="bg-gradient-to-r from-[#FFA5B5] to-[#FFB7B2] p-5 rounded-xl text-white shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-xl font-bold">Özel Teklifler</h3>
+              <p className="text-sm mt-1 opacity-95">Yeni müşteriler için %20 indirim</p>
+              <button className="mt-4 bg-white text-primary px-5 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all duration-300">
+                Şimdi Keşfet
+              </button>
+            </div>
+            <div className="text-4xl">✨</div>
+          </div>
+        </div>
+      </div>
+      
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-medium tracking-tight text-gray-900">
           Kategoriler
@@ -176,22 +192,6 @@ export default function CategoriesSection() {
             </div>
           );
         })}
-      </div>
-      
-      {/* Özel Teklifler Bölümü */}
-      <div className="mb-4">
-        <div className="bg-gradient-to-r from-primary to-[#FFB7B2] p-5 rounded-xl text-white shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-xl font-bold">Özel Teklifler</h3>
-              <p className="text-sm mt-1 opacity-95">Yeni müşteriler için %20 indirim</p>
-              <button className="mt-4 bg-white text-primary px-5 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all duration-300">
-                Şimdi Keşfet
-              </button>
-            </div>
-            <div className="text-4xl">✨</div>
-          </div>
-        </div>
       </div>
     </div>
   );

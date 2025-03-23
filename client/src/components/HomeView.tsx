@@ -234,7 +234,6 @@ export default function HomeView() {
       
       <div className="pb-16">
         <StorySection />
-        <WeatherPromoBanner />
         <CategoriesSection />
         <FeaturedSalonsSection />
         <PremiumFeaturesSection />
