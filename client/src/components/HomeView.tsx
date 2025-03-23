@@ -65,15 +65,6 @@ function WeatherPromoBanner() {
   
   return (
     <div className="px-4 pt-3 pb-4">
-      <div className="flex items-center justify-between mb-2">
-        <div>
-          <h2 className="text-lg font-bold text-gray-800 flex items-center">
-            <Sun size={20} className="text-amber-500 mr-2" /> 
-            Güne Özel Fırsatlar
-          </h2>
-          <p className="text-xs text-gray-600 mt-0.5">Günün hava durumuna göre özel teklifler</p>
-        </div>
-      </div>
       
       <div className="bg-gradient-to-r from-sky-400 to-indigo-500 rounded-xl shadow-md overflow-hidden relative mt-2">
         {/* Dekoratif arka plan elementleri */}
