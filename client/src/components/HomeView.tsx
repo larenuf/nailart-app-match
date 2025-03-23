@@ -1,6 +1,6 @@
 import TopNavigation from "./TopNavigation";
 import BottomNavigation from "./BottomNavigation";
-import StorySection from "./StorySection";
+import StorySection2 from "./StorySection2";
 import CategoriesSection from "./CategoriesSection";
 import FeaturedSalonsSectionNew from "./FeaturedSalonsSectionNew";
 import NearestSalonsMap from "./NearestSalonsMap";
@@ -245,7 +245,7 @@ export default function HomeView() {
       <TopNavigation />
       
       <div className="pb-16" onClick={(e) => e.stopPropagation()}>
-        <StorySection />
+        <StorySection2 />
         <CategoriesSection />
         <WeatherPromoBanner />
         <FeaturedSalonsSectionNew />
