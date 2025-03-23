@@ -39,6 +39,7 @@ export const salons = pgTable("salons", {
   district: text("district"),
   email: text("email"),
   website: text("website"),
+  specialFeatures: text("special_features"),
   status: text("status").default("active"), // active, inactive, pending
   isActive: boolean("is_active").default(true), // quick flag for active/inactive status
   featuredPosition: integer("featured_position"), // for ordering in featured list

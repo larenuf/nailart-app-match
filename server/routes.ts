@@ -230,7 +230,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Toplam salon sayısı
       const salons = await storage.getSalons();
-      const activeSalons = salons.filter(salon => salon.isActive !== false).length;
+      const activeSalons = salons.filter(salon => salon.status === "active").length;
       
       // Kullanıcı sayısı
       const users = await storage.getUsers();
@@ -266,21 +266,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
           type: "appointment",
           message: "Yeni randevu oluşturuldu",
           user: `ID: ${booking.userId}`,
-          time: new Date(booking.createdAt).toLocaleString()
+          time: new Date(booking.createdAt || new Date()).toLocaleString()
         })),
         ...reviews.slice(0, 5).map(review => ({
           id: review.id,
           type: "review",
           message: `Yeni yorum eklendi (${review.rating} yıldız)`,
           user: `ID: ${review.userId}`,
-          time: new Date(review.createdAt).toLocaleString()
+          time: new Date(review.createdAt || new Date()).toLocaleString()
         }))
       ].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
        .slice(0, 5);
       
       // En iyi salonlar
       const topSalons = [...salons]
-        .sort((a, b) => b.rating - a.rating)
+        .sort((a, b) => (b.rating || 0) - (a.rating || 0))
         .slice(0, 3)
         .map(salon => ({
           id: salon.id,
