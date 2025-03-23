@@ -36,8 +36,15 @@ function Router() {
       <Route path="/color-matcher" component={ColorMatcher} />
       
       {/* Salon Yönetim Sayfaları */}
-      <Route path="/admin/dashboard" component={Dashboard} />
-      <Route path="/admin/create-salon" component={CreateSalon} />
+      <Route path="/admin">
+        <Dashboard />
+      </Route>
+      <Route path="/admin/dashboard">
+        <Dashboard />
+      </Route>
+      <Route path="/admin/create-salon">
+        <CreateSalon />
+      </Route>
       
       <Route component={NotFound} />
     </Switch>

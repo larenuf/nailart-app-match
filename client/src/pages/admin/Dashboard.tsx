@@ -4,12 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CalendarDays, Settings, Users, ShoppingBag, BarChart2, Tag, Store } from "lucide-react";
-import SalonDetailsForm from "@/components/admin/SalonDetailsForm";
-import ArtistManagement from "@/components/admin/ArtistManagement";
-import ServiceManagement from "@/components/admin/ServiceManagement";
-import AppointmentManagement from "@/components/admin/AppointmentManagement";
-import PromotionManagement from "@/components/admin/PromotionManagement";
-import SalonAnalytics from "@/components/admin/SalonAnalytics";
+
+// Doğrudan göreli yollar kullanarak modül yükleme sorununu çözelim
+import SalonDetailsForm from "../../components/admin/SalonDetailsForm";
+import ArtistManagement from "../../components/admin/ArtistManagement";
+import ServiceManagement from "../../components/admin/ServiceManagement";
+import AppointmentManagement from "../../components/admin/AppointmentManagement";
+import PromotionManagement from "../../components/admin/PromotionManagement";
+import SalonAnalytics from "../../components/admin/SalonAnalytics";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("overview");
