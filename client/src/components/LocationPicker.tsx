@@ -4,6 +4,7 @@ import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { AlertCircle } from "lucide-react";
 
 const containerStyle = {
   width: '100%',
@@ -114,6 +115,16 @@ export default function LocationPicker({ open, onClose }: { open: boolean; onClo
           <DrawerTitle className="text-center">Konum Seç</DrawerTitle>
         </DrawerHeader>
         
+        <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4 flex items-start dark:bg-amber-900/30 dark:border-amber-700">
+          <AlertCircle className="h-5 w-5 text-amber-500 mr-2 flex-shrink-0 mt-0.5" />
+          <div>
+            <h3 className="text-sm font-medium text-amber-800 dark:text-amber-200">Harita yüklenemiyor</h3>
+            <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+              Geçerli bir Google Maps API anahtarı gerekiyor. Şimdilik manuel konum seçimi yapabilirsiniz.
+            </p>
+          </div>
+        </div>
+        
         <div className="flex gap-2 mb-4">
           <Input 
             placeholder="Konum ara..." 
@@ -124,16 +135,31 @@ export default function LocationPicker({ open, onClose }: { open: boolean; onClo
           <Button onClick={handleSearch}>Ara</Button>
         </div>
         
-        <LoadScript googleMapsApiKey={apiKey}>
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={center}
-            zoom={14}
-            onClick={handleMapClick}
-          >
-            <Marker position={markerPosition} />
-          </GoogleMap>
-        </LoadScript>
+        {/* Harita yerine basit konum seçici */}
+        <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800 h-64 flex flex-col items-center justify-center">
+          <div className="text-gray-400 dark:text-gray-500 text-center mb-4">
+            <i className="fas fa-map-marker-alt text-3xl mb-2 block"></i>
+            <p className="text-sm">Harita şu anda kullanılamıyor</p>
+          </div>
+          
+          <div className="w-full mt-4">
+            <p className="text-xs text-gray-500 mb-2">Önceden tanımlanmış konumlar:</p>
+            <div className="space-y-2">
+              {["İstanbul", "Ankara", "İzmir", "Bursa", "Antalya"].map((city) => (
+                <div 
+                  key={city}
+                  className="rounded-lg border p-2 hover:bg-white dark:hover:bg-gray-700 cursor-pointer transition-colors"
+                  onClick={() => setLocationName(city)}
+                >
+                  <div className="flex items-center">
+                    <i className="fas fa-map-marker-alt text-pink-500 mr-2"></i>
+                    <span className="text-sm">{city}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
         
         <div className="mt-4">
           <p className="text-sm text-gray-600">Seçilen konum:</p>
@@ -142,7 +168,13 @@ export default function LocationPicker({ open, onClose }: { open: boolean; onClo
         
         <div className="mt-4 flex gap-2">
           <Button variant="outline" onClick={onClose} className="flex-1">İptal</Button>
-          <Button onClick={handleSaveLocation} className="flex-1">Kaydet</Button>
+          <Button 
+            onClick={handleSaveLocation} 
+            className="flex-1"
+            disabled={!locationName}
+          >
+            Kaydet
+          </Button>
         </div>
       </DrawerContent>
     </Drawer>
