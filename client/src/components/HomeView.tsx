@@ -27,57 +27,65 @@ function FeatureCard({ title, icon, onClick }: FeatureCardProps) {
 
 // New section to showcase premium features
 function PremiumFeaturesSection() {
+  const navigate = (path: string) => {
+    window.location.href = path;
+  };
+  
+  const showComingSoon = (feature: string) => {
+    alert(`${feature} yakında geliyor!`);
+  };
+  
   return (
     <div className="px-4 py-3 mt-4">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-lg font-semibold">Premium Features</h2>
+        <h2 className="text-lg font-semibold">Premium Özellikler</h2>
         <button
           className="text-sm text-primary hover:underline"
-          onClick={() => alert('Showing fewer features')}
+          onClick={() => alert('Daha az özellik gösteriliyor')}
         >
-          Show less
+          Daha az
         </button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <FeatureCard 
-          title="Virtual nail art consultation with stylist avatar"
+          title="Stilist avatar ile sanal tırnak sanatı danışmanlığı"
           icon={<Sparkles size={20} />}
-          onClick={() => alert('Virtual nail art consultation coming soon!')}
+          onClick={() => navigate('/virtual-consultation')}
         />
         <FeatureCard 
-          title="AI-powered nail color matching with user's outfit"
+          title="Kullanıcının kıyafetine göre AI renk eşleştirme"
           icon={<Palette size={20} />}
-          onClick={() => alert('AI color matching coming soon!')}
+          onClick={() => navigate('/color-matcher')}
         />
         <FeatureCard 
-          title="Loyalty points system with fun reward animations"
+          title="Eğlenceli ödül animasyonlı sadakat puanı sistemi"
           icon={<Medal size={20} />}
-          onClick={() => alert('Loyalty rewards coming soon!')}
+          onClick={() => showComingSoon('Sadakat puanları')}
         />
         <FeatureCard 
-          title="One-click salon booking theme customization"
+          title="Tek tıkla salon rezervasyonu teması kişiselleştirme"
           icon={<MousePointerClick size={20} />}
-          onClick={() => alert('Booking customization coming soon!')}
+          onClick={() => showComingSoon('Tema kişiselleştirme')}
         />
         <FeatureCard 
-          title="Interactive nail art mood board with seasonal trends"
+          title="Sezonluk trendlere göre interaktif tırnak mood board"
           icon={<ImagePlus size={20} />}
-          onClick={() => alert('Mood boards coming soon!')}
+          onClick={() => showComingSoon('Mood board')}
         />
         <FeatureCard 
-          title="Promotion/campaign management system"
+          title="Promosyon/kampanya yönetim sistemi"
           icon={<Megaphone size={20} />}
-          onClick={() => alert('Promotion management coming soon!')}
+          onClick={() => showComingSoon('Promosyon yönetimi')}
         />
         <FeatureCard 
-          title="Advanced filtering options (price, rating, service time)"
+          title="Gelişmiş filtreleme seçenekleri (fiyat, puan, servis süresi)"
           icon={<SlidersHorizontal size={20} />}
-          onClick={() => alert('Advanced filters coming soon!')}
+          onClick={() => navigate('/search')}
         />
         <FeatureCard 
-          title="Artist availability calendar integration"
+          title="Sanatçı müsaitlik takvimi entegrasyonu"
           icon={<Calendar size={20} />}
-          onClick={() => alert('Calendar integration coming soon!')}
+          onClick={() => navigate('/salons/1')}
         />
       </div>
     </div>

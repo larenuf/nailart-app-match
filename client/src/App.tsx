@@ -12,6 +12,8 @@ import Checkout from "@/pages/Checkout";
 import PaymentSuccess from "@/pages/PaymentSuccess";
 import Profile from "@/pages/Profile";
 import Search from "@/pages/Search";
+import VirtualConsultation from "@/pages/VirtualConsultation";
+import ColorMatcher from "@/pages/ColorMatcher";
 import AiChat from "@/components/AiChat";
 
 function Router() {
@@ -27,6 +29,8 @@ function Router() {
       <Route path="/payment-success" component={PaymentSuccess} />
       <Route path="/profile" component={Profile} />
       <Route path="/search" component={Search} />
+      <Route path="/virtual-consultation" component={VirtualConsultation} />
+      <Route path="/color-matcher" component={ColorMatcher} />
       <Route component={NotFound} />
     </Switch>
   );
