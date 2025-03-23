@@ -106,45 +106,32 @@ export default function CategoriesSection() {
 
   return (
     <div className="px-4 py-6">
-      {/* Özel Teklifler Bölümü - Yatay Scroll */}
+      {/* Özel Teklifler Bölümü - Sabit, yan yana kartlar */}
       <div className="mb-6">
-        <div className="flex overflow-x-auto gap-3 hide-scrollbar pb-2 pt-1 -mx-4 px-4">
-          <div className="bg-gradient-to-r from-[#FFA5B5] to-[#FFB7B2] p-3 rounded-xl text-white shadow-sm flex-shrink-0" style={{ width: '270px' }}>
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-base font-bold">Özel Teklifler</h3>
-                <p className="text-xs mt-0.5 opacity-95">Yeni müşteriler için %20 indirim</p>
-                <button className="mt-2 bg-white text-primary px-3 py-1 rounded-full text-xs font-medium shadow-sm hover:shadow-md transition-all duration-300">
-                  Şimdi Keşfet
-                </button>
-              </div>
-              <div className="text-2xl">✨</div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-gradient-to-r from-[#FFA5B5] to-[#FFB7B2] p-3 rounded-xl text-white shadow-sm">
+            <div>
+              <h3 className="text-base font-bold flex justify-between items-start">
+                <span>Özel Teklifler</span>
+                <span className="text-xl">✨</span>
+              </h3>
+              <p className="text-xs mt-0.5 opacity-95">Yeni müşteriler için %20 indirim</p>
+              <button className="mt-2 bg-white text-primary px-3 py-1 rounded-full text-xs font-medium shadow-sm hover:shadow-md transition-all duration-300 w-full">
+                Şimdi Keşfet
+              </button>
             </div>
           </div>
           
-          <div className="bg-gradient-to-r from-[#93c5fd] to-[#60a5fa] p-3 rounded-xl text-white shadow-sm flex-shrink-0" style={{ width: '250px' }}>
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-base font-bold">Hafta Sonu</h3>
-                <p className="text-xs mt-0.5 opacity-95">Tüm hizmetlerde %15 indirim</p>
-                <button className="mt-2 bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-medium shadow-sm hover:shadow-md transition-all duration-300">
-                  Detaylar
-                </button>
-              </div>
-              <div className="text-2xl">🎁</div>
-            </div>
-          </div>
-          
-          <div className="bg-gradient-to-r from-[#fcd34d] to-[#f59e0b] p-3 rounded-xl text-white shadow-sm flex-shrink-0" style={{ width: '230px' }}>
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-base font-bold">Doğum Günü</h3>
-                <p className="text-xs mt-0.5 opacity-95">Özel %30 doğum günü indirimi</p>
-                <button className="mt-2 bg-white text-yellow-600 px-3 py-1 rounded-full text-xs font-medium shadow-sm hover:shadow-md transition-all duration-300">
-                  Hemen Al
-                </button>
-              </div>
-              <div className="text-2xl">🎂</div>
+          <div className="bg-gradient-to-r from-[#93c5fd] to-[#60a5fa] p-3 rounded-xl text-white shadow-sm">
+            <div>
+              <h3 className="text-base font-bold flex justify-between items-start">
+                <span>Hafta Sonu</span>
+                <span className="text-xl">🎁</span>
+              </h3>
+              <p className="text-xs mt-0.5 opacity-95">Tüm hizmetlerde %15 indirim</p>
+              <button className="mt-2 bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-medium shadow-sm hover:shadow-md transition-all duration-300 w-full">
+                Detaylar
+              </button>
             </div>
           </div>
         </div>
