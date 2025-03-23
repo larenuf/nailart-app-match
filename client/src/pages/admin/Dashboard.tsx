@@ -1,4 +1,7 @@
-// Tamamen basitleştirilmiş dashboard - minimum import
+// Basitleştirilmiş dashboard - minimum import
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 
 export default function Dashboard() {
   return (
@@ -11,25 +14,54 @@ export default function Dashboard() {
       </header>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="border p-6 rounded-md">
-          <h2 className="text-xl font-bold mb-4">Genel Bakış</h2>
-          <p>Bugün 0 randevu var</p>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Genel Bakış</CardTitle>
+            <CardDescription>Günlük istatistikler</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p>Bugün 0 randevu var</p>
+          </CardContent>
+        </Card>
         
-        <div className="border p-6 rounded-md">
-          <h2 className="text-xl font-bold mb-4">Salon Bilgileri</h2>
-          <p>Salon adı: NAM Nail Studio</p>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Salon Bilgileri</CardTitle>
+            <CardDescription>Temel bilgiler</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p>Salon adı: NAM Nail Studio</p>
+          </CardContent>
+        </Card>
         
-        <div className="border p-6 rounded-md">
-          <h2 className="text-xl font-bold mb-4">Artistler</h2>
-          <p>Toplam 5 artist</p>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Artistler</CardTitle>
+            <CardDescription>Artist yönetimi</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p>Toplam 5 artist</p>
+          </CardContent>
+        </Card>
         
-        <div className="border p-6 rounded-md">
-          <h2 className="text-xl font-bold mb-4">Hizmetler</h2>
-          <p>Toplam 12 hizmet</p>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Hizmetler</CardTitle>
+            <CardDescription>Hizmet yönetimi</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p>Toplam 12 hizmet</p>
+          </CardContent>
+        </Card>
+      </div>
+      
+      <div className="mt-6 flex justify-center space-x-4">
+        <Button asChild>
+          <Link href="/admin/create-salon">Yeni Salon Oluştur</Link>
+        </Button>
+        <Button variant="outline" asChild>
+          <Link href="/">Ana Sayfaya Dön</Link>
+        </Button>
       </div>
     </div>
   );
