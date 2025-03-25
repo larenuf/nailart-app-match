@@ -547,6 +547,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get all salons
+  app.get("/api/salons", async (req, res) => {
+    try {
+      const salons = await storage.getSalons();
+      res.json(salons);
+    } catch (error: any) {
+      console.error("Error fetching all salons:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   // Get featured salons
   app.get("/api/salons/featured", async (req, res) => {
     try {

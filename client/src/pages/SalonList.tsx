@@ -61,9 +61,14 @@ export default function SalonList() {
   const [showFilters, setShowFilters] = useState(false);
   
   // Tüm salonları getir
-  const { data: salons, isLoading, error } = useQuery<Salon[]>({
+  const { data: salons, isLoading, error, refetch } = useQuery<Salon[]>({
     queryKey: ['/api/salons'],
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    retry: 3,
+    retryDelay: 1000,
+    onError: (error) => {
+      console.error("Salon verisi çekilirken hata oluştu:", error);
+    }
   });
 
   const handleFilterChange = (key: keyof FilterOptions, value: any) => {
