@@ -58,8 +58,8 @@ export default function TopNavigation({ title, showBackButton }: { title?: strin
 
   // Geri butonu için handler
   const handleBackButtonClick = useCallback(() => {
-    navigate(-1);
-  }, [navigate]);
+    window.history.back();
+  }, []);
 
   return (
     <>

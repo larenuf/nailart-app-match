@@ -12,10 +12,10 @@ export default function BottomNavigation() {
             <span className="text-xs mt-1 block">Ana Sayfa</span>
           </Link>
         </div>
-        <div className={`flex flex-col items-center px-3 py-1 ${location === '/search' ? 'text-[#D6C3E5] dark:text-[#D3B5E8]' : 'text-gray-500 dark:text-gray-400'}`}>
-          <Link href="/search">
-            <i className="fas fa-search text-lg"></i>
-            <span className="text-xs mt-1 block">Keşfet</span>
+        <div className={`flex flex-col items-center px-3 py-1 ${location === '/salons' ? 'text-[#D6C3E5] dark:text-[#D3B5E8]' : 'text-gray-500 dark:text-gray-400'}`}>
+          <Link href="/salons">
+            <i className="fas fa-store text-lg"></i>
+            <span className="text-xs mt-1 block">Salonlar</span>
           </Link>
         </div>
         <div className={`flex flex-col items-center px-3 py-1 ${location.startsWith('/booking') ? 'text-[#D6C3E5] dark:text-[#D3B5E8]' : 'text-gray-500 dark:text-gray-400'}`}>
