@@ -166,7 +166,7 @@ export default function SalonsList() {
             <CardTitle>Salonlar</CardTitle>
             <CardDescription>Sisteme kayıtlı tüm salonları yönetin</CardDescription>
           </div>
-          <Link href="/admin/salons/create">
+          <Link href="/admin/create-salon">
             <Button size="sm">
               <Plus className="mr-2 h-4 w-4" />
               Yeni Salon
