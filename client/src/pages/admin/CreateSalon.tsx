@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { ChevronLeft, Store, MapPin, Upload, Camera, Check, AlertCircle } from "lucide-react";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 
 // Gelişmiş salon oluşturma form şeması
 const createSalonSchema = z.object({
@@ -88,9 +89,21 @@ export default function CreateSalon() {
 
   // Salon oluşturma mutasyonu
   const createSalonMutation = useMutation({
-    mutationFn: async (values: any) => {
+    mutationFn: async (values: z.infer<typeof createSalonSchema> & { imageUrl: string }) => {
+      // API için veri hazırlama
+      const salonData = {
+        ...values,
+        rating: 0,       // Yeni salonlar için varsayılan değer
+        reviewCount: 0,  // Yeni salonlar için varsayılan değer
+        distance: 0      // Bu değer kullanıcının konumuna göre dinamik olarak hesaplanacak
+      };
+      
       // Gerçek API çağrısı yapılıyor
-      const response = await apiRequest("POST", "/api/admin/salons", values);
+      const response = await apiRequest("POST", "/api/admin/salons", salonData);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Salon oluşturulurken bir hata oluştu");
+      }
       return response.json();
     },
     onSuccess: (data) => {
