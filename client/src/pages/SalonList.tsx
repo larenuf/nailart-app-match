@@ -23,7 +23,7 @@ import TopNavigation from '@/components/TopNavigation';
 import BottomNavigation from '@/components/BottomNavigation';
 import { MapPin, Star, Clock, Filter, Search, Heart, Scissors, Check } from 'lucide-react';
 
-type Salon = {
+interface Salon {
   id: number;
   name: string;
   address: string;
@@ -36,17 +36,19 @@ type Salon = {
   isPremium: boolean;
   openTime: string;
   closeTime: string;
-  city?: string;
-  district?: string;
-};
+}
 
-type FilterOptions = {
+interface SalonWithCity extends Salon {
+  city: string;
+}
+
+interface FilterOptions {
   searchText: string;
   city: string;
   sort: string;
   priceRange: number[];
   isPremium: boolean;
-};
+}
 
 export default function SalonList() {
   const [_, navigate] = useLocation();
@@ -61,14 +63,11 @@ export default function SalonList() {
   const [showFilters, setShowFilters] = useState(false);
   
   // Tüm salonları getir
-  const { data: salons, isLoading, error, refetch } = useQuery<Salon[]>({
+  const { data: salons, isLoading, error } = useQuery<Salon[]>({
     queryKey: ['/api/salons'],
     refetchOnWindowFocus: false,
     retry: 3,
-    retryDelay: 1000,
-    onError: (error) => {
-      console.error("Salon verisi çekilirken hata oluştu:", error);
-    }
+    retryDelay: 1000
   });
 
   const handleFilterChange = (key: keyof FilterOptions, value: any) => {
@@ -89,13 +88,13 @@ export default function SalonList() {
     setShowFilters(prev => !prev);
   };
 
-  const handleSalonClick = (salon: Salon) => {
+  const handleSalonClick = (salon: SalonWithCity) => {
     navigate(`/salons/${salon.id}`);
   };
 
-  // Salonlar için şehir bilgisi ekle (örnek olarak)
-  const salonsWithCity = salons?.map(salon => {
-    // Adresten şehir bilgisini çıkar (örnek veri için)
+  // Salonlar için şehir bilgisi ekle
+  const salonsWithCity: SalonWithCity[] = salons ? salons.map((salon): SalonWithCity => {
+    // Adresten şehir bilgisini çıkar
     let city = "İstanbul";
     
     if (salon.address.includes("Ankara")) {
@@ -108,10 +107,10 @@ export default function SalonList() {
       ...salon,
       city
     };
-  });
+  }) : [];
   
   // Salonları filtrele
-  const filteredSalons = salonsWithCity?.filter(salon => {
+  const filteredSalons: SalonWithCity[] = salonsWithCity.filter((salon) => {
     // Arama metni filtresi
     if (filters.searchText && !salon.name.toLowerCase().includes(filters.searchText.toLowerCase()) &&
         !salon.address.toLowerCase().includes(filters.searchText.toLowerCase())) {
@@ -132,7 +131,7 @@ export default function SalonList() {
   });
 
   // Salonları sırala
-  const sortedSalons = filteredSalons ? [...filteredSalons].sort((a, b) => {
+  const sortedSalons = [...filteredSalons].sort((a, b) => {
     switch (filters.sort) {
       case "rating":
         return b.rating - a.rating;
@@ -143,7 +142,7 @@ export default function SalonList() {
       default:
         return 0;
     }
-  }) : [];
+  });
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
