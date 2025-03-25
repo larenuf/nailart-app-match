@@ -53,14 +53,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.post("/api/admin/salons", async (req, res) => {
-    try {
-      const salon = await storage.createSalon(req.body);
-      res.status(201).json(salon);
-    } catch (error) {
-      res.status(500).json({ error: "Salon oluşturulurken bir hata oluştu" });
-    }
-  });
+  // Bu endpoint aşağıda daha detaylı olarak tanımlandığı için kaldırıldı
   
   app.put("/api/admin/salons/:id", async (req, res) => {
     try {
