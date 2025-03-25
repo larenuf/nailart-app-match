@@ -243,11 +243,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put("/api/admin/reviews/:id", async (req, res) => {
     try {
       const reviewId = parseInt(req.params.id);
-      const review = await storage.updateReview(reviewId, {
+      const updatedReview = await storage.updateReview(reviewId, {
         ...req.body,
         adminReviewed: true
       });
-      res.json(review);
+      
+      // Gerçek zamanlı güncelleme gönder
+      broadcastToAll('review_update', {
+        action: 'update',
+        review: updatedReview
+      });
+      
+      res.json(updatedReview);
     } catch (error) {
       res.status(500).json({ error: "Yorum güncellenirken bir hata oluştu" });
     }
@@ -257,6 +264,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const reviewId = parseInt(req.params.id);
       await storage.deleteReview(reviewId);
+      
+      // Gerçek zamanlı güncelleme gönder
+      broadcastToAll('review_update', {
+        action: 'delete',
+        reviewId
+      });
+      
       res.json({ success: true, message: "Yorum başarıyla silindi" });
     } catch (error) {
       res.status(500).json({ error: "Yorum silinirken bir hata oluştu" });
@@ -395,6 +409,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         specialFeatures: salonData.specialFeatures || ""
       });
       
+      // Gerçek zamanlı güncelleme gönder
+      broadcastToAll('salon_update', {
+        action: 'create',
+        salon: newSalon
+      });
+      
       res.status(201).json(newSalon);
     } catch (error: any) {
       console.error("Salon oluşturulurken hata:", error);
@@ -417,7 +437,97 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Get all stories
+  // Story yönetimi - Admin API'leri
+  app.get("/api/admin/stories", async (req, res) => {
+    try {
+      // Admin yetkisi kontrolü yapılabilir (şimdilik atlanıyor)
+      const stories = await storage.getStories();
+      res.json(stories);
+    } catch (error: any) {
+      res.status(500).json({ error: "Hikayeler alınırken bir hata oluştu" });
+    }
+  });
+  
+  app.post("/api/admin/stories", async (req, res) => {
+    try {
+      // Admin yetkisi kontrolü yapılabilir (şimdilik atlanıyor)
+      const storyData = req.body;
+      
+      if (!storyData.title || !storyData.imageUrl) {
+        return res.status(400).json({ error: "Hikaye başlığı ve resim URL'si gereklidir" });
+      }
+      
+      const newStory = await storage.createStory({
+        title: storyData.title,
+        imageUrl: storyData.imageUrl,
+        highlighted: storyData.highlighted || false,
+        videoUrl: storyData.videoUrl || null
+      });
+      
+      // Gerçek zamanlı güncelleme gönder
+      broadcastToAll('story_update', {
+        action: 'create',
+        story: newStory
+      });
+      
+      res.status(201).json(newStory);
+    } catch (error: any) {
+      console.error("Hikaye oluşturulurken hata:", error);
+      res.status(500).json({ 
+        message: error.message,
+        error: "Hikaye oluşturulamadı"
+      });
+    }
+  });
+  
+  app.put("/api/admin/stories/:id", async (req, res) => {
+    try {
+      // Admin yetkisi kontrolü yapılabilir (şimdilik atlanıyor)
+      const storyId = parseInt(req.params.id);
+      const storyData = req.body;
+      
+      const updatedStory = await storage.updateStory(storyId, storyData);
+      
+      // Gerçek zamanlı güncelleme gönder
+      broadcastToAll('story_update', {
+        action: 'update',
+        story: updatedStory
+      });
+      
+      res.json(updatedStory);
+    } catch (error: any) {
+      console.error("Hikaye güncellenirken hata:", error);
+      res.status(500).json({ 
+        message: error.message,
+        error: "Hikaye güncellenemedi"
+      });
+    }
+  });
+  
+  app.delete("/api/admin/stories/:id", async (req, res) => {
+    try {
+      // Admin yetkisi kontrolü yapılabilir (şimdilik atlanıyor)
+      const storyId = parseInt(req.params.id);
+      
+      await storage.deleteStory(storyId);
+      
+      // Gerçek zamanlı güncelleme gönder
+      broadcastToAll('story_update', {
+        action: 'delete',
+        storyId
+      });
+      
+      res.json({ success: true, message: "Hikaye başarıyla silindi" });
+    } catch (error: any) {
+      console.error("Hikaye silinirken hata:", error);
+      res.status(500).json({ 
+        message: error.message,
+        error: "Hikaye silinemedi"
+      });
+    }
+  });
+  
+  // Genel API - Tüm hikayeleri getir
   app.get("/api/stories", async (req, res) => {
     try {
       const stories = await storage.getStories();
