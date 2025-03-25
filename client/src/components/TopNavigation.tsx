@@ -1,12 +1,12 @@
 import { useAppContext } from "@/context/AppContext";
 import { useTheme } from "@/context/ThemeContext";
-import { Moon, Sun, Settings } from "lucide-react";
+import { Moon, Sun, Settings, ArrowLeft } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import LocationPicker from "./LocationPicker";
 
-export default function TopNavigation() {
+export default function TopNavigation({ title, showBackButton }: { title?: string; showBackButton?: boolean }) {
   const { userLocation } = useAppContext();
   const displayLocation = userLocation || "New York";
   const { darkMode, toggleDarkMode } = useTheme();
@@ -56,11 +56,29 @@ export default function TopNavigation() {
     setLocationPickerOpen(true);
   }, []);
 
+  // Geri butonu için handler
+  const handleBackButtonClick = useCallback(() => {
+    navigate(-1);
+  }, [navigate]);
+
   return (
     <>
       <div className="px-4 py-4 bg-[#FAFAFA] dark:bg-gray-900 transition-colors duration-200" onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-[#FF5864]">NAM <span className="text-xs font-medium align-text-top dark:text-gray-300">NailArtMatch</span></h1>
+          {showBackButton ? (
+            <div className="flex items-center">
+              <button
+                onClick={handleBackButtonClick}
+                className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm mr-3 dark:bg-gray-700 dark:text-white"
+              >
+                <ArrowLeft size={18} />
+              </button>
+              {title && <h2 className="text-lg font-semibold dark:text-white">{title}</h2>}
+            </div>
+          ) : (
+            <h1 className="text-2xl font-bold text-[#FF5864]">NAM <span className="text-xs font-medium align-text-top dark:text-gray-300">NailArtMatch</span></h1>
+          )}
+          
           <div className="flex space-x-3">
             <button 
               className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm text-[#333333] dark:bg-gray-700 dark:text-white"
@@ -100,14 +118,17 @@ export default function TopNavigation() {
             )}
           </div>
         </div>
-        <div 
-          className="flex items-center text-sm mt-3 bg-white p-2.5 rounded-lg shadow-sm dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200 cursor-pointer"
-          onClick={handleLocationClick}
-        >
-          <i className="fas fa-map-marker-alt text-[#FF5864] mr-2"></i>
-          <span className="font-medium">{displayLocation}</span>
-          <i className="fas fa-chevron-down text-xs ml-1 text-gray-400 dark:text-gray-500"></i>
-        </div>
+        
+        {!title && (
+          <div 
+            className="flex items-center text-sm mt-3 bg-white p-2.5 rounded-lg shadow-sm dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200 cursor-pointer"
+            onClick={handleLocationClick}
+          >
+            <i className="fas fa-map-marker-alt text-[#FF5864] mr-2"></i>
+            <span className="font-medium">{displayLocation}</span>
+            <i className="fas fa-chevron-down text-xs ml-1 text-gray-400 dark:text-gray-500"></i>
+          </div>
+        )}
       </div>
 
       {/* Konum Seçici */}
