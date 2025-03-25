@@ -5,7 +5,26 @@ import { insertBookingSchema, insertReviewSchema, insertPromotionSchema } from "
 import { v4 as uuidv4 } from 'uuid';
 import type { ChatMessage } from './storage';
 import { setupAuth } from "./auth";
-import { WebSocketServer } from 'ws';
+import { WebSocketServer, WebSocket } from 'ws';
+
+// WebSocket bağlantılarını yönetmek için global değişkenler
+let wsServer: WebSocketServer;
+const activeConnections: Set<WebSocket> = new Set();
+
+// WebSocket üzerinden tüm bağlı istemcilere mesaj gönderme
+export function broadcastToAll(eventType: string, data: any) {
+  const message = JSON.stringify({
+    type: eventType,
+    data: data,
+    timestamp: new Date().toISOString()
+  });
+  
+  activeConnections.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(message);
+    }
+  });
+}
 
 // Mock Stripe implementation for now
 const mockStripe = {
@@ -906,16 +925,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
   
   // Set up WebSocket server
-  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  wsServer = new WebSocketServer({ server: httpServer, path: '/ws' });
   
-  wss.on('connection', (ws) => {
+  wsServer.on('connection', (ws) => {
     console.log('New WebSocket connection established');
+    
+    // Bağlantıyı aktif bağlantılar listesine ekle
+    activeConnections.add(ws);
     
     // Send welcome message
     ws.send(JSON.stringify({
       type: 'welcome',
-      message: 'Connected to Nail Art Match WebSocket server'
+      message: 'Connected to Nail Art Match WebSocket server',
+      timestamp: new Date().toISOString()
     }));
+    
+    // Bağlantı kapandığında temizle
+    ws.on('close', () => {
+      console.log('WebSocket connection closed');
+      activeConnections.delete(ws);
+    });
     
     // Handle messages
     ws.on('message', (message) => {
@@ -926,24 +955,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Handle different message types
         if (data.type === 'booking_update') {
           // Broadcast booking updates to all connected clients
-          wss.clients.forEach((client) => {
-            if (client.readyState === WebSocket.OPEN) {
-              client.send(JSON.stringify({
-                type: 'booking_notification',
-                data: data.data
-              }));
-            }
-          });
+          broadcastToAll('booking_notification', data.data);
+        }
+        
+        // Admin işlemleri
+        else if (data.type === 'salon_update' || 
+                data.type === 'artist_update' || 
+                data.type === 'service_update' || 
+                data.type === 'story_update' || 
+                data.type === 'review_update') {
+          // İlgili içerik türü güncellendiğinde tüm bağlantılara bildir
+          broadcastToAll(data.type, data.data);
         }
       } catch (error) {
         console.error('Error handling WebSocket message:', error);
       }
     });
     
-    // Handle connection close
-    ws.on('close', () => {
-      console.log('WebSocket connection closed');
-    });
+    // Duplicate close event handler - removing
   });
 
   return httpServer;
