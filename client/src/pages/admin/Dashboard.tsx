@@ -118,6 +118,7 @@ export default function Dashboard() {
     { id: "users", name: "Kullanıcı Yönetimi", icon: Users },
     { id: "appointments", name: "Randevu Yönetimi", icon: CalendarDays },
     { id: "reviews", name: "Yorum Yönetimi", icon: MessageSquare },
+    { id: "stories", name: "Hikaye Yönetimi", icon: Activity },
     { id: "notifications", name: "Bildirimler", icon: Bell },
     { id: "analytics", name: "Analitik", icon: BarChart2 },
     { id: "settings", name: "Ayarlar", icon: Settings }
@@ -289,8 +290,49 @@ export default function Dashboard() {
             </Card>
           </div>
           
-          {/* Bugünkü Randevular ve Popüler Kategoriler */}
+          {/* Bugünkü Randevular, CMS ve Popüler Kategoriler */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="md:col-span-1">
+              <CardHeader className="pb-2">
+                <CardTitle>İçerik Yönetimi</CardTitle>
+                <CardDescription>Gerçek zamanlı CMS özellikleri</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center border rounded-md p-3 hover:bg-slate-50 cursor-pointer" 
+                       onClick={() => setActiveSection("stories")}>
+                    <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 mr-3">
+                      <Activity className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Hikaye Yönetimi</p>
+                      <p className="text-xs text-muted-foreground">Uygulamanın öne çıkan içeriği</p>
+                    </div>
+                    <Badge variant="secondary">Yeni</Badge>
+                  </div>
+                  
+                  <div className="flex items-center border rounded-md p-3 hover:bg-slate-50 cursor-pointer"
+                       onClick={() => setActiveSection("reviews")}>
+                    <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 mr-3">
+                      <MessageSquare className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Yorum Yönetimi</p>
+                      <p className="text-xs text-muted-foreground">İnceleme bekleyen: {displayStats.unreviewedComments}</p>
+                    </div>
+                    {displayStats.unreviewedComments > 0 && (
+                      <Badge variant="destructive">{displayStats.unreviewedComments}</Badge>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <p className="text-xs text-muted-foreground text-center w-full">
+                  Tüm değişiklikler anında kullanıcılara yansır
+                </p>
+              </CardFooter>
+            </Card>
+            
             <Card className="md:col-span-2">
               <CardHeader>
                 <CardTitle>Bugünkü Randevular</CardTitle>
@@ -412,6 +454,10 @@ export default function Dashboard() {
       );
     } else if (activeSection === "salons") {
       return <SalonsList />;
+    } else if (activeSection === "reviews") {
+      return <CommentManagement />;
+    } else if (activeSection === "stories") {
+      return <StoryManagement />;
     } else {
       return (
         <div className="flex items-center justify-center h-full">
@@ -470,7 +516,10 @@ export default function Dashboard() {
               
               {/* Bildirim sayısı (örnek görsel için) */}
               {option.id === "reviews" && (
-                <Badge variant="destructive" className="ml-auto">14</Badge>
+                <Badge variant="destructive" className="ml-auto">{displayStats.unreviewedComments}</Badge>
+              )}
+              {option.id === "stories" && (
+                <Badge variant="secondary" className="ml-auto">Yeni</Badge>
               )}
               {option.id === "appointments" && (
                 <Badge variant="secondary" className="ml-auto">47</Badge>
