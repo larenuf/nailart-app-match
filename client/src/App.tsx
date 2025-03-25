@@ -16,7 +16,7 @@ import Search from "@/pages/Search";
 import VirtualConsultation from "@/pages/VirtualConsultation";
 import ColorMatcher from "@/pages/ColorMatcher";
 import Dashboard from "@/pages/admin/Dashboard";
-import CreateSalon from "@/pages/admin/CreateSalon";
+import CreateSalon from "@/pages/admin/CreateSalonNew";
 import AiChat from "@/components/AiChat";
 
 function Router() {

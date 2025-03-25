@@ -179,6 +179,19 @@ export default function CreateSalon() {
       setActiveTab("other");
     }
   };
+  
+  // Harita için tıklama işleyicisi
+  const handleMapClick = useCallback((e: google.maps.MapMouseEvent) => {
+    if (e.latLng) {
+      const newPos = {
+        lat: e.latLng.lat(),
+        lng: e.latLng.lng()
+      };
+      setMarkerPosition(newPos);
+      form.setValue("latitude", newPos.lat);
+      form.setValue("longitude", newPos.lng);
+    }
+  }, [form]);
 
   return (
     <div className="container max-w-5xl mx-auto p-4 pb-16">
@@ -467,40 +480,99 @@ export default function CreateSalon() {
                       name="address"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Açık Adres</FormLabel>
+                          <FormLabel>Adres</FormLabel>
                           <FormControl>
                             <Textarea 
-                              placeholder="Bağdat Caddesi, No: 123, Kadıköy" 
-                              {...field}
+                              placeholder="Salonun tam adresi"
+                              {...field} 
                             />
                           </FormControl>
                           <FormDescription>
-                            Müşterilerin salonu kolayca bulabilmeleri için tam adresi girin
+                            Müşterilerin salonu kolayca bulabilmesi için tam adresi giriniz
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                     
-                    <div>
-                      <FormLabel>Harita Konumu</FormLabel>
-                      <div className="h-60 mt-2 border rounded-md p-2 flex items-center justify-center bg-gray-50">
-                        <div className="text-center">
-                          <MapPin className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                          <p className="text-sm text-gray-500">
-                            Salon konumu belirlemek için harita entegrasyonu burada gösterilecek
-                          </p>
-                          <p className="text-sm text-gray-500">
-                            (Harita gösterimi geçici olarak devre dışı bırakılmıştır)
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex space-x-4 mt-2 text-xs text-gray-500">
-                        <span>Enlem: {form.getValues("latitude")}</span>
-                        <span>Boylam: {form.getValues("longitude")}</span>
-                      </div>
+                    {/* Google Maps Haritası */}
+                    <div className="mt-4">
+                      <h4 className="text-sm font-medium mb-2">Konumu Haritada İşaretleyin</h4>
+                      <Card className="overflow-hidden">
+                        <CardContent className="p-0">
+                          {isLoaded ? (
+                            <div className="h-[300px] w-full">
+                              <GoogleMap
+                                mapContainerStyle={{ width: '100%', height: '100%' }}
+                                center={markerPosition}
+                                zoom={14}
+                                onClick={handleMapClick}
+                              >
+                                <Marker position={markerPosition} />
+                              </GoogleMap>
+                              <div className="p-2 text-xs text-muted-foreground bg-slate-50">
+                                Haritada salon konumunu işaretlemek için tıklayın
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="h-[300px] w-full flex items-center justify-center bg-slate-100">
+                              <p className="text-muted-foreground">Harita yükleniyor...</p>
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
                     </div>
-
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="latitude"
+                        render={({ field: { onChange, ...field } }) => (
+                          <FormItem>
+                            <FormLabel>Enlem</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                step="0.000001"
+                                onChange={(e) => {
+                                  const lat = parseFloat(e.target.value);
+                                  onChange(lat);
+                                  setMarkerPosition(prev => ({ ...prev, lat }));
+                                }}
+                                {...field} 
+                                value={field.value?.toString() || ""}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="longitude"
+                        render={({ field: { onChange, ...field } }) => (
+                          <FormItem>
+                            <FormLabel>Boylam</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                step="0.000001"
+                                onChange={(e) => {
+                                  const lng = parseFloat(e.target.value);
+                                  onChange(lng);
+                                  setMarkerPosition(prev => ({ ...prev, lng }));
+                                }}
+                                {...field} 
+                                value={field.value?.toString() || ""}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
                     <div className="pt-4 flex justify-between">
                       <Button 
                         type="button" 
@@ -525,79 +597,68 @@ export default function CreateSalon() {
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium mb-4">Salon Görselleri</h3>
                     
-                    <div>
-                      <FormLabel>Kapak Görseli</FormLabel>
-                      <FormDescription className="mb-2">
-                        Müşterilere gösterilecek ana görsel. Yüksek kaliteli ve salon içini gösteren bir fotoğraf seçin.
-                      </FormDescription>
-                      
-                      {/* Görsel yükleme alanı */}
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
-                        {imagePreview ? (
-                          <div className="relative">
-                            <img 
-                              src={imagePreview} 
-                              alt="Preview" 
-                              className="w-full h-48 object-cover rounded-md" 
-                            />
-                            <Button 
-                              type="button" 
-                              variant="destructive" 
-                              size="sm" 
-                              className="absolute top-2 right-2"
-                              onClick={() => {
-                                setSelectedImage(null);
-                                setImagePreview(null);
-                              }}
-                            >
-                              Kaldır
-                            </Button>
-                          </div>
-                        ) : (
-                          <div className="flex flex-col items-center justify-center h-48">
-                            <Camera className="h-8 w-8 text-gray-400 mb-2" />
-                            <p className="text-sm text-gray-500 mb-2">
-                              Görsel yüklemek için tıklayın veya sürükleyin
-                            </p>
-                            <Button 
-                              type="button" 
-                              variant="outline" 
-                              size="sm"
-                              onClick={() => alert("Dosya yükleme özelliği geçici olarak devre dışı bırakılmıştır. Lütfen aşağıdaki örnek görsellerden birini seçin.")}
-                            >
-                              <Upload className="h-4 w-4 mr-2" />
-                              Dosya Seç
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                      
-                      {/* Örnek resimler */}
-                      <div className="mt-4">
-                        <FormLabel>Örnek Görsellerden Seçin</FormLabel>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
-                          {sampleImages.map((image, index) => (
-                            <div 
-                              key={index} 
-                              className={`relative cursor-pointer rounded-md overflow-hidden border-2 ${selectedImage === image ? 'border-purple-500' : 'border-transparent'}`}
-                              onClick={() => selectImage(image)}
-                            >
+                    <Card>
+                      <CardContent className="p-6">
+                        <div className="text-center mb-4">
+                          <h4 className="text-sm font-medium mb-2">Salon Kapak Resmi</h4>
+                          <p className="text-xs text-muted-foreground mb-4">
+                            Salon listesinde ve salon sayfasında gösterilecek ana görsel
+                          </p>
+                          
+                          {imagePreview ? (
+                            <div className="relative w-full h-48 mb-4 rounded-md overflow-hidden">
                               <img 
-                                src={image} 
-                                alt={`Sample ${index + 1}`} 
-                                className="w-full h-24 object-cover" 
+                                src={imagePreview} 
+                                alt="Salon cover preview" 
+                                className="w-full h-full object-cover"
                               />
-                              {selectedImage === image && (
-                                <div className="absolute top-1 right-1 bg-purple-500 rounded-full p-0.5">
-                                  <Check className="h-3 w-3 text-white" />
-                                </div>
-                              )}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedImage(null);
+                                  setImagePreview(null);
+                                }}
+                                className="absolute top-2 right-2 bg-white/80 p-1 rounded-full shadow-md hover:bg-white"
+                              >
+                                <AlertCircle className="h-5 w-5 text-red-500" />
+                              </button>
                             </div>
-                          ))}
+                          ) : (
+                            <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-md p-6 mb-4 flex flex-col items-center justify-center">
+                              <Camera className="h-8 w-8 text-gray-400 mb-2" />
+                              <p className="text-sm text-muted-foreground">Henüz bir görsel seçilmedi</p>
+                            </div>
+                          )}
+                          
+                          <div className="flex flex-col items-center">
+                            <div className="flex flex-wrap justify-center gap-3 mb-4">
+                              {sampleImages.map((imageUrl) => (
+                                <div 
+                                  key={imageUrl}
+                                  className={`w-16 h-16 rounded-md overflow-hidden cursor-pointer border-2 ${selectedImage === imageUrl ? 'border-purple-500' : 'border-transparent'}`}
+                                  onClick={() => selectImage(imageUrl)}
+                                >
+                                  <img 
+                                    src={imageUrl} 
+                                    alt="Sample salon" 
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                            
+                            <Button variant="outline" className="flex gap-2">
+                              <Upload className="h-4 w-4" />
+                              <span>Kendi Görselinizi Yükleyin</span>
+                            </Button>
+                            <p className="text-xs text-muted-foreground mt-2">
+                              JPG, PNG veya WebP formatında, en fazla 5MB boyutunda
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-
+                      </CardContent>
+                    </Card>
+                    
                     <div className="pt-4 flex justify-between">
                       <Button 
                         type="button" 
@@ -619,54 +680,55 @@ export default function CreateSalon() {
                 
                 <TabsContent value="other">
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium mb-4">Diğer Bilgiler</h3>
+                    <h3 className="text-lg font-medium mb-4">Diğer Salon Bilgileri</h3>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <FormField
-                        control={form.control}
-                        name="discount"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>İndirim/Promosyon Bilgisi</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Örn: %15 indirim, İlk ziyarette %20 indirim" {...field} />
-                            </FormControl>
-                            <FormDescription>
-                              Salon için geçerli indirim veya promosyonlar
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="specialFeatures"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Özel Özellikler</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Örn: Ücretsiz park, Wi-Fi, Çocuk oyun alanı" {...field} />
-                            </FormControl>
-                            <FormDescription>
-                              Salonunuzu öne çıkaracak özel özellikler
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+                    <FormField
+                      control={form.control}
+                      name="specialFeatures"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Özel Özellikler ve Hizmetler</FormLabel>
+                          <FormControl>
+                            <Textarea 
+                              placeholder="Salonunuzu öne çıkaran özellikleri belirtin (örn: ücretsiz park, wifi, çocuk oyun alanı, vb.)"
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Salonunuzun sunduğu özel özellikleri virgülle ayırarak yazın
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <FormField
+                      control={form.control}
+                      name="discount"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>İndirim Bilgisi (İsteğe Bağlı)</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Örn: %15 indirim" {...field} />
+                          </FormControl>
+                          <FormDescription>
+                            Eğer sunan bir indirim varsa, burada belirtin. Bu bilgi salon kartlarında görünecektir
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
                       <FormField
                         control={form.control}
                         name="isPremium"
                         render={({ field }) => (
-                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                          <FormItem className="flex flex-row items-center justify-between p-4 border rounded-lg">
                             <div className="space-y-0.5">
                               <FormLabel className="text-base">Premium Salon</FormLabel>
                               <FormDescription>
-                                Salon listelerde ön sıralarda gösterilir ve özel etiketler alır
+                                Premium salonlar aramalarda ve listelerde öncelikli gösterilir
                               </FormDescription>
                             </div>
                             <FormControl>
@@ -683,11 +745,11 @@ export default function CreateSalon() {
                         control={form.control}
                         name="isActive"
                         render={({ field }) => (
-                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                          <FormItem className="flex flex-row items-center justify-between p-4 border rounded-lg">
                             <div className="space-y-0.5">
-                              <FormLabel className="text-base">Salon Durumu</FormLabel>
+                              <FormLabel className="text-base">Aktif Salon</FormLabel>
                               <FormDescription>
-                                Salon aktif olduğunda rezervasyona açıktır
+                                Aktif salonlar uygulamada görünür. Pasif salonlar listelenme
                               </FormDescription>
                             </div>
                             <FormControl>
@@ -701,17 +763,7 @@ export default function CreateSalon() {
                       />
                     </div>
                     
-                    <div className="bg-blue-50 border border-blue-200 rounded-md p-4 flex items-start mt-6">
-                      <AlertCircle className="h-5 w-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <h4 className="text-sm font-medium text-blue-700">Salon Oluşturma İşlemi</h4>
-                        <p className="text-sm text-blue-600 mt-1">
-                          Salon oluşturulduktan sonra, salon sahiplerinin hesap erişimlerini ayarlamak, hizmetleri tanımlamak ve takvim ayarlarını yapmak için ek adımlar gerekecektir.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="pt-6 flex justify-between">
+                    <div className="pt-8 flex justify-between">
                       <Button 
                         type="button" 
                         variant="outline"
@@ -720,21 +772,23 @@ export default function CreateSalon() {
                         Geri: Medya
                       </Button>
                       
-                      <div className="space-x-2">
-                        <Button 
-                          type="button" 
-                          variant="outline"
-                          onClick={() => navigate("/admin")}
-                        >
-                          İptal
-                        </Button>
-                        <Button 
-                          type="submit" 
-                          disabled={createSalonMutation.isPending}
-                        >
-                          {createSalonMutation.isPending ? "Oluşturuluyor..." : "Salon Oluştur"}
-                        </Button>
-                      </div>
+                      <Button 
+                        type="submit"
+                        disabled={createSalonMutation.isPending}
+                        className="gap-2"
+                      >
+                        {createSalonMutation.isPending ? (
+                          <>
+                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                            <span>İşleniyor...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Check className="h-4 w-4" />
+                            <span>Salon Oluştur</span>
+                          </>
+                        )}
+                      </Button>
                     </div>
                   </div>
                 </TabsContent>
