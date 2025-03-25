@@ -90,8 +90,8 @@ export default function FeaturedSalonsSectionNew() {
           <Sparkles size={14} className="text-amber-500 mr-1"/>
           Öne Çıkan Salonlar
         </h2>
-        <Link href="/search" className="text-xs font-medium text-primary dark:text-pink-400 flex items-center cursor-pointer">
-            Tümünü Gör <ArrowRight size={10} className="ml-0.5"/>
+        <Link href="/salons" className="text-xs font-medium text-primary dark:text-pink-400 flex items-center cursor-pointer">
+            Tüm Salonlar <ArrowRight size={10} className="ml-0.5"/>
         </Link>
       </div>
 

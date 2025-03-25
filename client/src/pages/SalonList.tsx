@@ -85,11 +85,28 @@ export default function SalonList() {
   };
 
   const handleSalonClick = (salon: Salon) => {
-    navigate(`/salon/${salon.id}`);
+    navigate(`/salons/${salon.id}`);
   };
 
+  // Salonlar için şehir bilgisi ekle (örnek olarak)
+  const salonsWithCity = salons?.map(salon => {
+    // Adresten şehir bilgisini çıkar (örnek veri için)
+    let city = "İstanbul";
+    
+    if (salon.address.includes("Ankara")) {
+      city = "Ankara";
+    } else if (salon.address.includes("İzmir")) {
+      city = "İzmir";
+    }
+    
+    return {
+      ...salon,
+      city
+    };
+  });
+  
   // Salonları filtrele
-  const filteredSalons = salons?.filter(salon => {
+  const filteredSalons = salonsWithCity?.filter(salon => {
     // Arama metni filtresi
     if (filters.searchText && !salon.name.toLowerCase().includes(filters.searchText.toLowerCase()) &&
         !salon.address.toLowerCase().includes(filters.searchText.toLowerCase())) {
