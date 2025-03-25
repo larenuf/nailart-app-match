@@ -8,6 +8,7 @@ import NotFound from "@/pages/not-found";
 import HomeView from "@/components/HomeView";
 import SalonDetail from "@/pages/SalonDetail";
 import ArtistDetail from "@/pages/ArtistDetail";
+import SalonList from "@/pages/SalonList";
 import Booking from "@/pages/Booking";
 import Checkout from "@/pages/Checkout";
 import PaymentSuccess from "@/pages/PaymentSuccess";
@@ -25,6 +26,7 @@ function Router() {
       <Route path="/">
         <HomeView />
       </Route>
+      <Route path="/salons" component={SalonList} />
       <Route path="/salons/:id" component={SalonDetail} />
       <Route path="/artists/:id" component={ArtistDetail} />
       <Route path="/booking/:id" component={Booking} />
