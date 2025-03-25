@@ -258,9 +258,17 @@ export default function SalonList() {
               <Card key={salon.id} className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer" onClick={() => handleSalonClick(salon)}>
                 <div className="relative h-40">
                   <img
-                    src={salon.imageUrl}
+                    src={salon.id === 1 ? "https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80" : 
+                         salon.id === 2 ? "https://images.unsplash.com/photo-1604902396830-aca29e19b067?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80" :
+                         salon.id === 3 ? "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80" :
+                         "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80"}
                     alt={salon.name}
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      console.error("Salon resmi yüklenemedi:", salon.id);
+                      // Yedek resim göster
+                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=400&h=250&fit=crop&q=80';
+                    }}
                   />
                   {salon.discount && (
                     <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-medium">
