@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
+import CloudinaryUploader from '@/components/CloudinaryUploader';
 import {
   Card,
   CardContent,
@@ -13,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, Pencil, Trash2, Plus, Save } from "lucide-react";
+import { Loader2, Pencil, Trash2, Plus, Save, UploadCloud } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -405,10 +406,36 @@ export default function StoryManagement() {
                 name="imageUrl"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Resim URL</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://example.com/image.jpg" {...field} />
-                    </FormControl>
+                    <FormLabel>Resim</FormLabel>
+                    <div className="space-y-4">
+                      <FormControl>
+                        <Input 
+                          placeholder="https://example.com/image.jpg" 
+                          {...field} 
+                          className={field.value ? "mb-2" : ""}
+                        />
+                      </FormControl>
+                      
+                      <div className="flex flex-col space-y-2">
+                        <div className="text-sm font-medium">Veya görsel yükle:</div>
+                        <CloudinaryUploader
+                          onUploadComplete={(url) => {
+                            form.setValue("imageUrl", url, { shouldValidate: true });
+                          }}
+                          folder="nail_art_match_stories"
+                        />
+                      </div>
+                      
+                      {field.value && (
+                        <div className="mt-2 rounded-md overflow-hidden border">
+                          <img
+                            src={field.value}
+                            alt="Hikaye Görseli Önizleme"
+                            className="w-full h-32 object-cover"
+                          />
+                        </div>
+                      )}
+                    </div>
                     <FormDescription>
                       Hikayelerde görüntülenecek resim
                     </FormDescription>
@@ -455,16 +482,7 @@ export default function StoryManagement() {
                 )}
               />
               
-              {editingStory && editingStory.imageUrl && (
-                <div className="border rounded-md p-2">
-                  <p className="text-sm font-medium mb-2">Mevcut Resim</p>
-                  <img 
-                    src={editingStory.imageUrl} 
-                    alt="Preview" 
-                    className="w-full h-32 object-cover rounded-md" 
-                  />
-                </div>
-              )}
+              {/* Mevcut resim önizlemesi yukarıda Cloudinary uploader içinde gösteriliyor */}
               
               <DialogFooter>
                 <Button
