@@ -31,7 +31,16 @@ import {
   type InsertTimeSlot,
   reviews,
   type Review,
-  type InsertReview
+  type InsertReview,
+  favorites,
+  type Favorite,
+  type InsertFavorite,
+  chats,
+  type Chat,
+  type InsertChat,
+  chatMessages,
+  type ChatMessage as DbChatMessage,
+  type InsertChatMessage
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, gte, lte, lt, desc, asc, sql, inArray } from "drizzle-orm";
@@ -137,12 +146,30 @@ export interface IStorage {
   deletePromotion(id: number): Promise<boolean>;
   incrementPromotionUsage(id: number): Promise<Promotion>;
 
+  // Favorite operations
+  getFavoritesByUser(userId: number): Promise<Favorite[]>;
+  getFavoritesByType(userId: number, type: string): Promise<Favorite[]>;
+  addFavorite(favorite: InsertFavorite): Promise<Favorite>;
+  removeFavorite(id: number): Promise<boolean>;
+  checkIsFavorite(userId: number, type: string, itemId: number): Promise<boolean>;
+
+  // Direct Chat operations
+  createChat(chat: InsertChat): Promise<Chat>;
+  getChatsByUser(userId: number): Promise<Chat[]>;
+  getChatsBySalon(salonId: number): Promise<Chat[]>;
+  getChat(userId: number, salonId: number): Promise<Chat | undefined>;
+  getChatById(chatId: number): Promise<Chat | undefined>;
+  addChatMessageToChat(chatMessage: InsertChatMessage): Promise<DbChatMessage>;
+  getChatMessagesByChatId(chatId: number): Promise<DbChatMessage[]>;
+  markChatMessagesAsRead(chatId: number, userId: number): Promise<boolean>;
+  getUnreadMessageCount(chatId: number, userId: number): Promise<number>;
+
   // Session store
   sessionStore: any;
 }
 
-// Chat messages table (not in schema.ts because it's only used server-side)
-const chatMessages: ChatMessage[] = [];
+// AI Chat messages table (not in schema.ts because it's only used server-side)
+const aiChatMessages: ChatMessage[] = [];
 
 export class DatabaseStorage implements IStorage {
   sessionStore: any;
