@@ -7,6 +7,7 @@ import NearestSalonsMap from "./NearestSalonsMap";
 import { Sparkles, Palette, Medal, MousePointerClick, ImagePlus, Megaphone, SlidersHorizontal, Calendar, Sun, ArrowRight } from 'lucide-react';
 import { useCallback } from "react";
 import { useLocation } from "wouter";
+import { useI18n } from "@/i18n";
 
 // Feature card component
 interface FeatureCardProps {
@@ -48,6 +49,7 @@ function FeatureCard({ title, description, icon, onClick, available, gradient }:
 // Weather-based promotional banner
 function WeatherPromoBanner() {
   const [_, setLocation] = useLocation();
+  const { t } = useI18n();
 
   const handleNavigate = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -59,7 +61,7 @@ function WeatherPromoBanner() {
     <div className="px-4 pt-3 pb-4">
       
       <div className="bg-gradient-to-r from-sky-400 to-indigo-500 rounded-xl shadow-md overflow-hidden relative mt-2">
-        {/* Dekoratif arka plan elementleri */}
+        {/* Decorative background elements */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-300/20 rounded-full -mr-10 -mt-10"></div>
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-pink-300/20 rounded-full -ml-6 -mb-6"></div>
         
@@ -69,15 +71,15 @@ function WeatherPromoBanner() {
               <Sun className="h-6 w-6 text-white" />
             </div>
             <div className="flex-1">
-              <h3 className="text-base font-semibold text-white drop-shadow-sm">Güne Uygun Şık Başlangıç</h3>
+              <h3 className="text-base font-semibold text-white drop-shadow-sm">{t('home.elegantStartForDay')}</h3>
               <div className="mt-2 text-sm text-white/90 space-y-1.5">
                 <p className="flex items-center">
-                  <span className="mr-1.5">☀️</span> Bugün İstanbul'da hava çok güzel...
+                  <span className="mr-1.5">☀️</span> {t('home.niceWeatherToday')}
                 </p>
                 <p className="flex items-center">
-                  <span className="mr-1.5">💅</span> Tırnakların da en az senin kadar parlasın!
+                  <span className="mr-1.5">💅</span> {t('home.nailsShineAsYou')}
                 </p>
-                <p className="font-medium text-white mt-1">NAM ile randevunu al, tarzını yansıt.</p>
+                <p className="font-medium text-white mt-1">{t('home.bookAppointmentShowStyle')}</p>
               </div>
               
               <button 
@@ -85,7 +87,7 @@ function WeatherPromoBanner() {
                 className="mt-3 flex items-center text-sm bg-white text-indigo-600 px-4 py-2 rounded-full font-medium shadow-sm hover:bg-white/90 transition-all"
                 type="button"
               >
-                Randevu Al
+                {t('booking.bookAppointment')}
                 <ArrowRight className="ml-1.5 h-4 w-4" />
               </button>
             </div>
@@ -106,11 +108,18 @@ function PremiumFeaturesSection() {
     setLocation(path);
   }, [setLocation]);
   
+  const { t, locale } = useI18n();
+  
   const showComingSoon = useCallback((e: React.MouseEvent, feature: string) => {
     e.preventDefault();
     e.stopPropagation();
-    alert(`${feature} yakında geliyor! Bizi takip etmeye devam edin.`);
-  }, []);
+    const message = locale === 'en' 
+      ? `${feature} coming soon! Stay tuned.`
+      : locale === 'ar'
+      ? `${feature} قريبًا! ترقبوا.`
+      : `${feature} yakında geliyor! Bizi takip etmeye devam edin.`;
+    alert(message);
+  }, [locale]);
   
   const features = [
     {
@@ -188,10 +197,10 @@ function PremiumFeaturesSection() {
       <div className="flex items-center justify-between mb-2 relative z-10">
         <h2 className="text-xs font-medium text-gray-700 dark:text-gray-300 flex items-center">
           <Sparkles size={14} className="text-pink-500 dark:text-pink-400 mr-1" /> 
-          Premium Özellikler
+          {t('home.premiumFeatures')}
         </h2>
         <span className="text-[10px] text-pink-600 dark:text-pink-400 font-medium flex items-center">
-          Tümünü Gör <ArrowRight size={10} className="ml-0.5" />
+          {locale === 'tr' ? 'Tümünü Gör' : locale === 'en' ? 'View All' : 'عرض الكل'} <ArrowRight size={10} className="ml-0.5" />
         </span>
       </div>
       
