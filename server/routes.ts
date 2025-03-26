@@ -989,10 +989,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Yeni sohbet oluştur
         chat = await storage.createChat({
           userId,
-          salonId,
-          lastMessageAt: new Date(),
-          createdAt: new Date(),
-          updatedAt: new Date()
+          salonId
         });
       }
       
@@ -1019,11 +1016,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Mesajı ekle
       const message = await storage.addChatMessageToChat({
         chatId,
-        text,
+        content: text,
         senderType,
         senderId,
-        isRead: false,
-        createdAt: new Date()
+        isRead: false
       });
       
       // WebSocket ile gerçek zamanlı bildirim gönder
