@@ -31,7 +31,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [bookingDetails, setBookingDetails] = useState<BookingDetails | null>(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [userLocation, setUserLocation] = useState('New York');
+  const [userLocation, setUserLocation] = useState('İstanbul');
 
   const resetSelection = () => {
     setSelectedSalon(null);
