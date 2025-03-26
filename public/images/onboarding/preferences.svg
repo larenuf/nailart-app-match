@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="200" viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Group of people illustration -->
+  
+  <!-- Person 1 (center) -->
+  <circle cx="150" cy="70" r="14" fill="#F9C9BC" />
+  <path d="M150,85 L150,120" stroke="#333" stroke-width="2" />
+  <path d="M150,95 L135,110" stroke="#333" stroke-width="2" />
+  <path d="M150,95 L165,110" stroke="#333" stroke-width="2" />
+  <rect x="140" y="120" width="20" height="30" rx="2" fill="#30AAB9" />
+  <path d="M146,72 L148,74 L154,68" stroke="#333" stroke-width="1" />
+  
+  <!-- Person 2 (left) -->
+  <circle cx="110" cy="90" r="12" fill="#F9C9BC" />
+  <path d="M110,105 L110,130" stroke="#333" stroke-width="2" />
+  <path d="M110,110 L100,120" stroke="#333" stroke-width="2" />
+  <path d="M110,110 L120,120" stroke="#333" stroke-width="2" />
+  <rect x="100" y="130" width="20" height="25" rx="2" fill="#F9C9BC" />
+  <path d="M105,95 L115,95" stroke="#333" stroke-width="1" />
+  <circle cx="110" cy="80" r="3" fill="#333" />
+  
+  <!-- Person 3 (right) -->
+  <circle cx="190" cy="85" r="13" fill="#F9C9BC" />
+  <path d="M190,100 L190,130" stroke="#333" stroke-width="2" />
+  <path d="M190,105 L180,115" stroke="#333" stroke-width="2" />
+  <path d="M190,105 L200,115" stroke="#333" stroke-width="2" />
+  <rect x="180" y="130" width="20" height="30" rx="2" fill="#F0A0A0" />
+  <path d="M185,85 L195,85" stroke="#333" stroke-width="1" />
+  
+  <!-- Person 4 (bottom left) -->
+  <circle cx="75" cy="120" r="11" fill="#B7A0CF" />
+  <path d="M75,135 L75,155" stroke="#333" stroke-width="2" />
+  <path d="M75,140 L65,150" stroke="#333" stroke-width="2" />
+  <path d="M75,140 L85,150" stroke="#333" stroke-width="2" />
+  <rect x="65" y="155" width="20" height="25" rx="2" fill="#F9C9BC" />
+  <circle cx="70" cy="118" r="2" fill="#333" />
+  <circle cx="80" cy="118" r="2" fill="#333" />
+  
+  <!-- Person 5 (bottom right) -->
+  <circle cx="225" cy="115" r="12" fill="#F9C9BC" />
+  <path d="M225,130 L225,155" stroke="#333" stroke-width="2" />
+  <path d="M225,135 L215,145" stroke="#333" stroke-width="2" />
+  <path d="M225,135 L235,145" stroke="#333" stroke-width="2" />
+  <rect x="215" y="155" width="20" height="25" rx="2" fill="#EFEFEF" />
+  <path d="M220,115 L230,115" stroke="#333" stroke-width="1" />
+  <path d="M225,115 L225,110" stroke="#333" stroke-width="1" />
+</svg>
