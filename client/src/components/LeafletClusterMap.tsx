@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback, lazy, Suspense } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -8,7 +8,7 @@ import { Salon } from '@/types';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Award, MapPin, Navigation, Tag } from 'lucide-react';
+import { Award, MapPin, Navigation, Tag, MapPinOff } from 'lucide-react';
 
 // Leaflet icon hatası çözümü
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -32,9 +32,17 @@ const createCustomIcon = (type: string, color: string) => {
   });
 };
 
-// Marker kümeleme için simülasyon fonksiyonu
+// Marker kümeleme için gelişmiş simülasyon fonksiyonu
 function clusterMarkers(salons: Salon[], zoom: number) {
-  // Zoom seviyesi 12'nin altındaysa kümeleri oluştur
+  // Boş salon listesi kontrolü
+  if (!salons || salons.length === 0) {
+    return [];
+  }
+  
+  // Zoom seviyesine göre kümeleme stratejisini değiştir
+  // 10'dan düşük: Büyük kümeler
+  // 10-12 arası: Orta kümeler
+  // 12'den büyük: Kümeleme yapma, bireysel markerlar göster
   if (zoom < 12) {
     const clusters: { 
       lat: number; 
@@ -44,31 +52,44 @@ function clusterMarkers(salons: Salon[], zoom: number) {
       mainType: 'featured' | 'filtered' | 'nearby';
     }[] = [];
     
-    // Bu basit bir simülasyondur, gerçek uygulamada daha karmaşık bir algoritma kullanılmalıdır
-    const gridSize = 0.02 / (zoom / 10); // Zoom seviyesine göre grid boyutunu ayarla
+    // Zoom seviyesine göre grid boyutunu dinamik olarak ayarla
+    // Düşük zoom = daha büyük grid = daha fazla kümeleme
+    const gridSize = zoom < 10 ? 0.03 : 0.02 / (zoom / 10); 
     
     salons.forEach(salon => {
+      // Kümeleme için lokasyon koordinatlarını yuvarla
       const lat = Math.floor(salon.latitude / gridSize) * gridSize;
       const lng = Math.floor(salon.longitude / gridSize) * gridSize;
       
+      // Aynı veya yakın grid hücresinde mevcut bir küme var mı?
       const existingCluster = clusters.find(
         c => Math.abs(c.lat - lat) < gridSize && Math.abs(c.lng - lng) < gridSize
       );
       
       if (existingCluster) {
+        // Mevcut kümeye salon ekle
         existingCluster.salons.push(salon);
         existingCluster.count += 1;
-        // Küme içinde premium salon varsa, kümenin tipini featured yap
+        
+        // Kümeleme öncelikleri:
+        // 1. Premium/Featured salonlar (en yüksek öncelik)
+        // 2. Filtrelenmiş salonlar
+        // 3. Normal salonlar
         if (salon.isPremium && existingCluster.mainType !== 'featured') {
           existingCluster.mainType = 'featured';
+        } else if (salon.id % 5 === 0 && existingCluster.mainType === 'nearby') {
+          // Sadece normal kümenin tipini filtrelenmiş yap
+          // Featured kümesini değiştirme (öncelik featured > filtered > nearby)
+          existingCluster.mainType = 'filtered';
         }
       } else {
+        // Yeni küme oluştur
         clusters.push({ 
           lat, 
           lng, 
           count: 1, 
           salons: [salon],
-          mainType: salon.isPremium ? 'featured' : 'nearby'
+          mainType: salon.isPremium ? 'featured' : salon.id % 5 === 0 ? 'filtered' : 'nearby'
         });
       }
     });
@@ -76,7 +97,7 @@ function clusterMarkers(salons: Salon[], zoom: number) {
     return clusters;
   }
   
-  // Zoom seviyesi yüksekse kümeleme yapma
+  // Zoom seviyesi yüksekse kümeleme yapma, her salonu kendi markerıyla göster
   return salons.map(salon => ({
     lat: salon.latitude,
     lng: salon.longitude,
@@ -222,9 +243,16 @@ export default function LeafletClusterMap({ salons }: { salons: Salon[] }) {
   // Kümelenmiş markerları oluştur
   const clusters = clusterMarkers(salons, zoom);
   
-  const handleMarkerClick = (salon: Salon) => {
+  const handleMarkerClick = useCallback((salon: Salon) => {
     setSelectedSalon(salon);
-  };
+    // Harita alanına otomatik scroll yapalım - iyi bir UX için
+    setTimeout(() => {
+      const mapElement = document.querySelector('.leaflet-container');
+      if (mapElement) {
+        mapElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
+  }, []);
   
   const handleViewSalonDetails = (salon: Salon) => {
     setGlobalSelectedSalon(salon);
@@ -414,16 +442,17 @@ export default function LeafletClusterMap({ salons }: { salons: Salon[] }) {
         >
           <Navigation className="h-5 w-5 text-pink-500" />
         </button>
+
+        {selectedSalon && (
+          <SelectedSalonCard 
+            salon={selectedSalon} 
+            onClose={() => setSelectedSalon(null)} 
+            onViewDetails={handleViewSalonDetails} 
+          />
+        )}
       </div>
       
-      {/* Seçili salon kartı */}
-      {selectedSalon && (
-        <SelectedSalonCard 
-          salon={selectedSalon} 
-          onClose={() => setSelectedSalon(null)} 
-          onViewDetails={handleViewSalonDetails} 
-        />
-      )}
+      {/* Salon kartı harita içinde olduğu için bu kısma gerek yok */}
       
       {/* Salon İsimleri Listesi */}
       <div className="p-4 mt-2">
