@@ -36,7 +36,7 @@ export default function AiChat() {
 
   // Fetching chat history
   const { data: messages = [], isLoading } = useQuery<Message[]>({
-    queryKey: ['/api/chat/messages'],
+    queryKey: ['/api/ai-chat/messages'],
     refetchOnWindowFocus: false,
   });
 
@@ -44,11 +44,11 @@ export default function AiChat() {
   const sendMessageMutation = useMutation({
     mutationFn: async (message: string) => {
       setTyping(true);
-      const response = await apiRequest('POST', '/api/chat/messages', { message });
+      const response = await apiRequest('POST', '/api/ai-chat/messages', { message });
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/chat/messages'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/ai-chat/messages'] });
       setInput('');
       
       // Add typing indicator and then remove it after response comes
