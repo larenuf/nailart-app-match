@@ -345,9 +345,6 @@ export default function NearestSalonsMap() {
                       lng: selectedMarker.longitude
                     }}
                     onCloseClick={handleInfoWindowClose}
-                    options={{
-                      pixelOffset: { width: 0, height: -15 }
-                    }}
                   >
                     <div className="p-2 max-w-[220px] bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border-t-2 border-pink-500 rounded-lg shadow-lg">
                       <div className="flex items-start">
