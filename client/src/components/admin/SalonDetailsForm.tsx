@@ -12,7 +12,9 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import { MapPin } from "lucide-react";
+import { MapPin, UploadCloud } from "lucide-react";
+import CloudinaryUploader from "@/components/CloudinaryUploader";
+import MultiCloudinaryUploader from "@/components/MultiCloudinaryUploader";
 
 // Salon güncelleme form şeması
 const updateSalonSchema = z.object({
@@ -30,6 +32,7 @@ const updateSalonSchema = z.object({
   isPremium: z.boolean().optional(),
   discount: z.string().optional(),
   imageUrl: z.string().optional(),
+  galleryImages: z.array(z.string()).optional().default([]),
 });
 
 type SalonDetailsFormProps = {
@@ -65,6 +68,7 @@ export default function SalonDetailsForm({ salon }: SalonDetailsFormProps) {
       isPremium: salon?.isPremium || false,
       discount: salon?.discount || "",
       imageUrl: salon?.imageUrl || "",
+      galleryImages: salon?.galleryImages || [],
     }
   });
 
@@ -242,12 +246,38 @@ export default function SalonDetailsForm({ salon }: SalonDetailsFormProps) {
                 name="imageUrl"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Görsel URL (İsteğe Bağlı)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://example.com/image.jpg" {...field} />
-                    </FormControl>
+                    <FormLabel>Kapak Görseli</FormLabel>
+                    <div className="space-y-4">
+                      <FormControl>
+                        <Input 
+                          placeholder="https://example.com/image.jpg" 
+                          {...field} 
+                          className={field.value ? "mb-2" : ""}
+                        />
+                      </FormControl>
+                      
+                      <div className="flex flex-col space-y-2">
+                        <div className="text-sm font-medium">Veya görsel yükle:</div>
+                        <CloudinaryUploader
+                          onUploadComplete={(url) => {
+                            form.setValue("imageUrl", url, { shouldValidate: true });
+                          }}
+                          folder="nail_art_match_salons"
+                        />
+                      </div>
+                      
+                      {field.value && (
+                        <div className="mt-2 rounded-md overflow-hidden border">
+                          <img
+                            src={field.value}
+                            alt="Salon Görseli Önizleme"
+                            className="w-full h-32 object-cover"
+                          />
+                        </div>
+                      )}
+                    </div>
                     <FormDescription>
-                      Bir görsel URL'si girin veya yükleyici yakında eklenecek
+                      Salon listesinde gösterilecek kapak görseli
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -305,6 +335,59 @@ export default function SalonDetailsForm({ salon }: SalonDetailsFormProps) {
                       {...field} 
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="galleryImages"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Salon Galeri Görselleri</FormLabel>
+                  <div className="space-y-4">
+                    <FormControl>
+                      <MultiCloudinaryUploader
+                        onUploadComplete={(urls) => {
+                          form.setValue("galleryImages", urls, { shouldValidate: true });
+                        }}
+                        folder="nail_art_match_galleries"
+                        maxFiles={10}
+                        initialImages={field.value}
+                      />
+                    </FormControl>
+                    
+                    {field.value && field.value.length > 0 && (
+                      <div className="mt-4">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                          {field.value.map((url, index) => (
+                            <div key={index} className="relative rounded-md overflow-hidden border group">
+                              <img
+                                src={url}
+                                alt={`Salon Görseli ${index+1}`}
+                                className="w-full h-24 object-cover"
+                              />
+                              <button
+                                type="button"
+                                className="absolute inset-0 bg-black bg-opacity-50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => {
+                                  const updatedImages = [...field.value];
+                                  updatedImages.splice(index, 1);
+                                  form.setValue("galleryImages", updatedImages, { shouldValidate: true });
+                                }}
+                              >
+                                <span className="text-xs">Kaldır</span>
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <FormDescription>
+                    Salonunuzu tanıtan galeri görselleri yükleyin (en fazla 10 görsel)
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
