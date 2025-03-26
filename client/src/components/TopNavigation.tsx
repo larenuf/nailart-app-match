@@ -10,7 +10,7 @@ import { CurrencySelector } from "./CurrencySelector";
 
 export default function TopNavigation({ title, showBackButton }: { title?: string; showBackButton?: boolean }) {
   const { userLocation } = useAppContext();
-  const displayLocation = userLocation || "New York";
+  const displayLocation = userLocation || "İstanbul";
   const { darkMode, toggleDarkMode } = useTheme();
   const [locationPickerOpen, setLocationPickerOpen] = useState(false);
   const [_, navigate] = useLocation();
