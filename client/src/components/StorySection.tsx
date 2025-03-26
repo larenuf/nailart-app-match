@@ -79,8 +79,10 @@ export default function StorySection() {
                 />
                 {story.videoUrl && (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-black/30 rounded-full p-1">
-                      <i className="fas fa-play text-white text-xs"></i>
+                    <div className="bg-black/50 rounded-full p-1 w-6 h-6 flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className="w-4 h-4">
+                        <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
+                      </svg>
                     </div>
                   </div>
                 )}
@@ -123,13 +125,19 @@ export default function StorySection() {
             
             {/* Ana İçerik */}
             {selectedStory.videoUrl ? (
-              <div className="w-full h-full">
-                <iframe
+              <div className="w-full h-full flex items-center justify-center bg-black">
+                <video
+                  ref={videoRef}
                   src={selectedStory.videoUrl}
-                  className="w-full h-full"
-                  allowFullScreen
-                  frameBorder="0"
-                ></iframe>
+                  className="w-full h-full max-h-full object-contain"
+                  controls
+                  autoPlay
+                  playsInline
+                  muted={false}
+                >
+                  <source src={selectedStory.videoUrl} type="video/mp4" />
+                  Video formatı desteklenmiyor.
+                </video>
               </div>
             ) : (
               <img 
