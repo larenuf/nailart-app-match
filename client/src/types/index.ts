@@ -25,6 +25,7 @@ export type Salon = {
   openTime: string;
   closeTime: string;
   imageUrl: string;
+  galleryImages?: string[];
   discount: string;
   distance: number;
   isPremium: boolean;

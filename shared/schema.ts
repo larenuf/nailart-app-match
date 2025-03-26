@@ -31,6 +31,7 @@ export const salons = pgTable("salons", {
   openTime: text("open_time"),
   closeTime: text("close_time"),
   imageUrl: text("image_url"),
+  galleryImages: text("gallery_images").array(), // Salon galeri görsellerinin dizisi
   discount: text("discount"),
   distance: doublePrecision("distance"),
   isPremium: boolean("is_premium").default(false),
