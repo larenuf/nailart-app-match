@@ -40,6 +40,41 @@ export async function uploadImage(
   }
 }
 
+// Video dosyasını Base64 olarak alıp Cloudinary'ye yükler
+export async function uploadVideo(
+  file: string,
+  folder: string = 'nail_art_match_videos'
+): Promise<string> {
+  try {
+    // Base64 veriyi kontrol et
+    if (!file || (!file.startsWith('data:video') && !file.startsWith('data:application'))) {
+      throw new ApiError(400, 'Geçersiz video formatı. Base64 formatında bir video gerekli.');
+    }
+
+    // Cloudinary'ye yükle
+    const result = await cloudinary.uploader.upload(file, {
+      folder,
+      resource_type: 'video',
+      chunk_size: 6000000, // 6MB parçalar halinde yükle (büyük dosyalar için)
+      eager: [
+        { format: 'mp4', transformation: [
+          { quality: 'auto' },
+          { width: 720, crop: 'scale' }
+        ]}
+      ],
+      eager_async: true
+    });
+
+    return result.secure_url;
+  } catch (error) {
+    console.error('Cloudinary video yükleme hatası:', error);
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, 'Video yüklenirken bir hata oluştu');
+  }
+}
+
 // Çoklu resim yükleme
 export async function uploadMultipleImages(
   files: string[],
@@ -65,6 +100,19 @@ export async function deleteImage(publicId: string): Promise<boolean> {
   } catch (error) {
     console.error('Cloudinary görüntü silme hatası:', error);
     throw new ApiError(500, 'Görüntü silinirken bir hata oluştu');
+  }
+}
+
+// Video silme (Cloudinary'den public_id ile)
+export async function deleteVideo(publicId: string): Promise<boolean> {
+  try {
+    const result = await cloudinary.uploader.destroy(publicId, {
+      resource_type: 'video'
+    });
+    return result.result === 'ok';
+  } catch (error) {
+    console.error('Cloudinary video silme hatası:', error);
+    throw new ApiError(500, 'Video silinirken bir hata oluştu');
   }
 }
 
