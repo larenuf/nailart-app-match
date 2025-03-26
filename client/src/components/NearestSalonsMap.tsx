@@ -47,6 +47,8 @@ const markerTypes = {
   }
 };
 
+// Bu bileşen artık LeafletClusterMap tarafından değiştirilmiştir
+// Uyumluluk için korunuyor
 export default function NearestSalonsMap() {
   // stopPropagation handler
   const stopPropagation = (e: React.MouseEvent) => {

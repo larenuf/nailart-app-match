@@ -4,9 +4,9 @@ import StorySection2 from "./StorySection2";
 import CategoriesSection from "./CategoriesSection";
 import FeaturedSalonsSectionNew from "./FeaturedSalonsSectionNew";
 import NailProductsSection from "@/components/NailProductsSection";
-import NearestSalonsMap from "./NearestSalonsMap";
+import LeafletClusterMap from "./LeafletClusterMap";
 import { Sparkles, Palette, Medal, MousePointerClick, ImagePlus, Megaphone, SlidersHorizontal, Calendar, Sun, ArrowRight } from 'lucide-react';
-import { useCallback } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useI18n } from "@/i18n";
 
@@ -319,6 +319,18 @@ function PremiumFeaturesSection() {
 
 export default function HomeView() {
   const { locale } = useI18n();
+  const [salons, setSalons] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/salons')
+      .then(response => response.json())
+      .then(data => {
+        setSalons(data);
+      })
+      .catch(error => {
+        console.error('Error fetching salons:', error);
+      });
+  }, []);
   
   return (
     <div 
@@ -337,7 +349,7 @@ export default function HomeView() {
         <WeatherPromoBanner />
         <FeaturedSalonsSectionNew />
         <div className="px-4" onClick={(e) => e.stopPropagation()}>
-          <NearestSalonsMap />
+          <LeafletClusterMap salons={salons} />
         </div>
         <NailProductsSection />
         <PremiumFeaturesSection />
