@@ -36,54 +36,6 @@ export default function FeaturedSalonsSectionNew() {
 
   return (
     <div className="px-4 py-4">
-      {/* Tırnak Ürünleri Satış Alanı */}
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-3">
-          <h2 className="text-sm font-medium tracking-tight text-gray-700 dark:text-gray-300 flex items-center">
-            <ShoppingCart size={14} className="text-purple-500 mr-1"/>
-            Tırnak Ürünleri
-          </h2>
-          <Link href="/shop" className="text-xs font-medium text-primary dark:text-pink-400 flex items-center cursor-pointer">
-            Mağazaya Git <ArrowRight size={10} className="ml-0.5"/>
-          </Link>
-        </div>
-        
-        <div className="grid grid-cols-2 gap-3">
-          {/* Tırnak Bakım Ürünleri */}
-          <Link href="/product-category/nail-care" className="cursor-pointer group">
-              <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02] bg-gradient-to-b from-slate-100 via-slate-200 to-slate-400">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-slate-500 text-2xl font-medium">Tırnak Bakım Ürünleri</div>
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
-                <div className="absolute bottom-0 left-0 p-2.5 text-white">
-                  <h3 className="text-sm font-bold">💅 Tırnak Bakım Ürünleri</h3>
-                  <div className="flex items-center mt-1">
-                    <span className="text-xs mr-2 bg-white/30 px-2 py-0.5 rounded-full backdrop-blur-sm">Özel Fiyatlar</span>
-                    <span className="text-xs bg-primary/80 px-2 py-0.5 rounded-full">%15 İndirim</span>
-                  </div>
-                </div>
-              </div>
-          </Link>
-          
-          {/* Nail Art Kitleri */}
-          <Link href="/product-category/nail-art-kits" className="cursor-pointer group">
-              <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02] bg-gradient-to-b from-slate-100 via-slate-200 to-slate-400">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-slate-500 text-2xl font-medium">Nail Art Kitleri</div>
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
-                <div className="absolute bottom-0 left-0 p-2.5 text-white">
-                  <h3 className="text-sm font-bold">✨ Nail Art Kitleri</h3>
-                  <div className="flex items-center mt-1">
-                    <span className="text-xs mr-2 bg-white/30 px-2 py-0.5 rounded-full backdrop-blur-sm">Yeni Ürünler</span>
-                    <span className="text-xs bg-primary/80 px-2 py-0.5 rounded-full">%20 İndirim</span>
-                  </div>
-                </div>
-              </div>
-          </Link>
-        </div>
-      </div>
       
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-sm font-medium tracking-tight text-gray-700 dark:text-gray-300 flex items-center">

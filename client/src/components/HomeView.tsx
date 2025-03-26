@@ -3,6 +3,7 @@ import BottomNavigation from "./BottomNavigation";
 import StorySection2 from "./StorySection2";
 import CategoriesSection from "./CategoriesSection";
 import FeaturedSalonsSectionNew from "./FeaturedSalonsSectionNew";
+import NailProductsSection from "@/components/NailProductsSection";
 import NearestSalonsMap from "./NearestSalonsMap";
 import { Sparkles, Palette, Medal, MousePointerClick, ImagePlus, Megaphone, SlidersHorizontal, Calendar, Sun, ArrowRight } from 'lucide-react';
 import { useCallback } from "react";
@@ -338,6 +339,7 @@ export default function HomeView() {
         <div className="px-4" onClick={(e) => e.stopPropagation()}>
           <NearestSalonsMap />
         </div>
+        <NailProductsSection />
         <PremiumFeaturesSection />
         <div className="mt-4"></div>
       </div>
