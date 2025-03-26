@@ -20,12 +20,10 @@ export default function SalonDetailView() {
     enabled: false, // Endpoint yok, o yüzden devre dışı
   });
 
-  // Salon fotoğraf galerisi - gerçek olarak arkadan gelecek, şimdilik örneklendiriyoruz
+  // Salon fotoğraf galerisi - önce salon imageUrl, sonra galleryImages dizisinden gelir
   const galleryImages = [
     selectedSalon?.imageUrl,
-    "https://images.unsplash.com/photo-1604902396830-aca29e19b067?q=80&w=500&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1600428877878-1a0fd85beda8?q=80&w=500&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=500&auto=format&fit=crop"
+    ...(selectedSalon?.galleryImages || [])
   ].filter(Boolean) as string[];
 
   // Örnek hizmetler - gerçek veritabanından gelecek
