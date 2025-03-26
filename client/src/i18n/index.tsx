@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import trTranslations from './tr.json';
 import enTranslations from './en.json';
 import arTranslations from './ar.json';
@@ -44,14 +44,14 @@ interface I18nContextType {
 
 const I18nContext = createContext<I18nContextType | null>(null);
 
-export function I18nProvider({ children }: { children: ReactNode }) {
+export const I18nProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // Try to get saved locale/currency from localStorage, default to tr
   const savedLocale = typeof window !== 'undefined' 
-    ? (localStorage.getItem('locale') as SupportedLocale) || 'tr'
+    ? (localStorage.getItem('locale') as SupportedLocale || 'tr')
     : 'tr';
   
   const savedCurrency = typeof window !== 'undefined'
-    ? (localStorage.getItem('currency') as SupportedCurrency) || localeCurrencyMap[savedLocale]
+    ? (localStorage.getItem('currency') as SupportedCurrency || localeCurrencyMap[savedLocale])
     : localeCurrencyMap[savedLocale];
 
   const [locale, setLocaleState] = useState<SupportedLocale>(savedLocale);
@@ -107,9 +107,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const currencySymbol = t(`currency.${currency}`);
 
   // Format price with currency
-  const formatPrice = (amount: number, options = { showSymbol: true }): string => {
+  const formatPrice = (amount: number, options?: { showSymbol?: boolean }): string => {
+    const showSymbol = options?.showSymbol !== undefined ? options.showSymbol : true;
     const formatter = new Intl.NumberFormat(locale === 'tr' ? 'tr-TR' : locale === 'ar' ? 'ar-AE' : 'en-US', {
-      style: options.showSymbol ? 'currency' : 'decimal',
+      style: showSymbol ? 'currency' : 'decimal',
       currency: currency,
       minimumFractionDigits: 0,
       maximumFractionDigits: 2
@@ -127,22 +128,24 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     return toCurrency === 'USD' ? amountInUSD : amountInUSD * exchangeRates[toCurrency];
   };
 
+  const contextValue: I18nContextType = {
+    locale,
+    setLocale,
+    currency,
+    setCurrency,
+    t,
+    formatPrice,
+    convertPrice,
+    currencySymbol,
+    isRTL
+  };
+
   return (
-    <I18nContext.Provider value={{
-      locale,
-      setLocale,
-      currency,
-      setCurrency,
-      t,
-      formatPrice,
-      convertPrice,
-      currencySymbol,
-      isRTL
-    }}>
+    <I18nContext.Provider value={contextValue}>
       {children}
     </I18nContext.Provider>
   );
-}
+};
 
 export function useI18n() {
   const context = useContext(I18nContext);
