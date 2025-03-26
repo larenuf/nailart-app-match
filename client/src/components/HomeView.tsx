@@ -20,18 +20,21 @@ interface FeatureCardProps {
 }
 
 function FeatureCard({ title, description, icon, onClick, available, gradient }: FeatureCardProps) {
+  const { locale } = useI18n();
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     onClick(e);
   };
   
+  const comingSoonText = locale === 'tr' ? 'Yakında' : locale === 'en' ? 'Coming Soon' : 'قريبًا';
+  
   return (
     <div 
       onClick={handleClick}
       className={`rounded-full overflow-hidden shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-300 cursor-pointer border border-gray-100 dark:border-gray-700 w-12 h-12 flex items-center justify-center relative`}
       style={{ background: gradient }}
-      title={`${title}${!available ? ' (Yakında)' : ''}`}
+      title={`${title}${!available ? ` (${comingSoonText})` : ''}`}
     >
       <div className="bg-white/90 dark:bg-gray-800/90 rounded-full p-1.5 w-8 h-8 flex items-center justify-center">
         <div className="text-primary dark:text-white">{icon}</div>
@@ -121,72 +124,143 @@ function PremiumFeaturesSection() {
     alert(message);
   }, [locale]);
   
-  const features = [
+  const getLocalizedFeatureName = (trName: string): string => {
+    switch(trName) {
+      case "Sanal Danışmanlık": 
+        return locale === 'en' ? 'Virtual Consultation' : 
+               locale === 'ar' ? 'استشارة افتراضية' : trName;
+      case "AI Renk Eşleştirme": 
+        return locale === 'en' ? 'AI Color Matching' : 
+               locale === 'ar' ? 'مطابقة الألوان بالذكاء الاصطناعي' : trName;
+      case "Sadakat Puanları": 
+        return locale === 'en' ? 'Loyalty Points' : 
+               locale === 'ar' ? 'نقاط الولاء' : trName;
+      case "Tema Kişiselleştirme": 
+        return locale === 'en' ? 'Theme Customization' : 
+               locale === 'ar' ? 'تخصيص السمة' : trName;
+      case "Tırnak Mood Board": 
+        return locale === 'en' ? 'Nail Mood Board' : 
+               locale === 'ar' ? 'لوحة أفكار الأظافر' : trName;
+      case "Kampanya Yönetimi": 
+        return locale === 'en' ? 'Promotion Management' : 
+               locale === 'ar' ? 'إدارة العروض' : trName;
+      case "Gelişmiş Filtreleme": 
+        return locale === 'en' ? 'Advanced Filtering' : 
+               locale === 'ar' ? 'تصفية متقدمة' : trName;
+      case "Takvim Entegrasyonu": 
+        return locale === 'en' ? 'Calendar Integration' : 
+               locale === 'ar' ? 'تكامل التقويم' : trName;
+      default: return trName;
+    }
+  };
+
+  const getLocalizedFeatureDesc = (trName: string, trDesc: string): string => {
+    if (locale === 'tr') return trDesc;
+    
+    switch(trName) {
+      case "Sanal Danışmanlık": 
+        return locale === 'en' ? 'Get personalized nail art advice with our expert stylist avatar' : 
+               'احصل على نصائح مخصصة لفن الأظافر مع خبير التصميم الافتراضي';
+      case "AI Renk Eşleştirme": 
+        return locale === 'en' ? 'Find nail colors that best match your outfit and skin tone' : 
+               'ابحث عن ألوان الأظافر التي تناسب ملابسك ولون بشرتك';
+      case "Sadakat Puanları": 
+        return locale === 'en' ? 'Earn points with every appointment, use for special discounts and gifts' : 
+               'اكسب النقاط مع كل موعد، واستخدمها للحصول على خصومات وهدايا خاصة';
+      case "Tema Kişiselleştirme": 
+        return locale === 'en' ? 'Customize the app theme according to your style' : 
+               'خصص سمة التطبيق وفقًا لأسلوبك الخاص';
+      case "Tırnak Mood Board": 
+        return locale === 'en' ? 'Save designs you like and share with your stylist' : 
+               'احفظ التصاميم التي تعجبك وشاركها مع مصمم الأظافر الخاص بك';
+      case "Kampanya Yönetimi": 
+        return locale === 'en' ? 'Be the first to know about special promotions and discounts' : 
+               'كن أول من يعرف عن العروض والخصومات الخاصة';
+      case "Gelişmiş Filtreleme": 
+        return locale === 'en' ? 'Find the best salon by price, rating and service duration' : 
+               'ابحث عن أفضل صالون حسب السعر والتقييم ومدة الخدمة';
+      case "Takvim Entegrasyonu": 
+        return locale === 'en' ? 'Quickly book appointments based on artist availability' : 
+               'احجز المواعيد بسرعة بناءً على توفر الفنان';
+      default: return trDesc;
+    }
+  };
+  
+  const featureData = [
     {
-      title: "Sanal Danışmanlık",
-      description: "Uzman stilist avatarımız ile kişiselleştirilmiş tırnak sanatı tavsiyeleri alın",
+      trTitle: "Sanal Danışmanlık",
+      trDescription: "Uzman stilist avatarımız ile kişiselleştirilmiş tırnak sanatı tavsiyeleri alın",
       icon: <Sparkles size={14} />,
       onClick: (e: React.MouseEvent) => handleNavigate(e, '/virtual-consultation'),
       available: true,
       gradient: "linear-gradient(135deg, #f9a8d4 0%, #ec4899 100%)" // Pastel pembe
     },
     {
-      title: "AI Renk Eşleştirme",
-      description: "Kıyafetinize ve ten renginize en uygun tırnak renklerini bulun",
+      trTitle: "AI Renk Eşleştirme",
+      trDescription: "Kıyafetinize ve ten renginize en uygun tırnak renklerini bulun",
       icon: <Palette size={14} />,
       onClick: (e: React.MouseEvent) => handleNavigate(e, '/color-matcher'),
       available: true,
       gradient: "linear-gradient(135deg, #93c5fd 0%, #3b82f6 100%)" // Pastel mavi
     },
     {
-      title: "Sadakat Puanları",
-      description: "Her randevuda puan kazanın, özel indirimler ve hediyeler için kullanın",
+      trTitle: "Sadakat Puanları",
+      trDescription: "Her randevuda puan kazanın, özel indirimler ve hediyeler için kullanın",
       icon: <Medal size={14} />,
-      onClick: (e: React.MouseEvent) => showComingSoon(e, 'Sadakat puanları'),
+      onClick: (e: React.MouseEvent) => showComingSoon(e, getLocalizedFeatureName("Sadakat Puanları")),
       available: false,
       gradient: "linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%)" // Pastel sarı
     },
     {
-      title: "Tema Kişiselleştirme",
-      description: "Uygulama temasını kendi stilinize göre özelleştirin",
+      trTitle: "Tema Kişiselleştirme",
+      trDescription: "Uygulama temasını kendi stilinize göre özelleştirin",
       icon: <MousePointerClick size={14} />,
-      onClick: (e: React.MouseEvent) => showComingSoon(e, 'Tema kişiselleştirme'),
+      onClick: (e: React.MouseEvent) => showComingSoon(e, getLocalizedFeatureName("Tema Kişiselleştirme")),
       available: false,
       gradient: "linear-gradient(135deg, #86efac 0%, #22c55e 100%)" // Pastel yeşil
     },
     {
-      title: "Tırnak Mood Board",
-      description: "Beğendiğiniz tasarımları kaydedin ve stilistinizle paylaşın",
+      trTitle: "Tırnak Mood Board",
+      trDescription: "Beğendiğiniz tasarımları kaydedin ve stilistinizle paylaşın",
       icon: <ImagePlus size={14} />,
-      onClick: (e: React.MouseEvent) => showComingSoon(e, 'Mood board'),
+      onClick: (e: React.MouseEvent) => showComingSoon(e, getLocalizedFeatureName("Tırnak Mood Board")),
       available: false,
       gradient: "linear-gradient(135deg, #c4b5fd 0%, #8b5cf6 100%)" // Pastel mor
     },
     {
-      title: "Kampanya Yönetimi",
-      description: "Özel promosyon ve indirimlerden ilk siz haberdar olun",
+      trTitle: "Kampanya Yönetimi",
+      trDescription: "Özel promosyon ve indirimlerden ilk siz haberdar olun",
       icon: <Megaphone size={14} />,
-      onClick: (e: React.MouseEvent) => showComingSoon(e, 'Promosyon yönetimi'),
+      onClick: (e: React.MouseEvent) => showComingSoon(e, getLocalizedFeatureName("Kampanya Yönetimi")),
       available: false,
       gradient: "linear-gradient(135deg, #fca5a5 0%, #ef4444 100%)" // Pastel kırmızı
     },
     {
-      title: "Gelişmiş Filtreleme",
-      description: "Fiyata, puana ve servis süresine göre en uygun salonu bulun",
+      trTitle: "Gelişmiş Filtreleme",
+      trDescription: "Fiyata, puana ve servis süresine göre en uygun salonu bulun",
       icon: <SlidersHorizontal size={14} />,
       onClick: (e: React.MouseEvent) => handleNavigate(e, '/search'),
       available: true,
       gradient: "linear-gradient(135deg, #a5b4fc 0%, #6366f1 100%)" // Pastel indigo
     },
     {
-      title: "Takvim Entegrasyonu",
-      description: "Sanatçı müsaitlik takvimine göre hızlıca randevu alın",
+      trTitle: "Takvim Entegrasyonu",
+      trDescription: "Sanatçı müsaitlik takvimine göre hızlıca randevu alın",
       icon: <Calendar size={14} />,
       onClick: (e: React.MouseEvent) => handleNavigate(e, '/salons/1'),
       available: true,
       gradient: "linear-gradient(135deg, #f0abfc 0%, #d946ef 100%)" // Pastel fuşya
     }
   ];
+  
+  const features = featureData.map(feature => ({
+    title: getLocalizedFeatureName(feature.trTitle),
+    description: getLocalizedFeatureDesc(feature.trTitle, feature.trDescription),
+    icon: feature.icon,
+    onClick: feature.onClick,
+    available: feature.available,
+    gradient: feature.gradient
+  }));
   
   return (
     <div className="px-4 py-2 mt-1 bg-gradient-to-br from-slate-100/60 to-gray-50/60 dark:from-gray-800/60 dark:to-gray-900/60 rounded-t-2xl relative overflow-hidden transition-colors duration-200">
@@ -243,13 +317,16 @@ function PremiumFeaturesSection() {
 }
 
 export default function HomeView() {
+  const { locale } = useI18n();
+  
   return (
     <div 
       className="max-w-md mx-auto bg-white dark:bg-gray-900 min-h-screen relative pb-16 transition-colors duration-200"
       onClick={(e) => {
-        // Ana etkinliği durdur, böylece tüm tıklamalar özgün hedeflerinde kalır
+        // Stop the main event, so all clicks remain in their original targets
         e.stopPropagation();
       }}
+      dir={locale === 'ar' ? 'rtl' : 'ltr'} // Support for RTL layouts in Arabic
     >
       <TopNavigation />
       
