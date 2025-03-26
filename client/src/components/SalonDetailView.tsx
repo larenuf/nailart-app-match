@@ -146,15 +146,18 @@ export default function SalonDetailView() {
 
           {/* Salon Tanıtım Videosu */}
           {selectedSalon.videoUrl && (
-            <div className="mb-4">
-              <h3 className="font-bold mb-2">Salon Tanıtım Videosu</h3>
-              <div className="rounded-lg overflow-hidden">
+            <div className="mb-6">
+              <h3 className="font-bold mb-3 text-lg text-gray-800 dark:text-gray-200">Salon Tanıtım Videosu</h3>
+              <div className="rounded-lg overflow-hidden shadow-lg">
                 <video 
                   src={selectedSalon.videoUrl} 
                   controls 
                   className="w-full h-auto"
                   poster={selectedSalon.imageUrl}
+                  preload="metadata"
+                  playsInline
                 >
+                  <source src={selectedSalon.videoUrl} type="video/mp4" />
                   Tarayıcınız video etiketini desteklemiyor.
                 </video>
               </div>
