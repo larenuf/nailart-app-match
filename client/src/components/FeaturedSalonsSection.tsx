@@ -2,16 +2,41 @@ import { useQuery } from "@tanstack/react-query";
 import { useAppContext } from "@/context/AppContext";
 import { useLocation } from "wouter";
 import { Salon } from "@/types";
-import { ShoppingCart, Sparkles, Fingerprint, ArrowRight } from "lucide-react";
-import { useCallback } from "react";
+import { ShoppingCart, Sparkles, Fingerprint, ArrowRight, MapPin, Star, Clock, ArrowDownAZ, Percent, Filter } from "lucide-react";
+import { useCallback, useState, useMemo } from "react";
+import { Button } from "@/components/ui/button";
+import { useI18n } from "@/i18n";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function FeaturedSalonsSection() {
   const { setSelectedSalon } = useAppContext();
   const [, navigate] = useLocation();
+  const { t } = useI18n();
   
-  const { data: salons, isLoading } = useQuery<Salon[]>({
+  const { data: salons = [], isLoading } = useQuery<Salon[]>({
     queryKey: ["/api/salons/featured"],
   });
+
+  // Filtre durumları
+  const [filterType, setFilterType] = useState<string>("all"); // 'all', 'nearest', 'top-rated', 'discounts'
+
+  // Filtrelenmiş salonları hesapla
+  const filteredSalons = useMemo(() => {
+    if (!salons || salons.length === 0) return [];
+    
+    let filtered = [...salons];
+    
+    switch (filterType) {
+      case 'nearest':
+        return filtered.sort((a, b) => a.distance - b.distance);
+      case 'top-rated':
+        return filtered.sort((a, b) => b.rating - a.rating);
+      case 'discounts':
+        return filtered.filter(salon => salon.discount);
+      default:
+        return filtered;
+    }
+  }, [salons, filterType]);
 
   // Basitleştirilmiş salon seçimi işleyicisi
   const handleSelectSalon = useCallback((salon: Salon) => {
@@ -192,6 +217,48 @@ export default function FeaturedSalonsSection() {
           Tümünü Gör <ArrowRight size={10} className="ml-0.5"/>
         </button>
       </div>
+      
+      {/* Yeni Filtre Butonları */}
+      <ScrollArea className="mb-4" type="scroll">
+        <div className="flex space-x-2 pb-2">
+          <Button 
+            size="sm" 
+            variant={filterType === "all" ? "default" : "outline"}
+            className="rounded-full text-xs whitespace-nowrap"
+            onClick={() => setFilterType("all")}
+          >
+            <Filter size={12} className="mr-1" />
+            Sırala
+          </Button>
+          <Button 
+            size="sm" 
+            variant={filterType === "nearest" ? "default" : "outline"}
+            className="rounded-full text-xs whitespace-nowrap"
+            onClick={() => setFilterType("nearest")}
+          >
+            <MapPin size={12} className="mr-1" />
+            En Yakın
+          </Button>
+          <Button 
+            size="sm" 
+            variant={filterType === "top-rated" ? "default" : "outline"}
+            className="rounded-full text-xs whitespace-nowrap"
+            onClick={() => setFilterType("top-rated")}
+          >
+            <Star size={12} className="mr-1" />
+            En Yüksek Puan
+          </Button>
+          <Button 
+            size="sm" 
+            variant={filterType === "discounts" ? "default" : "outline"}
+            className="rounded-full text-xs whitespace-nowrap"
+            onClick={() => setFilterType("discounts")}
+          >
+            <Percent size={12} className="mr-1" />
+            Kampanya
+          </Button>
+        </div>
+      </ScrollArea>
 
       <div 
         className="space-y-4"
@@ -200,7 +267,7 @@ export default function FeaturedSalonsSection() {
           e.stopPropagation();
         }}
       >
-        {salons?.map((salon) => (
+        {filteredSalons.map((salon) => (
           <div
             key={salon.id}
             className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer"
