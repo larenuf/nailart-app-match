@@ -14,6 +14,7 @@ import { useState } from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { MapPin, UploadCloud } from "lucide-react";
 import CloudinaryUploader from "@/components/CloudinaryUploader";
+import CloudinaryVideoUploader from "@/components/CloudinaryVideoUploader";
 import MultiCloudinaryUploader from "@/components/MultiCloudinaryUploader";
 
 // Salon güncelleme form şeması
@@ -33,6 +34,7 @@ const updateSalonSchema = z.object({
   discount: z.string().optional(),
   imageUrl: z.string().optional(),
   galleryImages: z.array(z.string()).optional().default([]),
+  videoUrl: z.string().url("Geçerli bir URL giriniz").optional().or(z.literal("")),
 });
 
 type SalonDetailsFormProps = {

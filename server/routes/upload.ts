@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { uploadImage, uploadMultipleImages, uploadVideo, deleteVideo, deleteImage } from '../utils/cloudinary';
+import { uploadImage, uploadMultipleImages, uploadVideo, deleteVideo, deleteImage, getPublicIdFromUrl } from '../utils/cloudinary';
 import { requireAuth } from '../middleware/authMiddleware';
 import { ApiError } from '../middleware/errorHandler';
 
