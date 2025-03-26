@@ -188,37 +188,7 @@ export default function FeaturedSalonsSection() {
         </div>
       </div>
       
-      <div 
-        className="flex justify-between items-center mb-3"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
-      >
-        <h2 
-          className="text-sm font-medium tracking-tight text-gray-700 dark:text-gray-300 flex items-center"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-        >
-          <Sparkles size={14} className="text-amber-500 mr-1"/>
-          Öne Çıkan Salonlar
-        </h2>
-        <button 
-          className="text-xs font-medium text-primary dark:text-pink-400 flex items-center"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            handleViewAll(e);
-          }}
-          type="button"
-        >
-          Tümünü Gör <ArrowRight size={10} className="ml-0.5"/>
-        </button>
-      </div>
-      
-      {/* Yeni Filtre Butonları */}
+      {/* Yeni Filtre Butonları - Başlıktan önce yerleştirildi */}
       <ScrollArea className="mb-4" type="scroll">
         <div className="flex space-x-2 pb-2">
           <Button 
@@ -259,6 +229,36 @@ export default function FeaturedSalonsSection() {
           </Button>
         </div>
       </ScrollArea>
+      
+      <div 
+        className="flex justify-between items-center mb-3"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
+        <h2 
+          className="text-sm font-medium tracking-tight text-gray-700 dark:text-gray-300 flex items-center"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          <Sparkles size={14} className="text-amber-500 mr-1"/>
+          Öne Çıkan Salonlar
+        </h2>
+        <button 
+          className="text-xs font-medium text-primary dark:text-pink-400 flex items-center"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleViewAll(e);
+          }}
+          type="button"
+        >
+          Tümünü Gör <ArrowRight size={10} className="ml-0.5"/>
+        </button>
+      </div>
 
       <div 
         className="space-y-4"
