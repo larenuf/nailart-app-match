@@ -100,5 +100,3 @@ export function getPublicIdFromUrl(url: string): string {
     throw new ApiError(400, 'Geçersiz Cloudinary URL formatı');
   }
 }
-
-export default cloudinary;
