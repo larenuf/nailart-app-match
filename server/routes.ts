@@ -822,7 +822,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // AI Assistant Chat API endpoints
+  // AI Assistant Chat API endpoints - Enhanced with OpenAI
   app.get("/api/ai-chat/messages", async (req, res) => {
     try {
       const messages = await storage.getChatMessages();
@@ -834,7 +834,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   app.post("/api/ai-chat/messages", async (req, res) => {
     try {
-      const { message } = req.body;
+      const { message, userProfile = {} } = req.body;
       if (!message) {
         return res.status(400).json({ message: "Message text is required" });
       }
@@ -848,47 +848,117 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
       await storage.addChatMessage(userMessage);
       
-      // AI Güzellik Danışmanı - Gelişmiş Yanıt Sistemi
-      setTimeout(async () => {
-        let responseText = '';
+      // OpenAI API anahtarı kontrolü
+      if (!process.env.OPENAI_API_KEY) {
+        console.error("OPENAI_API_KEY çevre değişkeni eksik!");
         
-        // Gelişmiş pattern matching ve bağlam analizi
-        const lowercaseMessage = message.toLowerCase();
+        // Yedek yanıt mekanizması - API anahtarı yoksa temel yanıtlar kullan
+        setTimeout(async () => {
+          let responseText = 'API anahtarı eksik olduğu için şu anda detaylı yanıt veremiyorum. Lütfen daha sonra tekrar deneyin.';
+          
+          const aiMessage: ChatMessage = {
+            id: uuidv4(),
+            text: responseText,
+            isUser: false,
+            timestamp: new Date()
+          };
+          await storage.addChatMessage(aiMessage);
+        }, 1000);
         
-        // Selamlama mesajları
-        if (lowercaseMessage.includes('merhaba') || lowercaseMessage.includes('selam') || lowercaseMessage.includes('hi') || lowercaseMessage.includes('hello')) {
-          responseText = 'Merhaba! Ben AI Güzellik Danışmanınız. Tırnak bakımı, oje renkleri, nail art tasarımları veya en yakın salonlar hakkında sorularınızı yanıtlayabilirim. Size nasıl yardımcı olabilirim?';
-        }
+        // Hemen başarılı yanıt döndür
+        return res.status(201).json(userMessage);
+      }
+      
+      // Son 10 mesajı geçmişten getir (bağlam için)
+      const chatHistory = await storage.getChatMessages();
+      const recentMessages = chatHistory
+        .slice(-10)
+        .map(msg => ({
+          role: msg.isUser ? "user" : "assistant",
+          content: msg.text
+        }));
+      
+      // OpenAI API'ye istek yapılandırması
+      const roleDescription = "Sen bir profesyonel nail artist ve güzellik danışmanısın. Kullanıcılara aşağıdaki konularda yardımcı ol: tırnak sanatı ve tasarımı, kaş şekillendirme, makyaj önerileri, cilt bakım rutinleri, saç bakımı, ten rengine ve cilt tipine uygun öneriler, güzellik trendleri, güzellik hizmetleriyle ilgili fiyat ve öneriler.";
+      
+      const systemMessage = {
+        role: "system",
+        content: `${roleDescription}
+
+Kullanıcının profili: 
+Ten rengi: ${userProfile.skinTone || "bilinmiyor"} 
+Cilt tipi: ${userProfile.skinType || "bilinmiyor"} 
+Lokasyon: ${userProfile.location || "İstanbul"} 
+Yaş: ${userProfile.age || "bilinmiyor"}
+`
+      };
+      
+      // OpenAI API'ye istek gönder
+      try {
+        const axios = await import('axios');
         
-        // Tırnak bakımı ve sağlığı hakkında
-        else if (lowercaseMessage.includes('tırnak bakım') || lowercaseMessage.includes('nail care') || lowercaseMessage.includes('tırnak sağlığı')) {
-          responseText = 'Sağlıklı tırnaklar için birkaç önemli ipucu:\n\n1. Düzenli olarak nemlendirici kullanın ve tırnak etlerini besleyin\n2. Asetonu sık kullanmaktan kaçının, tırnakları kurutur\n3. Protein açısından zengin gıdalar tüketin (yumurta, balık, baklagiller)\n4. Biotin ve E vitamini destekleri tırnak sağlığına yardımcı olabilir\n5. Eldivenle temizlik yapın, kimyasallar tırnaklara zarar verir\n\nÖzel bir konuda daha fazla bilgi ister misiniz?';
-        }
+        const response = await axios.default.post(
+          "https://api.openai.com/v1/chat/completions",
+          {
+            model: "gpt-3.5-turbo", // Daha ekonomik model
+            messages: [systemMessage, ...recentMessages, { role: "user", content: message }],
+            temperature: 0.7,
+            max_tokens: 600,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
         
-        // Tırnak trendleri ve stil önerileri
-        else if (lowercaseMessage.includes('trend') || lowercaseMessage.includes('popüler') || lowercaseMessage.includes('moda') || lowercaseMessage.includes('stil')) {
-          responseText = '2025 yılının en trend tırnak stilleri:\n\n1. Minimalist geometrik desenler\n2. "Glazed donut" parlak, inci efektli ojeler\n3. Mikro-gem ve üç boyutlu aplikasyonlar\n4. Matlaştırılmış, dokulu yüzeyler\n5. Neon ve canlı renklerde "French tip"\n6. Doğadan ilham alan organik desenler\n\nKişisel stiliniz ve ten renginize göre özelleştirilmiş öneriler için "ten rengime uygun" diye sorabilirsiniz.';
-        }
+        const reply = response.data.choices[0].message.content;
         
-        // Başka bir tematik yanıt yoksa genel yanıt ver
-        else {
-          responseText = 'Tırnak bakımı, oje renkleri veya nail art teknikleri hakkında daha spesifik sorularınız varsa sorabilirsiniz. Size en iyi şekilde yardımcı olmaya çalışacağım!';
-        }
-        
-        // Yapay zeka yanıtını ekle
+        // AI yanıtını ekle
         const aiMessage: ChatMessage = {
           id: uuidv4(),
-          text: responseText,
+          text: reply,
           isUser: false,
           timestamp: new Date()
         };
         await storage.addChatMessage(aiMessage);
         
-        // WebSocket ile gerçek zamanlı yanıt gönderimi yapılabilir
-      }, 1000);
-      
-      // Hemen başarılı yanıt döndür, AI yanıtı arkada oluşturulacak
-      res.status(201).json(userMessage);
+        // Başarılı yanıt döndür
+        res.status(201).json(userMessage);
+      } catch (apiError: any) {
+        console.error("OpenAI API error:", apiError.message);
+        
+        // API hatası durumunda yedek yanıt mekanizması
+        setTimeout(async () => {
+          // Gelişmiş pattern matching ve bağlam analizi
+          const lowercaseMessage = message.toLowerCase();
+          let responseText = '';
+          
+          // Temel yedek yanıt mekanizması
+          if (lowercaseMessage.includes('merhaba') || lowercaseMessage.includes('selam') || lowercaseMessage.includes('hi') || lowercaseMessage.includes('hello')) {
+            responseText = 'Merhaba! Ben AI Güzellik Danışmanınız. Tırnak bakımı, oje renkleri, nail art tasarımları veya en yakın salonlar hakkında sorularınızı yanıtlayabilirim. Size nasıl yardımcı olabilirim?';
+          } else if (lowercaseMessage.includes('tırnak bakım') || lowercaseMessage.includes('nail care') || lowercaseMessage.includes('tırnak sağlığı')) {
+            responseText = 'Sağlıklı tırnaklar için birkaç önemli ipucu:\n\n1. Düzenli olarak nemlendirici kullanın ve tırnak etlerini besleyin\n2. Asetonu sık kullanmaktan kaçının, tırnakları kurutur\n3. Protein açısından zengin gıdalar tüketin (yumurta, balık, baklagiller)\n4. Biotin ve E vitamini destekleri tırnak sağlığına yardımcı olabilir\n5. Eldivenle temizlik yapın, kimyasallar tırnaklara zarar verir\n\nÖzel bir konuda daha fazla bilgi ister misiniz?';
+          } else if (lowercaseMessage.includes('trend') || lowercaseMessage.includes('popüler') || lowercaseMessage.includes('moda') || lowercaseMessage.includes('stil')) {
+            responseText = '2025 yılının en trend tırnak stilleri:\n\n1. Minimalist geometrik desenler\n2. "Glazed donut" parlak, inci efektli ojeler\n3. Mikro-gem ve üç boyutlu aplikasyonlar\n4. Matlaştırılmış, dokulu yüzeyler\n5. Neon ve canlı renklerde "French tip"\n6. Doğadan ilham alan organik desenler\n\nKişisel stiliniz ve ten renginize göre özelleştirilmiş öneriler için "ten rengime uygun" diye sorabilirsiniz.';
+          } else {
+            responseText = 'Tırnak bakımı, oje renkleri veya nail art teknikleri hakkında daha spesifik sorularınız varsa sorabilirsiniz. Size en iyi şekilde yardımcı olmaya çalışacağım!';
+          }
+          
+          // Yapay zeka yanıtını ekle
+          const aiMessage: ChatMessage = {
+            id: uuidv4(),
+            text: responseText + "\n\n(Not: Şu anda OpenAI servisi ile bağlantı kurulamadı, basit yanıtlar kullanılıyor.)",
+            isUser: false,
+            timestamp: new Date()
+          };
+          await storage.addChatMessage(aiMessage);
+        }, 1000);
+        
+        // Hemen başarılı yanıt döndür
+        res.status(201).json(userMessage);
+      }
     } catch (error: any) {
       console.error("Error adding chat message:", error);
       res.status(500).json({ message: error.message });

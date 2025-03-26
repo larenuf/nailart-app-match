@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
-import { Loader2, Send, X, MessageCircle, Sparkles, Scissors, Compass, Gift, CalendarClock } from 'lucide-react';
+import { Loader2, Send, X, MessageCircle, Sparkles, Scissors, Compass, Gift, CalendarClock, User, Lightbulb, Settings, Palette, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar } from '@/components/ui/avatar';
@@ -9,6 +9,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type Message = {
   id: string;
@@ -26,10 +29,56 @@ const suggestedQuestions = [
   { text: "Manikür ne kadar sürer?", icon: <CalendarClock size={14} /> }
 ];
 
+// Kullanıcı profili tipi
+type UserProfile = {
+  skinTone: string;
+  skinType: string;
+  location: string;
+  age: string;
+};
+
+// AI Güzellik Asistanı için özel modlar
+const chatModes = [
+  { id: "general", name: "Genel", icon: <Sparkles size={14} />, description: "Genel güzellik tavsiyeleri" },
+  { id: "nail", name: "Nail Art", icon: <Scissors size={14} />, description: "Tırnak tasarımları ve bakımı" },
+  { id: "makeup", name: "Makyaj", icon: <Palette size={14} />, description: "Makyaj teknikleri ve ürünleri" },
+  { id: "skin", name: "Cilt Bakımı", icon: <Lightbulb size={14} />, description: "Cilt sorunları ve çözümleri" }
+];
+
+// Ten rengi seçenekleri
+const skinTones = [
+  { id: "fair", name: "Açık Ten" },
+  { id: "medium", name: "Orta Ten" },
+  { id: "olive", name: "Zeytuni Ten" },
+  { id: "tan", name: "Bronz Ten" },
+  { id: "dark", name: "Koyu Ten" }
+];
+
+// Cilt tipi seçenekleri
+const skinTypes = [
+  { id: "normal", name: "Normal" },
+  { id: "dry", name: "Kuru" },
+  { id: "oily", name: "Yağlı" },
+  { id: "combination", name: "Karma" },
+  { id: "sensitive", name: "Hassas" }
+];
+
 export default function AiChat() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [mode, setMode] = useState("general");
+  const { toast } = useToast();
+  
+  // Kullanıcı profili (cilt tipi, ten rengi vb.)
+  const [userProfile, setUserProfile] = useState<UserProfile>({
+    skinTone: "medium",
+    skinType: "normal",
+    location: "İstanbul",
+    age: "25-35"
+  });
+  
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -40,11 +89,17 @@ export default function AiChat() {
     refetchOnWindowFocus: false,
   });
 
-  // Send message mutation
+  // Send message mutation with enhanced profile data
   const sendMessageMutation = useMutation({
     mutationFn: async (message: string) => {
       setTyping(true);
-      const response = await apiRequest('POST', '/api/ai-chat/messages', { message });
+      const response = await apiRequest('POST', '/api/ai-chat/messages', { 
+        message,
+        userProfile: {
+          ...userProfile,
+          mode
+        }
+      });
       return response.json();
     },
     onSuccess: () => {
@@ -56,7 +111,13 @@ export default function AiChat() {
         setTyping(false);
       }, 1200);
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("AI chat error:", error);
+      toast({
+        title: "Mesaj gönderilemedi",
+        description: "Lütfen daha sonra tekrar deneyin",
+        variant: "destructive",
+      });
       setTyping(false);
     }
   });
@@ -73,6 +134,15 @@ export default function AiChat() {
     if (inputRef.current) {
       inputRef.current.focus();
     }
+  };
+  
+  const handleModeChange = (newMode: string) => {
+    setMode(newMode);
+    setShowSettings(false);
+    toast({
+      title: `Mod değiştirildi: ${chatModes.find(m => m.id === newMode)?.name}`,
+      description: "AI asistanı artık bu alanda uzmanlaşmış şekilde yanıt verecek",
+    });
   };
 
   // Auto-scroll to bottom when messages change
@@ -115,18 +185,127 @@ export default function AiChat() {
               </Avatar>
               <div>
                 <span className="font-medium block">AI Güzellik Danışmanı</span>
-                <span className="text-xs text-white/80">Her zaman yanınızda 💅</span>
+                <span className="text-xs text-white/80 flex items-center gap-1">
+                  {mode === "general" && <Sparkles size={12} />}
+                  {mode === "nail" && <Scissors size={12} />}
+                  {mode === "makeup" && <Palette size={12} />}
+                  {mode === "skin" && <Lightbulb size={12} />}
+                  <span>
+                    {chatModes.find(m => m.id === mode)?.name || "Genel"} mod
+                  </span>
+                </span>
               </div>
             </div>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="text-white hover:bg-white/20" 
-              onClick={() => setOpen(false)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
+            <div className="flex gap-1">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="text-white hover:bg-white/20 h-8 w-8" 
+                onClick={() => setShowSettings(!showSettings)}
+                title="Ayarlar"
+              >
+                <Settings className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="text-white hover:bg-white/20 h-8 w-8" 
+                onClick={() => setOpen(false)}
+                title="Kapat"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
+          
+          {/* Kullanıcı Profili ve Ayarlar Paneli */}
+          {showSettings && (
+            <div className="p-3 bg-gray-50 border-b border-gray-200">
+              <div className="mb-2 flex items-center justify-between">
+                <h3 className="text-sm font-medium text-gray-700 flex items-center">
+                  <User className="w-4 h-4 mr-1" /> Kişisel Profil
+                </h3>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-6 w-6 p-0 text-gray-500" 
+                  onClick={() => setShowSettings(false)}
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </div>
+              
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Konuşma Modu</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {chatModes.map((chatMode) => (
+                      <Button
+                        key={chatMode.id}
+                        variant={mode === chatMode.id ? "default" : "outline"}
+                        size="sm"
+                        className={cn(
+                          "text-xs h-auto py-1 flex justify-start gap-1",
+                          mode === chatMode.id 
+                            ? "bg-pink-500 hover:bg-pink-600 text-white" 
+                            : "text-gray-600"
+                        )}
+                        onClick={() => handleModeChange(chatMode.id)}
+                      >
+                        {chatMode.icon}
+                        <span>{chatMode.name}</span>
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1">Ten Rengi</label>
+                    <Select 
+                      value={userProfile.skinTone}
+                      onValueChange={(value) => setUserProfile({...userProfile, skinTone: value})}
+                    >
+                      <SelectTrigger className="h-8 text-xs">
+                        <SelectValue placeholder="Ten rengi seçin" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {skinTones.map((tone) => (
+                          <SelectItem key={tone.id} value={tone.id} className="text-xs">
+                            {tone.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1">Cilt Tipi</label>
+                    <Select 
+                      value={userProfile.skinType}
+                      onValueChange={(value) => setUserProfile({...userProfile, skinType: value})}
+                    >
+                      <SelectTrigger className="h-8 text-xs">
+                        <SelectValue placeholder="Cilt tipi seçin" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {skinTypes.map((type) => (
+                          <SelectItem key={type.id} value={type.id} className="text-xs">
+                            {type.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                <div className="text-xs text-gray-500 flex items-center pt-1">
+                  <Info className="h-3 w-3 mr-1" />
+                  <span>Kişisel ayarlar size özel tavsiyeler almanızı sağlar</span>
+                </div>
+              </div>
+            </div>
+          )}
 
           <ScrollArea className="flex-1 p-3 bg-white" type="always">
             {isLoading ? (
