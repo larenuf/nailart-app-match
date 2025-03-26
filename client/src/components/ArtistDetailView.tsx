@@ -12,8 +12,20 @@ import { tr } from "date-fns/locale";
 import { Calendar as CalendarIcon, Clock, CheckCircle2 } from "lucide-react";
 
 export default function ArtistDetailView() {
-  const { selectedArtist, selectedSalon, setSelectedArtist, setSelectedService, setSelectedDate, setSelectedTime } = useAppContext();
+  const { 
+    selectedArtist, 
+    selectedSalon, 
+    selectedService,
+    setSelectedArtist, 
+    setSelectedService, 
+    setSelectedDate, 
+    setSelectedTime, 
+    setBookingDetails 
+  } = useAppContext();
+  
   const [calendarDate, setCalendarDate] = useState<Date>(new Date());
+  const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
+  const [showBookingConfirmation, setShowBookingConfirmation] = useState(false);
 
   const { data: services, isLoading: servicesLoading } = useQuery<Service[]>({
     queryKey: [`/api/artists/${selectedArtist?.id}/services`],
@@ -44,8 +56,37 @@ export default function ArtistDetailView() {
   const handleServiceSelect = (service: Service | undefined) => {
     if (service) {
       setSelectedService(service);
-      // Redirect to booking page
-      window.location.href = `/booking/${service.id}`;
+      // Sekmeyi takvim sekmesine değiştir
+      const availabilityTab = document.querySelector('[data-state="inactive"][value="availability"]') as HTMLElement;
+      if (availabilityTab) {
+        availabilityTab.click();
+      }
+    }
+  };
+  
+  // Zaman dilimi seçimi
+  const handleTimeSlotSelect = (slot: TimeSlot) => {
+    if (!slot.isBooked) {
+      setSelectedSlot(slot);
+      setSelectedDate(calendarDate);
+      setSelectedTime(slot.startTime);
+      setShowBookingConfirmation(true);
+    }
+  };
+  
+  // Randevu onaylama
+  const handleConfirmBooking = () => {
+    if (selectedService && selectedArtist && selectedSlot && selectedSalon) {
+      setBookingDetails({
+        artist: selectedArtist,
+        service: selectedService,
+        salon: selectedSalon,
+        date: format(calendarDate, 'yyyy-MM-dd'),
+        time: selectedSlot.startTime
+      });
+      
+      // Randevu sayfasına yönlendir
+      window.location.href = `/booking/confirm`;
     }
   };
 
@@ -327,6 +368,17 @@ export default function ArtistDetailView() {
                 {format(calendarDate, 'dd MMMM yyyy, EEEE', { locale: tr })}
               </h4>
               
+              {/* Seçilen servis bilgisi varsa göster */}
+              {selectedService && (
+                <div className="mb-4 p-3 bg-[#FDF4F8] rounded-lg">
+                  <h4 className="font-medium text-gray-800">{selectedService.name}</h4>
+                  <div className="flex justify-between items-center mt-1">
+                    <span className="text-sm text-gray-600">{selectedService.durationMinutes} dakika</span>
+                    <span className="font-bold">${selectedService.price}</span>
+                  </div>
+                </div>
+              )}
+              
               {timeSlotsLoading ? (
                 <div className="grid grid-cols-4 gap-2">
                   {[...Array(8)].map((_, i) => (
@@ -339,16 +391,25 @@ export default function ArtistDetailView() {
                     <button
                       key={slot.id}
                       className={`
-                        py-2 rounded-md text-sm transition
-                        ${slot.isBooked ? "bg-gray-100 text-gray-400 cursor-not-allowed" : 
-                          "bg-[#F5F1EB] bg-opacity-40 hover:bg-[#F9E0E7] hover:bg-opacity-30 text-gray-700"
+                        py-2 rounded-md text-sm transition relative
+                        ${slot.isBooked 
+                          ? "bg-gray-100 text-gray-400 cursor-not-allowed" 
+                          : selectedSlot?.id === slot.id
+                            ? "bg-pink-500 text-white font-medium"
+                            : "bg-[#F5F1EB] bg-opacity-40 hover:bg-[#F9E0E7] hover:bg-opacity-30 text-gray-700"
                         }
                       `}
                       disabled={slot.isBooked}
+                      onClick={() => handleTimeSlotSelect(slot)}
                     >
                       {slot.startTime}
                       {slot.isBooked && (
                         <span className="ml-1 inline-block w-2 h-2 bg-red-500 rounded-full"></span>
+                      )}
+                      {selectedSlot?.id === slot.id && (
+                        <span className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                          <CheckCircle2 className="w-3 h-3 text-white" />
+                        </span>
                       )}
                     </button>
                   ))}
@@ -377,16 +438,96 @@ export default function ArtistDetailView() {
               </div>
             </div>
             
-            <div className="mt-4 bg-[#FBF7FA] p-4 rounded-lg">
-              <h4 className="font-medium flex items-center">
-                <CalendarIcon className="h-4 w-4 mr-2 text-[#6A0DAD]" />
-                Randevu Bilgisi
-              </h4>
-              <p className="text-sm text-gray-600 mt-1">
-                Randevu almak için lütfen önce bir hizmet seçin, ardından uygun bir tarih ve saat belirleyin.
-                İptal ve değişiklikler için en az 24 saat önceden haber vermeniz gerekmektedir.
-              </p>
-            </div>
+            {!selectedSlot ? (
+              <div className="mt-4 bg-[#FBF7FA] p-4 rounded-lg">
+                <h4 className="font-medium flex items-center">
+                  <CalendarIcon className="h-4 w-4 mr-2 text-[#6A0DAD]" />
+                  Randevu Bilgisi
+                </h4>
+                <p className="text-sm text-gray-600 mt-1">
+                  Randevu almak için lütfen önce bir hizmet seçin, ardından uygun bir tarih ve saat belirleyin.
+                  İptal ve değişiklikler için en az 24 saat önceden haber vermeniz gerekmektedir.
+                </p>
+              </div>
+            ) : (
+              <div className="mt-6">
+                <div className="bg-white border border-green-100 rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center mb-3">
+                    <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center mr-3">
+                      <CheckCircle2 className="h-5 w-5 text-green-500" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-800">Randevu Seçiminiz</h4>
+                      <p className="text-sm text-gray-500">Aşağıdaki bilgileri onaylayın</p>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2 mb-4">
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-gray-500">Sanatçı:</span>
+                      <span className="font-medium">{selectedArtist.name}</span>
+                    </div>
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-gray-500">Hizmet:</span>
+                      <span className="font-medium">{selectedService?.name || 'Seçilmedi'}</span>
+                    </div>
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-gray-500">Tarih:</span>
+                      <span className="font-medium">{format(calendarDate, 'dd MMMM yyyy', { locale: tr })}</span>
+                    </div>
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-gray-500">Saat:</span>
+                      <span className="font-medium">{selectedSlot.startTime}</span>
+                    </div>
+                    {selectedService && (
+                      <>
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-gray-500">Süre:</span>
+                          <span className="font-medium">{selectedService.durationMinutes} dakika</span>
+                        </div>
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-gray-500">Fiyat:</span>
+                          <span className="font-medium">${selectedService.price}</span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  
+                  <button 
+                    className="w-full bg-[#FF5864] hover:bg-[#FF5864]/90 text-white py-3 rounded-lg font-medium transition"
+                    onClick={handleConfirmBooking}
+                    disabled={!selectedService}
+                  >
+                    {selectedService 
+                      ? 'Randevuyu Onayla' 
+                      : 'Lütfen önce bir hizmet seçin'}
+                  </button>
+                  
+                  <div className="mt-3 text-center">
+                    <button 
+                      onClick={() => {
+                        setSelectedSlot(null);
+                        setSelectedDate(null);
+                        setSelectedTime(null);
+                      }}
+                      className="text-sm text-gray-500 hover:text-gray-700"
+                    >
+                      Seçimi İptal Et
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="mt-4 bg-blue-50 p-3 rounded-lg flex items-start">
+                  <div className="text-blue-500 mr-3 mt-0.5">
+                    <i className="fas fa-info-circle"></i>
+                  </div>
+                  <div className="text-xs text-blue-700">
+                    <p>Randevunuz onaylandıktan sonra, takvim uygulamanıza eklemek için bir seçenek sunulacaktır.</p>
+                    <p className="mt-1">İptal ve erteleme için en az 24 saat önceden haber verilmelidir.</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </TabsContent>
 
