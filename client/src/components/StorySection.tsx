@@ -67,17 +67,14 @@ export default function StorySection() {
                   : "border-2 border-gray-200 dark:border-gray-600"
               } p-0.5`}>
                 <img
-                  src={story.videoUrl ? (story.imageUrl || "https://placekitten.com/70/70") : 
-                       (story.id === 1 ? "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?ixlib=rb-1.2.1&w=70&h=70&fit=crop&q=80" : 
-                       story.id === 2 ? "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?ixlib=rb-1.2.1&w=70&h=70&fit=crop&q=80" : 
-                       story.id === 3 ? "https://images.unsplash.com/photo-1604902396830-aca29e19b067?ixlib=rb-1.2.1&w=70&h=70&fit=crop&q=80" : 
-                       story.id === 4 ? "https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-1.2.1&w=70&h=70&fit=crop&q=80" : 
-                       "https://placekitten.com/70/70")}
+                  src={story.imageUrl?.includes("cloudinary") 
+                    ? story.imageUrl.replace("/upload/", "/upload/c_fill,g_face,w_70,h_70,q_auto/") 
+                    : (story.imageUrl || `https://images.unsplash.com/photo-1519014816548-bf5fe059798b?ixlib=rb-1.2.1&w=70&h=70&fit=crop&q=80`)}
                   alt={story.title}
                   className="w-full h-full object-cover rounded-full"
                   onError={(e) => {
                     console.error("Resim yüklenemedi:", story.imageUrl);
-                    (e.target as HTMLImageElement).src = 'https://placekitten.com/70/70';
+                    (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?ixlib=rb-1.2.1&w=70&h=70&fit=crop&q=80';
                   }}
                 />
                 {story.videoUrl && (
@@ -136,11 +133,14 @@ export default function StorySection() {
               </div>
             ) : (
               <img 
-                src={selectedStory.imageUrl || "https://placekitten.com/400/600"} 
+                src={selectedStory.imageUrl?.includes("cloudinary") 
+                  ? selectedStory.imageUrl.replace("/upload/", "/upload/q_auto,f_auto,w_1080/") 
+                  : (selectedStory.imageUrl || "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?ixlib=rb-1.2.1&w=1080&fit=crop&q=80")} 
                 alt={selectedStory.title}
                 className="w-full h-full object-cover"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = 'https://placekitten.com/400/600';
+                  console.error("Ana hikaye resmi yüklenemedi:", selectedStory.imageUrl);
+                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?ixlib=rb-1.2.1&w=1080&fit=crop&q=80';
                 }}
               />
             )}
