@@ -20,13 +20,24 @@ import ColorMatcher from "@/pages/ColorMatcher";
 import Dashboard from "@/pages/admin/Dashboard";
 import CreateSalon from "@/pages/admin/CreateSalonNew";
 import AiChat from "@/components/AiChat";
+import Onboarding from "@/pages/Onboarding";
 
 function Router() {
+  // İlk kez giriş yapılıp yapılmadığını kontrol edelim
+  const isFirstVisit = localStorage.getItem('firstVisit') !== 'false';
+  
+  // İlk ziyaretse, kullanıcıyı onboarding'e yönlendirelim
+  if(isFirstVisit) {
+    localStorage.setItem('firstVisit', 'false');
+  }
+  
   return (
     <Switch>
       <Route path="/">
-        <HomeView />
+        {isFirstVisit ? <Onboarding /> : <HomeView />}
       </Route>
+      <Route path="/onboarding" component={Onboarding} />
+      <Route path="/home" component={HomeView} />
       <Route path="/salons" component={SalonList} />
       <Route path="/salons/:id" component={SalonDetail} />
       <Route path="/artists/:id" component={ArtistDetail} />

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="200" viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="150" cy="90" r="70" fill="#F5F5F5" />
+  
+  <!-- Map lines -->
+  <path d="M100,50 L200,50" stroke="#333" stroke-width="1" />
+  <path d="M180,30 L180,150" stroke="#333" stroke-width="1" />
+  <path d="M120,30 L120,70" stroke="#333" stroke-width="1" />
+  <path d="M150,70 L190,110" stroke="#333" stroke-width="1" />
+  <path d="M90,90 L130,130" stroke="#333" stroke-width="1" />
+  <path d="M130,130 L200,130" stroke="#333" stroke-width="1" />
+  <path d="M90,90 L90,150" stroke="#333" stroke-width="1" />
+  <path d="M90,150 L130,150" stroke="#333" stroke-width="1" />
+  <path d="M130,150 C140,160 160,160 170,150" stroke="#333" stroke-width="1" />
+  
+  <!-- Location dot -->
+  <circle cx="130" cy="90" r="4" fill="white" stroke="#30AAB9" stroke-width="2" />
+  
+  <!-- Location indicator -->
+  <circle cx="130" cy="90" r="8" fill="none" stroke="#30AAB9" stroke-width="1" opacity="0.6" />
+  <circle cx="130" cy="90" r="12" fill="none" stroke="#30AAB9" stroke-width="1" opacity="0.4" />
+  <circle cx="130" cy="90" r="16" fill="none" stroke="#30AAB9" stroke-width="1" opacity="0.2" />
+</svg>
