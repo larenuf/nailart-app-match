@@ -5,6 +5,8 @@ import { useCallback, useState } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import LocationPicker from "./LocationPicker";
+import { LanguageSelector } from "./LanguageSelector";
+import { CurrencySelector } from "./CurrencySelector";
 
 export default function TopNavigation({ title, showBackButton }: { title?: string; showBackButton?: boolean }) {
   const { userLocation } = useAppContext();
@@ -120,13 +122,19 @@ export default function TopNavigation({ title, showBackButton }: { title?: strin
         </div>
         
         {!title && (
-          <div 
-            className="flex items-center text-sm mt-3 bg-white p-2.5 rounded-lg shadow-sm dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200 cursor-pointer"
-            onClick={handleLocationClick}
-          >
-            <i className="fas fa-map-marker-alt text-[#FF5864] mr-2"></i>
-            <span className="font-medium">{displayLocation}</span>
-            <i className="fas fa-chevron-down text-xs ml-1 text-gray-400 dark:text-gray-500"></i>
+          <div className="flex mt-3 gap-2">
+            <div 
+              className="flex-1 flex items-center text-sm bg-white p-2.5 rounded-lg shadow-sm dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200 cursor-pointer"
+              onClick={handleLocationClick}
+            >
+              <i className="fas fa-map-marker-alt text-[#FF5864] mr-2"></i>
+              <span className="font-medium">{displayLocation}</span>
+              <i className="fas fa-chevron-down text-xs ml-1 text-gray-400 dark:text-gray-500"></i>
+            </div>
+            <div className="flex gap-1 items-center">
+              <LanguageSelector />
+              <CurrencySelector />
+            </div>
           </div>
         )}
       </div>

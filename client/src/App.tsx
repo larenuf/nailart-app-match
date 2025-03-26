@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { AppProvider } from "@/context/AppContext";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { I18nProvider } from "./i18n";
 import NotFound from "@/pages/not-found";
 import HomeView from "@/components/HomeView";
 import SalonDetail from "@/pages/SalonDetail";
@@ -51,11 +52,13 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <AppProvider>
-          <Router />
-          <AiChat />
-          <Toaster />
-        </AppProvider>
+        <I18nProvider>
+          <AppProvider>
+            <Router />
+            <AiChat />
+            <Toaster />
+          </AppProvider>
+        </I18nProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
