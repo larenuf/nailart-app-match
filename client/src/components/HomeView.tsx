@@ -338,8 +338,8 @@ export default function HomeView() {
         <div className="px-4" onClick={(e) => e.stopPropagation()}>
           <NearestSalonsMap />
         </div>
-        <div className="mt-4"></div>
         <PremiumFeaturesSection />
+        <div className="mt-4"></div>
       </div>
       
       <BottomNavigation />
