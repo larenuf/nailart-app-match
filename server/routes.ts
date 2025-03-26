@@ -822,8 +822,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Chat API endpoints
-  app.get("/api/chat/messages", async (req, res) => {
+  // AI Assistant Chat API endpoints
+  app.get("/api/ai-chat/messages", async (req, res) => {
     try {
       const messages = await storage.getChatMessages();
       res.json(messages);
@@ -832,7 +832,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.post("/api/chat/messages", async (req, res) => {
+  app.post("/api/ai-chat/messages", async (req, res) => {
     try {
       const { message } = req.body;
       if (!message) {
@@ -861,6 +861,423 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
         
         // Tırnak bakımı ve sağlığı hakkında
+        else if (lowercaseMessage.includes('tırnak bakım') || lowercaseMessage.includes('nail care') || lowercaseMessage.includes('tırnak sağlığı')) {
+          responseText = 'Sağlıklı tırnaklar için birkaç önemli ipucu:\n\n1. Düzenli olarak nemlendirici kullanın ve tırnak etlerini besleyin\n2. Asetonu sık kullanmaktan kaçının, tırnakları kurutur\n3. Protein açısından zengin gıdalar tüketin (yumurta, balık, baklagiller)\n4. Biotin ve E vitamini destekleri tırnak sağlığına yardımcı olabilir\n5. Eldivenle temizlik yapın, kimyasallar tırnaklara zarar verir\n\nÖzel bir konuda daha fazla bilgi ister misiniz?';
+        }
+        
+        // Tırnak trendleri ve stil önerileri
+        else if (lowercaseMessage.includes('trend') || lowercaseMessage.includes('popüler') || lowercaseMessage.includes('moda') || lowercaseMessage.includes('stil')) {
+          responseText = '2025 yılının en trend tırnak stilleri:\n\n1. Minimalist geometrik desenler\n2. "Glazed donut" parlak, inci efektli ojeler\n3. Mikro-gem ve üç boyutlu aplikasyonlar\n4. Matlaştırılmış, dokulu yüzeyler\n5. Neon ve canlı renklerde "French tip"\n6. Doğadan ilham alan organik desenler\n\nKişisel stiliniz ve ten renginize göre özelleştirilmiş öneriler için "ten rengime uygun" diye sorabilirsiniz.';
+        }
+        
+        // Başka bir tematik yanıt yoksa genel yanıt ver
+        else {
+          responseText = 'Tırnak bakımı, oje renkleri veya nail art teknikleri hakkında daha spesifik sorularınız varsa sorabilirsiniz. Size en iyi şekilde yardımcı olmaya çalışacağım!';
+        }
+        
+        // Yapay zeka yanıtını ekle
+        const aiMessage: ChatMessage = {
+          id: uuidv4(),
+          text: responseText,
+          isUser: false,
+          timestamp: new Date()
+        };
+        await storage.addChatMessage(aiMessage);
+        
+        // WebSocket ile gerçek zamanlı yanıt gönderimi yapılabilir
+      }, 1000);
+      
+      // Hemen başarılı yanıt döndür, AI yanıtı arkada oluşturulacak
+      res.status(201).json(userMessage);
+    } catch (error: any) {
+      console.error("Error adding chat message:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
+  // Live Chat API endpoints for salon-user chat
+  app.get("/api/chat/by-user/:userId", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Oturum açılmamış" });
+      }
+      
+      const userId = parseInt(req.params.userId);
+      const chats = await storage.getChatsByUser(userId);
+      
+      // Populate salon details for each chat
+      const chatsWithDetails = await Promise.all(
+        chats.map(async (chat) => {
+          const salon = await storage.getSalon(chat.salonId);
+          const unreadCount = await storage.getUnreadMessageCount(chat.id, userId);
+          return {
+            ...chat,
+            salon,
+            unreadCount
+          };
+        })
+      );
+      
+      res.json(chatsWithDetails);
+    } catch (error: any) {
+      console.error("Error getting user chats:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
+  app.get("/api/chat/by-salon/:salonId", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Oturum açılmamış" });
+      }
+      
+      const salonId = parseInt(req.params.salonId);
+      const chats = await storage.getChatsBySalon(salonId);
+      
+      // Populate user details for each chat
+      const chatsWithDetails = await Promise.all(
+        chats.map(async (chat) => {
+          const user = await storage.getUser(chat.userId);
+          const unreadCount = await storage.getUnreadMessageCount(chat.id, chat.salonId);
+          return {
+            ...chat,
+            user,
+            unreadCount
+          };
+        })
+      );
+      
+      res.json(chatsWithDetails);
+    } catch (error: any) {
+      console.error("Error getting salon chats:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
+  app.get("/api/chat/:chatId/messages", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Oturum açılmamış" });
+      }
+      
+      const chatId = parseInt(req.params.chatId);
+      const messages = await storage.getChatMessagesByChatId(chatId);
+      
+      res.json(messages);
+    } catch (error: any) {
+      console.error("Error getting chat messages:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
+  app.post("/api/chat/start", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Oturum açılmamış" });
+      }
+      
+      const { userId, salonId } = req.body;
+      
+      if (!userId || !salonId) {
+        return res.status(400).json({ message: "userId ve salonId gereklidir" });
+      }
+      
+      // Önce varolan bir sohbet var mı diye kontrol et
+      let chat = await storage.getChat(userId, salonId);
+      
+      if (!chat) {
+        // Yeni sohbet oluştur
+        chat = await storage.createChat({
+          userId,
+          salonId,
+          lastMessageAt: new Date(),
+          createdAt: new Date(),
+          updatedAt: new Date()
+        });
+      }
+      
+      res.status(201).json(chat);
+    } catch (error: any) {
+      console.error("Error starting chat:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
+  app.post("/api/chat/:chatId/messages", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Oturum açılmamış" });
+      }
+      
+      const chatId = parseInt(req.params.chatId);
+      const { text, senderType, senderId } = req.body;
+      
+      if (!text || !senderType || !senderId) {
+        return res.status(400).json({ message: "text, senderType ve senderId gereklidir" });
+      }
+      
+      // Mesajı ekle
+      const message = await storage.addChatMessageToChat({
+        chatId,
+        text,
+        senderType,
+        senderId,
+        isRead: false,
+        createdAt: new Date()
+      });
+      
+      // WebSocket ile gerçek zamanlı bildirim gönder
+      broadcastToAll('new_chat_message', {
+        chatId,
+        message
+      });
+      
+      res.status(201).json(message);
+    } catch (error: any) {
+      console.error("Error adding message:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
+  app.post("/api/chat/:chatId/mark-read", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Oturum açılmamış" });
+      }
+      
+      const chatId = parseInt(req.params.chatId);
+      const { userId } = req.body;
+      
+      if (!userId) {
+        return res.status(400).json({ message: "userId gereklidir" });
+      }
+      
+      await storage.markChatMessagesAsRead(chatId, userId);
+      
+      // WebSocket ile gerçek zamanlı bildirim gönder
+      broadcastToAll('messages_marked_read', {
+        chatId,
+        userId
+      });
+      
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Error marking messages as read:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
+  // Favorites API endpoints
+  app.get("/api/favorites/user/:userId", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Oturum açılmamış" });
+      }
+      
+      const userId = parseInt(req.params.userId);
+      
+      // Kullanıcının tüm favorilerini getir
+      const favorites = await storage.getFavoritesByUser(userId);
+      
+      // Favori detaylarını doldur (salon, artist, service bilgileri)
+      const favoritesWithDetails = await Promise.all(
+        favorites.map(async (favorite) => {
+          let item = null;
+          
+          if (favorite.type === 'salon' && favorite.salonId) {
+            item = await storage.getSalon(favorite.salonId);
+          } else if (favorite.type === 'artist' && favorite.artistId) {
+            item = await storage.getArtist(favorite.artistId);
+          } else if (favorite.type === 'service' && favorite.serviceId) {
+            item = await storage.getService(favorite.serviceId);
+          }
+          
+          return {
+            ...favorite,
+            item
+          };
+        })
+      );
+      
+      res.json(favoritesWithDetails);
+    } catch (error: any) {
+      console.error("Error getting user favorites:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
+  app.get("/api/favorites/user/:userId/type/:type", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Oturum açılmamış" });
+      }
+      
+      const userId = parseInt(req.params.userId);
+      const type = req.params.type;
+      
+      // Geçerli tip kontrolü
+      if (!['salon', 'artist', 'service'].includes(type)) {
+        return res.status(400).json({ message: "Geçersiz favori tipi. 'salon', 'artist' veya 'service' olmalı." });
+      }
+      
+      // Belirli tipte olan favorileri getir
+      const favorites = await storage.getFavoritesByType(userId, type);
+      
+      // Favori detaylarını doldur
+      const favoritesWithDetails = await Promise.all(
+        favorites.map(async (favorite) => {
+          let item = null;
+          
+          if (type === 'salon' && favorite.salonId) {
+            item = await storage.getSalon(favorite.salonId);
+          } else if (type === 'artist' && favorite.artistId) {
+            item = await storage.getArtist(favorite.artistId);
+          } else if (type === 'service' && favorite.serviceId) {
+            item = await storage.getService(favorite.serviceId);
+          }
+          
+          return {
+            ...favorite,
+            item
+          };
+        })
+      );
+      
+      res.json(favoritesWithDetails);
+    } catch (error: any) {
+      console.error(`Error getting user ${req.params.type} favorites:`, error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
+  app.post("/api/favorites", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Oturum açılmamış" });
+      }
+      
+      const { userId, type, itemId } = req.body;
+      
+      if (!userId || !type || !itemId) {
+        return res.status(400).json({ message: "userId, type ve itemId gereklidir" });
+      }
+      
+      // Geçerli tip kontrolü
+      if (!['salon', 'artist', 'service'].includes(type)) {
+        return res.status(400).json({ message: "Geçersiz favori tipi. 'salon', 'artist' veya 'service' olmalı." });
+      }
+      
+      // Eklenecek öğe var mı kontrol et
+      let exists = false;
+      if (type === 'salon') {
+        const salon = await storage.getSalon(itemId);
+        exists = !!salon;
+      } else if (type === 'artist') {
+        const artist = await storage.getArtist(itemId);
+        exists = !!artist;
+      } else if (type === 'service') {
+        const service = await storage.getService(itemId);
+        exists = !!service;
+      }
+      
+      if (!exists) {
+        return res.status(404).json({ message: "Favorilere eklenecek öğe bulunamadı" });
+      }
+      
+      // Zaten favorilerde mi kontrol et
+      const isFavorite = await storage.checkIsFavorite(userId, type, itemId);
+      
+      if (isFavorite) {
+        return res.status(400).json({ message: "Bu öğe zaten favorilerinizde" });
+      }
+      
+      // Favori ekle
+      const favoriteData: any = {
+        userId,
+        type,
+        createdAt: new Date()
+      };
+      
+      // Tip'e göre id'yi doğru alana ekle
+      if (type === 'salon') {
+        favoriteData.salonId = itemId;
+      } else if (type === 'artist') {
+        favoriteData.artistId = itemId;
+      } else if (type === 'service') {
+        favoriteData.serviceId = itemId;
+      }
+      
+      const favorite = await storage.addFavorite(favoriteData);
+      
+      // WebSocket ile gerçek zamanlı bildirim gönder
+      broadcastToAll('favorite_update', {
+        action: 'add',
+        favorite
+      });
+      
+      res.status(201).json(favorite);
+    } catch (error: any) {
+      console.error("Error adding favorite:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
+  app.delete("/api/favorites/:id", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Oturum açılmamış" });
+      }
+      
+      const favoriteId = parseInt(req.params.id);
+      
+      // Favoriden çıkar
+      await storage.removeFavorite(favoriteId);
+      
+      // WebSocket ile gerçek zamanlı bildirim gönder
+      broadcastToAll('favorite_update', {
+        action: 'remove',
+        favoriteId
+      });
+      
+      res.json({ success: true, message: "Öğe favorilerden kaldırıldı" });
+    } catch (error: any) {
+      console.error("Error removing favorite:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
+  app.get("/api/favorites/check", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Oturum açılmamış" });
+      }
+      
+      const { userId, type, itemId } = req.query;
+      
+      if (!userId || !type || !itemId) {
+        return res.status(400).json({ message: "userId, type ve itemId gereklidir" });
+      }
+      
+      // Geçerli tip kontrolü
+      if (!['salon', 'artist', 'service'].includes(type as string)) {
+        return res.status(400).json({ message: "Geçersiz favori tipi. 'salon', 'artist' veya 'service' olmalı." });
+      }
+      
+      // Favorilerde mi kontrol et
+      const isFavorite = await storage.checkIsFavorite(
+        parseInt(userId as string), 
+        type as string, 
+        parseInt(itemId as string)
+      );
+      
+      res.json({ isFavorite });
+    } catch (error: any) {
+      console.error("Error checking favorite:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Reviews API endpoints
         else if (lowercaseMessage.includes('tırnak bakım') || lowercaseMessage.includes('nail care') || lowercaseMessage.includes('tırnak sağlığı')) {
           responseText = 'Sağlıklı tırnaklar için birkaç önemli ipucu:\n\n1. Düzenli olarak nemlendirici kullanın ve tırnak etlerini besleyin\n2. Asetonu sık kullanmaktan kaçının, tırnakları kurutur\n3. Protein açısından zengin gıdalar tüketin (yumurta, balık, baklagiller)\n4. Biotin ve E vitamini destekleri tırnak sağlığına yardımcı olabilir\n5. Eldivenle temizlik yapın, kimyasallar tırnaklara zarar verir\n\nÖzel bir konuda daha fazla bilgi ister misiniz?';
         }

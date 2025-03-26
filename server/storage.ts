@@ -495,9 +495,9 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(availableTimeSlots).orderBy(asc(availableTimeSlots.date));
   }
 
-  // Chat operations
+  // AI Chat operations (these are for the AI assistant, not user-salon chats)
   async getChatMessages(): Promise<ChatMessage[]> {
-    return chatMessages;
+    return aiChatMessages;
   }
 
   async addChatMessage(message: ChatMessage): Promise<ChatMessage> {
@@ -506,7 +506,7 @@ export class DatabaseStorage implements IStorage {
       id: message.id || uuidv4(),
       timestamp: message.timestamp || new Date()
     };
-    chatMessages.push(newMessage);
+    aiChatMessages.push(newMessage);
     return newMessage;
   }
 
@@ -639,6 +639,141 @@ export class DatabaseStorage implements IStorage {
       .where(eq(promotions.id, id))
       .returning();
     return updatedPromotion;
+  }
+
+  // Favorites operations
+  async getFavoritesByUser(userId: number): Promise<Favorite[]> {
+    return await db.select().from(favorites).where(eq(favorites.userId, userId));
+  }
+
+  async getFavoritesByType(userId: number, type: string): Promise<Favorite[]> {
+    return await db
+      .select()
+      .from(favorites)
+      .where(and(
+        eq(favorites.userId, userId),
+        eq(favorites.type, type)
+      ));
+  }
+
+  async addFavorite(favorite: InsertFavorite): Promise<Favorite> {
+    const [createdFavorite] = await db.insert(favorites).values(favorite).returning();
+    return createdFavorite;
+  }
+
+  async removeFavorite(id: number): Promise<boolean> {
+    await db.delete(favorites).where(eq(favorites.id, id));
+    return true;
+  }
+
+  async checkIsFavorite(userId: number, type: string, itemId: number): Promise<boolean> {
+    const column = type === 'salon' 
+      ? favorites.salonId 
+      : type === 'artist' 
+        ? favorites.artistId 
+        : favorites.serviceId;
+    
+    const [favorite] = await db
+      .select()
+      .from(favorites)
+      .where(and(
+        eq(favorites.userId, userId),
+        eq(favorites.type, type),
+        eq(column, itemId)
+      ));
+    
+    return !!favorite;
+  }
+
+  // Direct Chat operations
+  async createChat(chat: InsertChat): Promise<Chat> {
+    const [createdChat] = await db.insert(chats).values(chat).returning();
+    return createdChat;
+  }
+
+  async getChatsByUser(userId: number): Promise<Chat[]> {
+    return await db
+      .select()
+      .from(chats)
+      .where(eq(chats.userId, userId))
+      .orderBy(desc(chats.lastMessageAt));
+  }
+
+  async getChatsBySalon(salonId: number): Promise<Chat[]> {
+    return await db
+      .select()
+      .from(chats)
+      .where(eq(chats.salonId, salonId))
+      .orderBy(desc(chats.lastMessageAt));
+  }
+
+  async getChat(userId: number, salonId: number): Promise<Chat | undefined> {
+    const [chat] = await db
+      .select()
+      .from(chats)
+      .where(and(
+        eq(chats.userId, userId),
+        eq(chats.salonId, salonId)
+      ));
+    return chat;
+  }
+
+  async getChatById(chatId: number): Promise<Chat | undefined> {
+    const [chat] = await db.select().from(chats).where(eq(chats.id, chatId));
+    return chat;
+  }
+
+  async addChatMessageToChat(chatMessage: InsertChatMessage): Promise<DbChatMessage> {
+    const [createdMessage] = await db.insert(chatMessages).values(chatMessage).returning();
+    
+    // Update the lastMessageAt timestamp for the chat
+    await db
+      .update(chats)
+      .set({ 
+        lastMessageAt: new Date(),
+        updatedAt: new Date()
+      })
+      .where(eq(chats.id, chatMessage.chatId));
+    
+    return createdMessage;
+  }
+
+  async getChatMessagesByChatId(chatId: number): Promise<DbChatMessage[]> {
+    return await db
+      .select()
+      .from(chatMessages)
+      .where(eq(chatMessages.chatId, chatId))
+      .orderBy(asc(chatMessages.createdAt));
+  }
+
+  async markChatMessagesAsRead(chatId: number, userId: number): Promise<boolean> {
+    // First, determine if the current user is a user or a salon
+    const messageType = 'salon'; // Assuming messages from salon if user is viewing them
+
+    await db
+      .update(chatMessages)
+      .set({ isRead: true })
+      .where(and(
+        eq(chatMessages.chatId, chatId),
+        eq(chatMessages.senderType, messageType)
+      ));
+    return true;
+  }
+
+  async getUnreadMessageCount(chatId: number, userId: number): Promise<number> {
+    // Determine the message type we're counting (messages from salon if user is viewing)
+    const messageType = 'salon'; 
+    
+    const result = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(chatMessages)
+      .where(and(
+        eq(chatMessages.chatId, chatId),
+        eq(chatMessages.isRead, false),
+        eq(chatMessages.senderType, messageType)
+      ));
+    
+    return result[0]?.count || 0;
   }
 }
 
