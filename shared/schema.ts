@@ -158,6 +158,38 @@ export const promotions = pgTable("promotions", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Favorites model
+export const favorites = pgTable("favorites", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  salonId: integer("salon_id"),
+  artistId: integer("artist_id"),
+  serviceId: integer("service_id"),
+  type: text("type").notNull(), // salon, artist, service
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Chat model
+export const chats = pgTable("chats", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  salonId: integer("salon_id").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at"),
+  lastMessageAt: timestamp("last_message_at").defaultNow(),
+});
+
+// Chat message model
+export const chatMessages = pgTable("chat_messages", {
+  id: serial("id").primaryKey(),
+  chatId: integer("chat_id").notNull(),
+  senderId: integer("sender_id").notNull(), // user_id or salon_owner_id
+  senderType: text("sender_type").notNull(), // user, salon
+  content: text("content").notNull(),
+  isRead: boolean("is_read").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -214,6 +246,23 @@ export const insertPromotionSchema = createInsertSchema(promotions).omit({
   usageCount: true,
 });
 
+export const insertFavoriteSchema = createInsertSchema(favorites).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertChatSchema = createInsertSchema(chats).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  lastMessageAt: true,
+});
+
+export const insertChatMessageSchema = createInsertSchema(chatMessages).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -247,3 +296,12 @@ export type Review = typeof reviews.$inferSelect;
 
 export type InsertPromotion = z.infer<typeof insertPromotionSchema>;
 export type Promotion = typeof promotions.$inferSelect;
+
+export type InsertFavorite = z.infer<typeof insertFavoriteSchema>;
+export type Favorite = typeof favorites.$inferSelect;
+
+export type InsertChat = z.infer<typeof insertChatSchema>;
+export type Chat = typeof chats.$inferSelect;
+
+export type InsertChatMessage = z.infer<typeof insertChatMessageSchema>;
+export type ChatMessage = typeof chatMessages.$inferSelect;
