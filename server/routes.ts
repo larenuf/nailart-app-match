@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { ChatMessage } from './storage';
 import { setupAuth } from "./auth";
 import { setupWebSocketServer, broadcastToAll } from './websocket';
+import uploadRoutes from './routes/upload';
 
 // Mock Stripe implementation for now
 const mockStripe = {
@@ -25,6 +26,9 @@ const mockStripe = {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication routes
   setupAuth(app);
+  
+  // Dosya yükleme API'lerini tanımla
+  app.use('/api/upload', uploadRoutes);
   
   // ---------- ADMİN API ENDPOİNTLERİ ----------
   
