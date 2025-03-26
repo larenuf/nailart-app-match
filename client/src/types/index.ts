@@ -29,6 +29,7 @@ export type Salon = {
   discount: string;
   distance: number;
   isPremium: boolean;
+  videoUrl?: string;
 };
 
 export type Artist = {

@@ -71,6 +71,7 @@ export default function SalonDetailsForm({ salon }: SalonDetailsFormProps) {
       discount: salon?.discount || "",
       imageUrl: salon?.imageUrl || "",
       galleryImages: salon?.galleryImages || [],
+      videoUrl: salon?.videoUrl || "",
     }
   });
 
@@ -389,6 +390,53 @@ export default function SalonDetailsForm({ salon }: SalonDetailsFormProps) {
                   </div>
                   <FormDescription>
                     Salonunuzu tanıtan galeri görselleri yükleyin (en fazla 10 görsel)
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="videoUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Salon Tanıtım Videosu (İsteğe Bağlı)</FormLabel>
+                  <div className="space-y-4">
+                    <FormControl>
+                      <Input 
+                        placeholder="https://example.com/video.mp4" 
+                        {...field} 
+                        className={field.value ? "mb-2" : ""}
+                      />
+                    </FormControl>
+                    
+                    <div className="flex flex-col space-y-2">
+                      <div className="text-sm font-medium">Veya video yükle:</div>
+                      <CloudinaryVideoUploader
+                        onUploadComplete={(url) => {
+                          form.setValue("videoUrl", url, { shouldValidate: true });
+                        }}
+                        folder="nail_art_match_salon_videos"
+                        maxSizeMB={50}
+                      />
+                    </div>
+                    
+                    {field.value && field.value.startsWith('http') && (
+                      <div className="mt-2 rounded-md overflow-hidden border p-2">
+                        <p className="text-xs text-muted-foreground mb-2">Video Önizleme:</p>
+                        <video
+                          src={field.value}
+                          controls
+                          className="w-full h-32 object-cover"
+                        >
+                          Tarayıcınız video etiketini desteklemiyor.
+                        </video>
+                      </div>
+                    )}
+                  </div>
+                  <FormDescription>
+                    Salonunuz için tanıtım videosu yükleyin (isteğe bağlı)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

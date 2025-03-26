@@ -144,6 +144,23 @@ export default function SalonDetailView() {
             ihtiyaçlarınızı karşılıyoruz.
           </p>
 
+          {/* Salon Tanıtım Videosu */}
+          {selectedSalon.videoUrl && (
+            <div className="mb-4">
+              <h3 className="font-bold mb-2">Salon Tanıtım Videosu</h3>
+              <div className="rounded-lg overflow-hidden">
+                <video 
+                  src={selectedSalon.videoUrl} 
+                  controls 
+                  className="w-full h-auto"
+                  poster={selectedSalon.imageUrl}
+                >
+                  Tarayıcınız video etiketini desteklemiyor.
+                </video>
+              </div>
+            </div>
+          )}
+
           <h3 className="font-bold mb-2">Özellikler</h3>
           <div className="grid grid-cols-2 gap-2 mb-4">
             <div className="flex items-center text-sm">
