@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { GoogleMap, LoadScript, InfoWindow } from "@react-google-maps/api";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, MapPin, Navigation } from "lucide-react";
+import { AlertCircle, MapPin, Navigation, SlidersHorizontal, Award, Tag } from "lucide-react";
 
 const containerStyle = {
   width: '100%',
@@ -23,6 +23,28 @@ const turkishCities = {
   istanbul: { lat: 41.0082, lng: 28.9784 },
   ankara: { lat: 39.9334, lng: 32.8597 },
   izmir: { lat: 38.4237, lng: 27.1428 }
+};
+
+// Marker renk türleri ve açıklamaları
+const markerTypes = {
+  featured: {
+    gradient: "bg-gradient-to-br from-yellow-400 to-yellow-500",
+    icon: "⭐️",
+    label: "Öne Çıkan",
+    color: "#F59E0B"
+  },
+  nearby: {
+    gradient: "bg-gradient-to-br from-pink-400 to-pink-500",
+    icon: "🌸",
+    label: "Yakındaki",
+    color: "#EC4899"
+  },
+  filtered: {
+    gradient: "bg-gradient-to-br from-purple-400 to-purple-500",
+    icon: "🎯",
+    label: "Filtrelenmiş",
+    color: "#8B5CF6"
+  }
 };
 
 export default function NearestSalonsMap() {
@@ -197,13 +219,13 @@ export default function NearestSalonsMap() {
             </div>
           </div>
           
-          {/* Şehir seçimi - yeni tasarım */}
-          <div className="bg-white dark:bg-gray-800 rounded-full shadow-md p-1 flex space-x-1 border border-gray-100 dark:border-gray-700">
+          {/* Şehir seçimi - güçlü tasarım */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-1 flex space-x-1 border border-gray-100 dark:border-gray-700">
             <button 
               onClick={() => setSelectedCity("istanbul")}
-              className={`text-xs px-3 py-1 rounded-full transition-all ${
+              className={`text-xs font-semibold px-3 py-1.5 rounded-md transition-all ${
                 selectedCity === "istanbul" 
-                  ? "bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-sm" 
+                  ? "bg-gradient-to-br from-pink-500 to-pink-600 text-white shadow-md translate-y-[-1px]" 
                   : "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
               }`}
             >
@@ -211,9 +233,9 @@ export default function NearestSalonsMap() {
             </button>
             <button 
               onClick={() => setSelectedCity("ankara")}
-              className={`text-xs px-3 py-1 rounded-full transition-all ${
+              className={`text-xs font-semibold px-3 py-1.5 rounded-md transition-all ${
                 selectedCity === "ankara" 
-                  ? "bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-sm" 
+                  ? "bg-gradient-to-br from-pink-500 to-pink-600 text-white shadow-md translate-y-[-1px]" 
                   : "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
               }`}
             >
@@ -221,14 +243,30 @@ export default function NearestSalonsMap() {
             </button>
             <button 
               onClick={() => setSelectedCity("izmir")}
-              className={`text-xs px-3 py-1 rounded-full transition-all ${
+              className={`text-xs font-semibold px-3 py-1.5 rounded-md transition-all ${
                 selectedCity === "izmir" 
-                  ? "bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-sm" 
+                  ? "bg-gradient-to-br from-pink-500 to-pink-600 text-white shadow-md translate-y-[-1px]" 
                   : "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
               }`}
             >
               İzmir
             </button>
+          </div>
+        </div>
+        
+        {/* Renk açıklamaları */}
+        <div className="mx-4 flex mb-2 items-center gap-4 justify-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-2 rounded-lg shadow-sm">
+          <div className="flex items-center space-x-1">
+            <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+            <span className="text-[10px] text-gray-600 dark:text-gray-300">{markerTypes.featured.label}</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <div className="w-3 h-3 rounded-full bg-pink-500"></div>
+            <span className="text-[10px] text-gray-600 dark:text-gray-300">{markerTypes.nearby.label}</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <div className="w-3 h-3 rounded-full bg-purple-500"></div>
+            <span className="text-[10px] text-gray-600 dark:text-gray-300">{markerTypes.filtered.label}</span>
           </div>
         </div>
         
@@ -294,48 +332,55 @@ export default function NearestSalonsMap() {
                   </div>
                 </div>
                 
-                {/* Salon işaretçileri */}
-                {salons?.map((salon) => (
-                  <div 
-                    key={salon.id}
-                    className="absolute cursor-pointer"
-                    style={{
-                      position: 'absolute',
-                      left: `${Math.random() * 80 + 10}%`,
-                      top: `${Math.random() * 80 + 10}%`,
-                      transform: 'translate(-50%, -50%)'
-                    }}
-                    onClick={() => handleMarkerClick(salon)}
-                  >
-                    <div className="flex flex-col items-center">
-                      <div 
-                        className={`
-                          w-10 h-10 rounded-lg shadow-lg relative cursor-pointer
-                          ${salon.isPremium ? 'bg-gradient-to-br from-yellow-400 to-yellow-500' : 'bg-gradient-to-br from-pink-400 to-pink-500'}
-                        `}
-                      >
-                        <div className="absolute inset-0 flex items-center justify-center text-white text-xs font-bold">
-                          {salon.isPremium ? (
-                            <span className="text-white">★</span>
-                          ) : (
-                            <span className="text-white">💅</span>
-                          )}
-                        </div>
-                        {/* Üçgen çıkıntı */}
+                {/* Salon işaretçileri - anlamlı renkler ve isimleri gizle */}
+                {salons?.map((salon, index) => {
+                  // Salonların %20'si filtre sonucu, %30'u öne çıkan, kalanlar yakındaki olsun
+                  let markerType = markerTypes.nearby; // Varsayılan: yakındaki
+                  if (index % 5 === 0) {
+                    markerType = markerTypes.filtered; // Filtrelenmiş
+                  } else if (salon.isPremium) {
+                    markerType = markerTypes.featured; // Öne çıkan 
+                  }
+                  
+                  return (
+                    <div 
+                      key={salon.id}
+                      className="absolute cursor-pointer hover:z-50"
+                      style={{
+                        position: 'absolute',
+                        left: `${Math.random() * 80 + 10}%`,
+                        top: `${Math.random() * 80 + 10}%`,
+                        transform: 'translate(-50%, -50%)'
+                      }}
+                      onClick={() => handleMarkerClick(salon)}
+                    >
+                      <div className="flex flex-col items-center group relative">
                         <div 
                           className={`
-                            absolute -bottom-1 left-1/2 transform -translate-x-1/2 rotate-45
-                            w-2 h-2 ${salon.isPremium ? 'bg-yellow-500' : 'bg-pink-500'}
+                            w-8 h-8 rounded-full shadow-lg relative cursor-pointer hover:scale-110 transition-all
+                            bg-${salon.isPremium ? 'yellow' : index % 5 === 0 ? 'purple' : 'pink'}-500
                           `}
-                        ></div>
-                      </div>
-                      {/* Mini etiket */}
-                      <div className="mt-1 bg-white dark:bg-gray-800 rounded-md shadow-md px-1 py-0.5 text-[8px] whitespace-nowrap">
-                        {salon.name}
+                          style={{ backgroundColor: markerType.color }}
+                        >
+                          <div className="absolute inset-0 flex items-center justify-center text-white text-xs font-bold">
+                            <span className="text-white">{markerType.icon}</span>
+                          </div>
+                          
+                          {/* Üçgen çıkıntı */}
+                          <div 
+                            className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 rotate-45 w-2 h-2"
+                            style={{ backgroundColor: markerType.color }}
+                          ></div>
+                        </div>
+                        
+                        {/* Sadece hover'da gösterilecek salon adı */}
+                        <div className="mt-1 scale-0 group-hover:scale-100 transition-all duration-200 bg-white dark:bg-gray-800 rounded-md shadow-md px-2 py-1 text-[10px] whitespace-nowrap absolute -bottom-8">
+                          {salon.name}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
                 
                 {/* Seçilen salon için bilgi penceresi - modern tasarım */}
                 {selectedMarker && (
@@ -431,9 +476,10 @@ export default function NearestSalonsMap() {
               </span>
               {selectedCity === "istanbul" ? "İstanbul" : selectedCity === "ankara" ? "Ankara" : "İzmir"}'daki En İyi Salonlar
             </h3>
-            <span className="text-xs text-pink-500 dark:text-pink-400 font-medium cursor-pointer hover:underline">
-              Tümünü Gör
-            </span>
+            <button className="flex items-center text-xs bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 px-3 py-1 rounded-full transition-colors">
+              <SlidersHorizontal className="h-3 w-3 mr-1" />
+              <span>Filtrele ve Sırala</span>
+            </button>
           </div>
           
           <div className="space-y-2">
@@ -460,13 +506,20 @@ export default function NearestSalonsMap() {
                     )}
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between flex-wrap">
                       <h3 className="font-bold text-gray-800 dark:text-white">{salon.name}</h3>
-                      {salon.discount && (
-                        <span className="bg-pink-100 dark:bg-pink-900/30 text-pink-800 dark:text-pink-300 text-[9px] font-bold px-2 py-0.5 rounded-full">
-                          {salon.discount}
-                        </span>
-                      )}
+                      <div className="flex space-x-1">
+                        {salon.isPremium && (
+                          <span className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center">
+                            <Award className="w-2.5 h-2.5 mr-0.5" /> En İyi
+                          </span>
+                        )}
+                        {salon.discount && (
+                          <span className="bg-pink-100 dark:bg-pink-900/30 text-pink-800 dark:text-pink-300 text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center">
+                            <Tag className="w-2.5 h-2.5 mr-0.5" /> {salon.discount}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <div className="flex items-center mt-1 text-xs text-gray-500 dark:text-gray-400">
                       <MapPin className="h-3 w-3 inline mr-1 text-pink-400" />
