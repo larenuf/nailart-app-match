@@ -3,6 +3,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import CloudinaryUploader from '@/components/CloudinaryUploader';
+import CloudinaryVideoUploader from '@/components/CloudinaryVideoUploader';
 import {
   Card,
   CardContent,
@@ -450,9 +451,39 @@ export default function StoryManagement() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Video URL (İsteğe Bağlı)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://example.com/video.mp4" {...field} />
-                    </FormControl>
+                    <div className="space-y-4">
+                      <FormControl>
+                        <Input 
+                          placeholder="https://example.com/video.mp4" 
+                          {...field} 
+                          className={field.value ? "mb-2" : ""}
+                        />
+                      </FormControl>
+                      
+                      <div className="flex flex-col space-y-2">
+                        <div className="text-sm font-medium">Veya video yükle:</div>
+                        <CloudinaryVideoUploader
+                          onUploadComplete={(url) => {
+                            form.setValue("videoUrl", url, { shouldValidate: true });
+                          }}
+                          folder="nail_art_match_videos"
+                          maxSizeMB={30}
+                        />
+                      </div>
+                      
+                      {field.value && field.value.startsWith('http') && (
+                        <div className="mt-2 rounded-md overflow-hidden border p-2">
+                          <p className="text-xs text-muted-foreground mb-2">Video Önizleme:</p>
+                          <video
+                            src={field.value}
+                            controls
+                            className="w-full h-32 object-cover"
+                          >
+                            Tarayıcınız video etiketini desteklemiyor.
+                          </video>
+                        </div>
+                      )}
+                    </div>
                     <FormDescription>
                       Hikayeye tıklandığında açılacak video (isteğe bağlı)
                     </FormDescription>
