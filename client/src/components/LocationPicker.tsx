@@ -19,8 +19,9 @@ type Coordinates = {
 export default function LocationPicker({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { userLocation, setUserLocation } = useAppContext();
   const [searchTerm, setSearchTerm] = useState("");
-  const [center, setCenter] = useState<Coordinates>({ lat: 40.7128, lng: -74.0060 }); // Default New York
-  const [markerPosition, setMarkerPosition] = useState<Coordinates>({ lat: 40.7128, lng: -74.0060 });
+  // Default to Istanbul, Turkey instead of New York
+  const [center, setCenter] = useState<Coordinates>({ lat: 41.0082, lng: 28.9784 }); // Istanbul
+  const [markerPosition, setMarkerPosition] = useState<Coordinates>({ lat: 41.0082, lng: 28.9784 });
   const [locationName, setLocationName] = useState("");
 
   // Google Maps API Key

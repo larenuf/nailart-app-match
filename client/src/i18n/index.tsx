@@ -45,14 +45,17 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | null>(null);
 
 export const I18nProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Try to get saved locale/currency from localStorage, default to tr
+  // Set default locale to Turkish (tr) and default currency to TRY, then try to get saved values from localStorage
+  const defaultLocale: SupportedLocale = 'tr';
+  const defaultCurrency: SupportedCurrency = 'TRY';
+  
   const savedLocale = typeof window !== 'undefined' 
-    ? (localStorage.getItem('locale') as SupportedLocale || 'tr')
-    : 'tr';
+    ? (localStorage.getItem('locale') as SupportedLocale || defaultLocale)
+    : defaultLocale;
   
   const savedCurrency = typeof window !== 'undefined'
-    ? (localStorage.getItem('currency') as SupportedCurrency || localeCurrencyMap[savedLocale])
-    : localeCurrencyMap[savedLocale];
+    ? (localStorage.getItem('currency') as SupportedCurrency || defaultCurrency)
+    : defaultCurrency;
 
   const [locale, setLocaleState] = useState<SupportedLocale>(savedLocale);
   const [currency, setCurrencyState] = useState<SupportedCurrency>(savedCurrency);
