@@ -1,0 +1,84 @@
+. UI Detail: Clean and Layered Information Display (Progressive Disclosure)
+Problem:
+Currently, salon cards display too much information at once (name, address, discount, distance, rating, availability, etc.). This creates cognitive overload and reduces visual clarity, especially on mobile.
+
+Solution – Layered Content Presentation:
+
+Collapsed (Default) View:
+
+Show only the salon name, distance from user, and average rating.
+
+This provides just enough context for users to skim multiple salons quickly.
+
+Expanded View (On Click or Tap):
+
+Reveal more detailed info:
+
+Opening hours
+
+Available discounts
+
+Quick description
+
+Service categories
+
+Action buttons like “Book Now” or “View Details”
+
+Implementation Tips:
+
+Use animated expansion with smooth transitions.
+
+Utilize icons instead of text where possible for minimalist design.
+
+Consider a "More Info" chevron or plus (+) icon for expand/collapse behavior.
+
+Benefits:
+
+Cleaner UI with better focus.
+
+Faster scanning and decision-making for users.
+
+Mobile-friendly design that avoids information clutter.
+
+🗓️ 5. Artist Availability Integration with Calendar Picker
+Objective:
+Allow users to view a nail artist's available time slots and directly book appointments.
+
+Functional Requirements:
+
+Each nail artist has a dynamic availability calendar.
+
+Users can:
+
+Select a service
+
+See available dates/times in a calendar picker component (e.g., horizontal scroll or modal date grid)
+
+Confirm the booking
+
+Bonus Feature:
+
+After booking, offer the user a one-tap “Add to Calendar” option:
+
+Google Calendar (via text/calendar or Google event link)
+
+Apple Calendar (via .ics file or Apple event)
+
+Technical Implementation:
+
+Use a date-time picker UI (e.g. react-datepicker, react-native-calendar-picker)
+
+Backend: Store artist availability using time slot schemas.
+
+Optional: Sync with actual artist calendars (Google Calendar API, Calendly integration)
+
+Benefits:
+
+Professional booking experience
+
+Avoids overbooking by showing only free slots
+
+Adds trust and transparency for the user
+
+Saves time for both user and salon
+
