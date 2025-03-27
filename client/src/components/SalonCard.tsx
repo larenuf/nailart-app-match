@@ -83,94 +83,101 @@ function SalonCardComponent({
       onClick={handleClick}
       className="h-full cursor-pointer"
     >
-      <Card className="overflow-hidden border border-gray-100 dark:border-gray-800 h-full shadow-sm hover:shadow-md transition-shadow duration-200">
-        <div className={`relative ${imageSize} w-full overflow-hidden`}>
+      <Card className="overflow-hidden border-none dark:border-gray-800 h-full shadow-md hover:shadow-lg transition-all duration-200 bg-white/80 dark:bg-gray-900/90">
+        <div className={`relative ${imageSize} w-full overflow-hidden rounded-t-xl`}>
           <LazyImage 
             src={salon.imageUrl} 
             alt={salon.name}
             className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
           />
           
+          {/* Overlay gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-70"></div>
+          
           {/* Badges */}
-          <div className="absolute top-2 left-2 flex flex-wrap gap-1">
+          <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
             {salon.isTopRated && (
-              <span className="bg-amber-500 text-white text-xs px-2 py-0.5 rounded-full font-medium">
+              <span className="bg-amber-500/90 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-medium">
                 {locale === 'tr' ? 'En İyi' : locale === 'en' ? 'Top Rated' : 'الأفضل تقييماً'}
               </span>
             )}
             {salon.hasDiscount && (
-              <span className="bg-purple-500 text-white text-xs px-2 py-0.5 rounded-full font-medium">
+              <span className="bg-purple-500/90 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-medium">
                 {locale === 'tr' ? '15% İndirim' : locale === 'en' ? '15% Off' : 'خصم 15٪'}
               </span>
             )}
           </div>
+          
+          {/* Salon name overlay at bottom of image */}
+          <div className="absolute bottom-0 left-0 right-0 px-4 py-3 bg-gradient-to-t from-black/80 to-transparent">
+            <h3 className={`${nameSize} font-semibold text-white line-clamp-1 drop-shadow-sm`}>
+              {salon.name}
+            </h3>
+          </div>
         </div>
         
-        <CardContent className={`${contentPadding}`}>
+        <CardContent className={`${contentPadding} pt-3`}>
           <div>
-            <div className="flex justify-between items-start">
-              <h3 className={`${nameSize} font-semibold text-gray-900 dark:text-white line-clamp-1`}>
-                {salon.name}
-              </h3>
-              <div className="flex items-center">
+            <div className="flex justify-between items-center mb-2">
+              <div className="flex items-center bg-amber-50 dark:bg-amber-900/20 px-2 py-1 rounded-lg">
                 <Star size={14} className="text-amber-500 fill-amber-500" />
-                <span className="text-sm text-gray-700 dark:text-gray-300 ml-1">{salon.rating}</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">({salon.reviewCount})</span>
+                <span className="text-xs font-semibold text-amber-700 dark:text-amber-400 ml-1">{salon.rating}</span>
+                <span className="text-xs text-amber-600 dark:text-amber-500 ml-1">({salon.reviewCount})</span>
               </div>
+              
+              {salon.openNow && (
+                <span className="text-xs bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-500 px-2 py-1 rounded-lg font-medium flex items-center">
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></div>
+                  {locale === 'tr' ? 'Şimdi Açık' : locale === 'en' ? 'Open Now' : 'مفتوح الآن'}
+                </span>
+              )}
             </div>
             
-            <div className="mt-1 flex items-start">
-              <MapPin size={14} className="text-gray-500 min-w-[14px] mt-0.5" />
-              <p className="text-xs text-gray-600 dark:text-gray-400 ml-1 line-clamp-1">
+            <div className="mt-3 flex items-start">
+              <MapPin size={16} className="text-primary min-w-[16px] mt-0.5" />
+              <p className="text-sm text-gray-700 dark:text-gray-300 ml-2 font-medium line-clamp-1">
                 {salon.address}
-                {salon.distance && <span className="ml-1 text-primary font-medium">{salon.distance}</span>}
+                {salon.distance && (
+                  <span className="ml-2 bg-gray-100 dark:bg-gray-800 text-primary px-1.5 py-0.5 rounded-md text-xs">
+                    {salon.distance}
+                  </span>
+                )}
               </p>
             </div>
             
-            {(salon.openNow !== undefined || salon.openTime) && (
-              <div className="mt-1 flex items-center">
-                <Clock size={14} className="text-gray-500 min-w-[14px]" />
-                <p className="text-xs ml-1">
-                  {salon.openNow ? (
-                    <span className="text-green-600 dark:text-green-500 font-medium">
-                      {locale === 'tr' ? 'Şimdi Açık' : locale === 'en' ? 'Open Now' : 'مفتوح الآن'}
-                    </span>
-                  ) : (
-                    <span className="text-gray-600 dark:text-gray-400">
-                      {locale === 'tr' ? 'Açık' : locale === 'en' ? 'Open' : 'مفتوح'}: {formatTime(salon.openTime)} - {formatTime(salon.closeTime)}
-                    </span>
-                  )}
+            {(salon.openTime) && (
+              <div className="mt-2 flex items-center">
+                <Clock size={16} className="text-primary min-w-[16px]" />
+                <p className="text-sm text-gray-700 dark:text-gray-300 ml-2 font-medium">
+                  {formatTime(salon.openTime)} - {formatTime(salon.closeTime)}
                 </p>
               </div>
             )}
             
-            {salon.phoneNumber && density !== 'compact' && (
-              <div className="mt-1 flex items-center">
-                <Phone size={14} className="text-gray-500 min-w-[14px]" />
-                <p className="text-xs text-gray-600 dark:text-gray-400 ml-1">{salon.phoneNumber}</p>
+            {salon.phoneNumber && (
+              <div className="mt-2 flex items-center">
+                <Phone size={16} className="text-primary min-w-[16px]" />
+                <p className="text-sm text-gray-700 dark:text-gray-300 ml-2 font-medium">{salon.phoneNumber}</p>
               </div>
             )}
             
-            {salon.promotion && density === 'expanded' && (
-              <div className="mt-2 flex items-start">
-                <Megaphone size={14} className="text-purple-600 min-w-[14px] mt-0.5" />
-                <p className="text-xs text-purple-600 dark:text-purple-400 ml-1 font-medium">
+            {salon.promotion && (
+              <div className="mt-3 flex items-start bg-purple-50 dark:bg-purple-900/20 p-2 rounded-lg">
+                <Megaphone size={16} className="text-purple-600 min-w-[16px] mt-0.5" />
+                <p className="text-sm text-purple-700 dark:text-purple-400 ml-2 font-medium">
                   {salon.promotion}
                 </p>
               </div>
             )}
             
-            {density === 'expanded' && (
-              <div className="mt-3 flex space-x-2">
-                <button className="text-xs bg-primary text-white py-1.5 px-3 rounded-full flex-1 hover:bg-primary-dark transition-colors">
-                  {locale === 'tr' ? 'Randevu Al' : locale === 'en' ? 'Book Now' : 'احجز الآن'}
-                </button>
-                <button className="text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 py-1.5 px-3 rounded-full flex items-center justify-center">
-                  <Phone size={12} className="mr-1" />
-                  {locale === 'tr' ? 'Ara' : locale === 'en' ? 'Call' : 'اتصل'}
-                </button>
-              </div>
-            )}
+            <div className="mt-4 flex space-x-3">
+              <button className="flex-1 bg-primary hover:bg-primary/90 text-white py-2.5 px-4 rounded-xl font-medium text-sm shadow-sm hover:shadow-md transition-all duration-200">
+                {locale === 'tr' ? 'Randevu Al' : locale === 'en' ? 'Book Now' : 'احجز الآن'}
+              </button>
+              <button className="w-12 aspect-square bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200">
+                <Phone size={18} className="text-primary" />
+              </button>
+            </div>
           </div>
         </CardContent>
       </Card>
