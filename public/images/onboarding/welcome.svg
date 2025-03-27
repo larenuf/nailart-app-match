@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="300" height="200" viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Waves in the background -->
-  <path d="M0,80 C60,60 90,100 150,80 C210,60 240,100 300,80 L300,200 L0,200 Z" fill="#E9F5F7" />
-  <path d="M0,90 C60,70 90,110 150,90 C210,70 240,110 300,90" stroke="#30AAB9" stroke-width="2" fill="none" />
-  <path d="M0,110 C60,90 90,130 150,110 C210,90 240,130 300,110" stroke="#30AAB9" stroke-width="2" fill="none" />
-  
-  <!-- App Logo -->
-  <circle cx="150" cy="100" r="40" fill="#30AAB9" />
-  <text x="150" y="110" font-family="Arial" font-size="40" fill="white" text-anchor="middle">b</text>
-
-  <!-- Image avatars -->
-  <circle cx="50" cy="100" r="25" fill="white" stroke="#30AAB9" stroke-width="2" />
-  <circle cx="100" cy="100" r="25" fill="white" stroke="#30AAB9" stroke-width="2" />
-  <circle cx="200" cy="100" r="25" fill="white" stroke="#30AAB9" stroke-width="2" />
-  <circle cx="250" cy="100" r="25" fill="white" stroke="#30AAB9" stroke-width="2" />
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g filter="url(#filter0_d)">
+    <rect x="50" y="50" width="300" height="200" rx="20" fill="#FFE4E1" />
+    <rect x="90" y="80" width="220" height="140" rx="10" fill="#FFFFFF" />
+    <circle cx="200" cy="100" r="30" fill="#30AAB9" />
+    <path d="M190 100L198 108L210 95" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <rect x="100" y="150" width="200" height="10" rx="5" fill="#F3F4F6" />
+    <rect x="100" y="170" width="150" height="10" rx="5" fill="#F3F4F6" />
+    <rect x="100" y="190" width="100" height="10" rx="5" fill="#F3F4F6" />
+    <circle cx="130" cy="220" r="15" fill="#30AAB9" opacity="0.3" />
+    <circle cx="170" cy="220" r="15" fill="#30AAB9" opacity="0.5" />
+    <circle cx="210" cy="220" r="15" fill="#30AAB9" opacity="0.7" />
+    <circle cx="250" cy="220" r="15" fill="#30AAB9" />
+  </g>
+  <defs>
+    <filter id="filter0_d" x="0" y="0" width="400" height="300" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+      <feOffset />
+      <feGaussianBlur stdDeviation="25" />
+      <feColorMatrix type="matrix" values="0 0 0 0 0.2 0 0 0 0 0.2 0 0 0 0 0.2 0 0 0 0.15 0" />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow" />
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+    </filter>
+  </defs>
 </svg>
