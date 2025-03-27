@@ -395,15 +395,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
               >
                 Erkekler için
               </motion.button>
-              <motion.button 
-                onClick={currentStep.buttonAction}
-                className="w-full border border-[#30AAB9] text-[#30AAB9] hover:bg-gray-50 font-medium rounded-md py-3 px-4 mt-2"
-                whileHover={{ scale: 1.03, backgroundColor: 'rgba(48, 170, 185, 0.05)' }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ type: "spring", stiffness: 500 }}
-              >
-                {currentStep.buttonText}
-              </motion.button>
+
             </motion.div>
           ) : (
             <motion.button 
