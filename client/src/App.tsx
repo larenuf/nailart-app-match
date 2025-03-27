@@ -75,6 +75,11 @@ function Router() {
       <Route path="/admin/dashboard" children={<Dashboard />} />
       <Route path="/admin/create-salon" children={<CreateSalon />} />
       
+      {/* Auth sayfası ekliyoruz */}
+      <Route path="/auth">
+        <Onboarding onComplete={completeOnboarding} />
+      </Route>
+      
       <Route component={NotFound} />
     </Switch>
   );
