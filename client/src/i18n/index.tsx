@@ -42,7 +42,7 @@ interface I18nContextType {
   isRTL: boolean;
 }
 
-const I18nContext = createContext<I18nContextType | null>(null);
+export const I18nContext = createContext<I18nContextType | null>(null);
 
 export const I18nProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // Set default locale to Turkish (tr) and default currency to TRY, then try to get saved values from localStorage
