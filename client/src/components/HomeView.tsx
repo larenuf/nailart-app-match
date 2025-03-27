@@ -5,10 +5,18 @@ import CategoriesSection from "./CategoriesSection";
 import FeaturedSalonsSectionNew from "./FeaturedSalonsSectionNew";
 import NailProductsSection from "@/components/NailProductsSection";
 import LeafletClusterMap from "./LeafletClusterMap";
-import { Sparkles, Palette, Medal, MousePointerClick, ImagePlus, Megaphone, SlidersHorizontal, Calendar, Sun, ArrowRight } from 'lucide-react';
-import { useCallback, useState, useEffect } from "react";
+import { 
+  Sparkles, Palette, Medal, MousePointerClick, ImagePlus, Megaphone, 
+  SlidersHorizontal, Calendar, Sun, ArrowRight, Bell, MapPin, 
+  Heart, SearchIcon, Star, LayoutGrid, Map, Moon, Settings,
+  User, Clock, Filter, TrendingUp, Menu, XCircle 
+} from 'lucide-react';
+import { useCallback, useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { useI18n } from "@/i18n";
+import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "@/context/ThemeContext";
+import { useAppContext } from "@/context/AppContext";
 
 // Feature card component
 interface FeatureCardProps {
@@ -317,9 +325,464 @@ function PremiumFeaturesSection() {
   );
 }
 
+// Personalized greeting section based on time of day
+function PersonalizedGreeting() {
+  const { t, locale } = useI18n();
+  const { userLocation } = useAppContext();
+  const [timeBasedGreeting, setTimeBasedGreeting] = useState<string>("");
+  const [weatherIcon, setWeatherIcon] = useState<string>("☀️");
+  const [userName, setUserName] = useState<string>("");
+  const [location, setLocation] = useState<string>(userLocation || "İstanbul");
+  const [_, navigate] = useLocation();
+  
+  // Function to get greeting based on time of day
+  useEffect(() => {
+    const getGreeting = () => {
+      const hour = new Date().getHours();
+      let greeting = "";
+      let icon = "";
+      
+      if (hour >= 5 && hour < 12) {
+        greeting = locale === 'tr' ? 'Günaydın' : locale === 'en' ? 'Good Morning' : 'صباح الخير';
+        icon = "☀️";
+      } else if (hour >= 12 && hour < 18) {
+        greeting = locale === 'tr' ? 'İyi Günler' : locale === 'en' ? 'Good Afternoon' : 'مساء الخير';
+        icon = "🌤️";
+      } else {
+        greeting = locale === 'tr' ? 'İyi Akşamlar' : locale === 'en' ? 'Good Evening' : 'مساء الخير';
+        icon = "🌙";
+      }
+      
+      setTimeBasedGreeting(greeting);
+      setWeatherIcon(icon);
+    };
+    
+    getGreeting();
+    
+    // Try to get user info if available
+    fetch('/api/user')
+      .then(response => {
+        if (response.ok) return response.json();
+        return { fullName: "" };
+      })
+      .then(data => {
+        if (data && data.fullName) {
+          setUserName(data.fullName.split(' ')[0]); // Just the first name
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching user info:', error);
+      });
+  }, [locale]);
+  
+  const handleNavigateToSearch = () => {
+    navigate('/search');
+  };
+  
+  return (
+    <motion.div 
+      className="px-4 pt-3 mb-1"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="flex justify-between items-start">
+        <div>
+          <div className="flex items-center">
+            <h1 className="text-xl font-semibold text-gray-800 dark:text-white">
+              {timeBasedGreeting} {userName && <span className="font-bold">{userName}</span>}
+            </h1>
+            <span className="text-2xl ml-2">{weatherIcon}</span>
+          </div>
+          <div className="flex items-center mt-1 text-sm text-gray-600 dark:text-gray-400">
+            <MapPin size={14} className="mr-1 text-gray-500 dark:text-gray-400" />
+            <span>{location}</span>
+            <button 
+              className="ml-1 text-primary dark:text-primary-dark text-xs font-medium"
+              onClick={() => navigate('/location')}
+            >
+              {locale === 'tr' ? 'Değiştir' : locale === 'en' ? 'Change' : 'تغيير'}
+            </button>
+          </div>
+        </div>
+        
+        <div className="flex space-x-2">
+          <motion.button 
+            className="p-2 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleNavigateToSearch}
+          >
+            <SearchIcon size={18} className="text-gray-600 dark:text-gray-400" />
+          </motion.button>
+          <motion.button 
+            className="p-2 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center relative"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate('/notifications')}
+          >
+            <Bell size={18} className="text-gray-600 dark:text-gray-400" />
+            <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+              <span className="text-white text-[10px] font-bold">2</span>
+            </div>
+          </motion.button>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+// View type selector component (List vs Map)
+function ViewTypeSelector({ viewType, setViewType }: { viewType: 'list' | 'map', setViewType: (type: 'list' | 'map') => void }) {
+  const { locale } = useI18n();
+  
+  return (
+    <div className="px-4 mb-2">
+      <div className="bg-gray-100 dark:bg-gray-800 p-1 rounded-lg flex w-full max-w-[140px]">
+        <button
+          onClick={() => setViewType('list')}
+          className={`flex-1 py-1.5 px-3 rounded-md flex items-center justify-center text-xs font-medium transition-colors duration-200 ${
+            viewType === 'list' 
+              ? 'bg-white dark:bg-gray-700 text-primary shadow-sm' 
+              : 'text-gray-600 dark:text-gray-400'
+          }`}
+        >
+          <LayoutGrid size={14} className="mr-1.5" />
+          {locale === 'tr' ? 'Liste' : locale === 'en' ? 'List' : 'قائمة'}
+        </button>
+        <button
+          onClick={() => setViewType('map')}
+          className={`flex-1 py-1.5 px-3 rounded-md flex items-center justify-center text-xs font-medium transition-colors duration-200 ${
+            viewType === 'map' 
+              ? 'bg-white dark:bg-gray-700 text-primary shadow-sm' 
+              : 'text-gray-600 dark:text-gray-400'
+          }`}
+        >
+          <Map size={14} className="mr-1.5" />
+          {locale === 'tr' ? 'Harita' : locale === 'en' ? 'Map' : 'خريطة'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Quick filter tags component
+function QuickFilterTags() {
+  const { locale } = useI18n();
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const [_, navigate] = useLocation();
+  
+  const getLocalizedFilterName = (trName: string): string => {
+    switch(trName) {
+      case "Şimdi Açık": 
+        return locale === 'en' ? 'Now Open' : locale === 'ar' ? 'مفتوح الآن' : trName;
+      case "Yakınımdaki": 
+        return locale === 'en' ? 'Near Me' : locale === 'ar' ? 'بالقرب مني' : trName;
+      case "En Yüksek Puan": 
+        return locale === 'en' ? 'Top Rated' : locale === 'ar' ? 'الأعلى تقييماً' : trName;
+      case "İndirimli": 
+        return locale === 'en' ? 'Discounted' : locale === 'ar' ? 'خصومات' : trName;
+      case "Bugün Müsait": 
+        return locale === 'en' ? 'Available Today' : locale === 'ar' ? 'متاح اليوم' : trName;
+      default: 
+        return trName;
+    }
+  };
+  
+  const filters = [
+    { id: 'open', name: 'Şimdi Açık', icon: <Clock size={12} className="mr-1 text-green-600" /> },
+    { id: 'nearby', name: 'Yakınımdaki', icon: <MapPin size={12} className="mr-1 text-blue-600" /> },
+    { id: 'rated', name: 'En Yüksek Puan', icon: <Star size={12} className="mr-1 text-amber-500" /> },
+    { id: 'discount', name: 'İndirimli', icon: <Megaphone size={12} className="mr-1 text-purple-600" /> },
+    { id: 'today', name: 'Bugün Müsait', icon: <Calendar size={12} className="mr-1 text-pink-600" /> }
+  ];
+  
+  const handleFilterClick = (filterId: string) => {
+    if (activeFilter === filterId) {
+      setActiveFilter(null);
+    } else {
+      setActiveFilter(filterId);
+      
+      // Implement appropriate filter logic here
+      if (filterId === 'nearby') {
+        // Example: navigate to nearest salons or update map view
+        navigate('/search?filter=nearest');
+      }
+    }
+  };
+  
+  return (
+    <div className="px-4 mb-3 mt-1">
+      <div className="flex overflow-x-auto pb-2 no-scrollbar space-x-2">
+        {filters.map((filter) => (
+          <motion.button
+            key={filter.id}
+            className={`flex items-center px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ${
+              activeFilter === filter.id 
+                ? 'bg-primary text-white' 
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+            }`}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => handleFilterClick(filter.id)}
+          >
+            {filter.icon}
+            {getLocalizedFilterName(filter.name)}
+          </motion.button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Pull to refresh component
+function PullToRefresh({ onRefresh }: { onRefresh: () => void }) {
+  const [isPulling, setIsPulling] = useState(false);
+  const [pullProgress, setPullProgress] = useState(0);
+  const startY = useRef(0);
+  const thresholdToRefresh = 80; // pixels needed to pull down to trigger refresh
+  
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (window.scrollY === 0) { // Only enable pull-to-refresh at the top of the page
+      startY.current = e.touches[0].clientY;
+      setIsPulling(true);
+    }
+  };
+  
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isPulling) return;
+    
+    const currentY = e.touches[0].clientY;
+    const diff = currentY - startY.current;
+    
+    if (diff > 0) {
+      // Resist the pull as it gets further
+      const resistance = 0.4;
+      const newProgress = Math.min(100, (diff * resistance / thresholdToRefresh) * 100);
+      setPullProgress(newProgress);
+    } else {
+      setPullProgress(0);
+    }
+  };
+  
+  const handleTouchEnd = () => {
+    if (!isPulling) return;
+    
+    if (pullProgress > 70) { // If pulled enough, trigger refresh
+      onRefresh();
+    }
+    
+    setIsPulling(false);
+    setPullProgress(0);
+  };
+  
+  return (
+    <div
+      className="fixed top-0 left-0 right-0 z-10 pointer-events-none"
+      style={{ 
+        transform: `translateY(${isPulling ? (pullProgress * 0.8) : 0}px)`,
+        transition: isPulling ? 'none' : 'transform 0.3s ease-out'
+      }}
+    >
+      {isPulling && (
+        <div className="flex justify-center items-center h-16 bg-transparent">
+          <motion.div 
+            animate={{ 
+              rotate: pullProgress > 70 ? 360 : pullProgress * 2,
+              scale: pullProgress > 70 ? [1, 1.1, 1] : 1
+            }}
+            transition={{ 
+              rotate: { duration: 0.5 }, 
+              scale: { duration: 0.3, repeat: pullProgress > 70 ? Infinity : 0 } 
+            }}
+            className="w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center"
+          >
+            <ArrowRight 
+              size={16} 
+              className="text-primary"
+              style={{ 
+                transform: `rotate(${90 + (pullProgress * 1.8)}deg)`,
+              }}
+            />
+          </motion.div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Density toggle for content display
+function DensityToggle({ density, setDensity }: { 
+  density: 'compact' | 'normal' | 'expanded', 
+  setDensity: (d: 'compact' | 'normal' | 'expanded') => void 
+}) {
+  const { locale } = useI18n();
+  
+  return (
+    <motion.div 
+      className="px-4 my-2 flex items-center justify-end"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.3 }}
+    >
+      <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+        <button
+          onClick={() => setDensity('compact')}
+          className={`p-1.5 rounded flex items-center justify-center ${
+            density === 'compact' 
+              ? 'bg-white dark:bg-gray-700 text-primary shadow-sm' 
+              : 'text-gray-600 dark:text-gray-400'
+          }`}
+          title={locale === 'tr' ? 'Sıkışık Görünüm' : locale === 'en' ? 'Compact View' : 'عرض مدمج'}
+        >
+          <Menu size={14} className="rotate-90" />
+        </button>
+        <button
+          onClick={() => setDensity('normal')}
+          className={`p-1.5 rounded mx-1 flex items-center justify-center ${
+            density === 'normal' 
+              ? 'bg-white dark:bg-gray-700 text-primary shadow-sm' 
+              : 'text-gray-600 dark:text-gray-400'
+          }`}
+          title={locale === 'tr' ? 'Normal Görünüm' : locale === 'en' ? 'Normal View' : 'عرض عادي'}
+        >
+          <Menu size={14} />
+        </button>
+        <button
+          onClick={() => setDensity('expanded')}
+          className={`p-1.5 rounded flex items-center justify-center ${
+            density === 'expanded' 
+              ? 'bg-white dark:bg-gray-700 text-primary shadow-sm' 
+              : 'text-gray-600 dark:text-gray-400'
+          }`}
+          title={locale === 'tr' ? 'Genişletilmiş Görünüm' : locale === 'en' ? 'Expanded View' : 'عرض موسع'}
+        >
+          <LayoutGrid size={14} />
+        </button>
+      </div>
+    </motion.div>
+  );
+}
+
+// Trending designs section
+function TrendingDesigns() {
+  const { t, locale } = useI18n();
+  const [_, navigate] = useLocation();
+  
+  const designs = [
+    {
+      id: 1,
+      imageUrl: "https://images.unsplash.com/photo-1604654894608-37121de39975?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fG5haWwlMjBhcnR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+      title: locale === 'tr' ? 'Fransız Manikürü' : locale === 'en' ? 'French Manicure' : 'مانيكير فرنسي',
+      likes: 243
+    },
+    {
+      id: 2,
+      imageUrl: "https://images.unsplash.com/photo-1632344548454-b98480d0d52d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fG5haWwlMjBhcnR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+      title: locale === 'tr' ? 'Jel Tasarım' : locale === 'en' ? 'Gel Design' : 'تصميم جل',
+      likes: 187
+    },
+    {
+      id: 3,
+      imageUrl: "https://images.unsplash.com/photo-1631729779973-a5430dfd9033?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bmFpbCUyMGRlc2lnbnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      title: locale === 'tr' ? 'Minimalist Çizgiler' : locale === 'en' ? 'Minimalist Lines' : 'خطوط بسيطة',
+      likes: 312
+    },
+    {
+      id: 4,
+      imageUrl: "https://images.unsplash.com/photo-1596442928576-8a709a431750?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bmFpbCUyMGRlc2lnbnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      title: locale === 'tr' ? 'Glitter Parlaklık' : locale === 'en' ? 'Glitter Shine' : 'بريق لامع',
+      likes: 276
+    }
+  ];
+  
+  return (
+    <div className="px-4 py-3 mt-1 mb-4">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-sm font-semibold text-gray-800 dark:text-gray-200 flex items-center">
+          <TrendingUp size={15} className="mr-1.5 text-primary" />
+          {locale === 'tr' ? 'Trend Tasarımlar' : locale === 'en' ? 'Trending Designs' : 'تصاميم رائجة'}
+        </h2>
+        <button 
+          className="text-xs text-primary dark:text-primary-dark font-medium flex items-center"
+          onClick={() => navigate('/trends')}
+        >
+          {locale === 'tr' ? 'Tümünü Gör' : locale === 'en' ? 'View All' : 'عرض الكل'}
+          <ArrowRight size={12} className="ml-1" />
+        </button>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-3">
+        {designs.map((design) => (
+          <motion.div 
+            key={design.id}
+            className="rounded-lg overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800"
+            whileHover={{ y: -5, scale: 1.02 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => navigate(`/design/${design.id}`)}
+          >
+            <div className="aspect-square w-full overflow-hidden relative">
+              <img 
+                src={design.imageUrl} 
+                alt={design.title} 
+                className="w-full h-full object-cover"
+                loading="lazy" 
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+              <div className="absolute bottom-2 left-2 right-2">
+                <h3 className="text-white text-sm font-medium drop-shadow-sm">{design.title}</h3>
+                <div className="flex items-center mt-1">
+                  <Heart size={12} className="text-red-400 fill-red-400" />
+                  <span className="text-white text-xs ml-1 drop-shadow-sm">{design.likes}</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function HomeView() {
   const { locale } = useI18n();
+  const { darkMode, toggleDarkMode } = useTheme();
   const [salons, setSalons] = useState([]);
+  const [viewType, setViewType] = useState<'list' | 'map'>('list');
+  const [density, setDensity] = useState<'compact' | 'normal' | 'expanded'>('normal');
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  
+  // Customize sections visibility
+  const [visibleSections, setVisibleSections] = useState({
+    stories: true,
+    categories: true,
+    weatherPromo: true,
+    featuredSalons: true,
+    map: true,
+    products: true,
+    trendingDesigns: true,
+    premiumFeatures: true
+  });
+  
+  // Handle pull-to-refresh
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    
+    // Simulate refresh
+    setTimeout(() => {
+      // Refresh data
+      fetch('/api/salons')
+        .then(response => response.json())
+        .then(data => {
+          setSalons(data);
+          setIsRefreshing(false);
+        })
+        .catch(error => {
+          console.error('Error fetching salons:', error);
+          setIsRefreshing(false);
+        });
+    }, 1000);
+  };
 
   useEffect(() => {
     fetch('/api/salons')
@@ -340,23 +803,75 @@ export default function HomeView() {
         e.stopPropagation();
       }}
       dir={locale === 'ar' ? 'rtl' : 'ltr'} // Support for RTL layouts in Arabic
+      onTouchStart={handleRefresh ? (e) => (document as any).pullToRefreshInstance?.handleTouchStart(e) : undefined}
+      onTouchMove={handleRefresh ? (e) => (document as any).pullToRefreshInstance?.handleTouchMove(e) : undefined}
+      onTouchEnd={handleRefresh ? () => (document as any).pullToRefreshInstance?.handleTouchEnd() : undefined}
     >
       <TopNavigation />
+      <PullToRefresh onRefresh={handleRefresh} />
+      
+      {/* Refreshing indicator */}
+      {isRefreshing && (
+        <div className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 py-2 shadow-md flex justify-center items-center">
+          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
+          <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
+            {locale === 'tr' ? 'Yenileniyor...' : locale === 'en' ? 'Refreshing...' : 'جارٍ التحديث...'}
+          </span>
+        </div>
+      )}
       
       <div className="pb-16" onClick={(e) => e.stopPropagation()}>
-        <StorySection2 />
-        <CategoriesSection />
-        <WeatherPromoBanner />
-        <FeaturedSalonsSectionNew />
-        <div className="px-4" onClick={(e) => e.stopPropagation()}>
-          <LeafletClusterMap salons={salons} />
-        </div>
-        <NailProductsSection />
-        <PremiumFeaturesSection />
+        {/* New personalized greeting section */}
+        <PersonalizedGreeting />
+        
+        {visibleSections.stories && <StorySection2 />}
+        
+        {/* Quick filter tags */}
+        <QuickFilterTags />
+        
+        {visibleSections.categories && <CategoriesSection />}
+        
+        {/* View type selector - toggle between list and map */}
+        <ViewTypeSelector viewType={viewType} setViewType={setViewType} />
+        
+        {/* Content density toggle */}
+        <DensityToggle density={density} setDensity={setDensity} />
+        
+        {visibleSections.weatherPromo && <WeatherPromoBanner />}
+        
+        {visibleSections.featuredSalons && <FeaturedSalonsSectionNew />}
+        
+        {viewType === 'map' && visibleSections.map && (
+          <div className="px-4" onClick={(e) => e.stopPropagation()}>
+            <LeafletClusterMap salons={salons} />
+          </div>
+        )}
+        
+        {/* Trending designs section */}
+        {visibleSections.trendingDesigns && <TrendingDesigns />}
+        
+        {visibleSections.products && <NailProductsSection />}
+        
+        {visibleSections.premiumFeatures && <PremiumFeaturesSection />}
+        
         <div className="mt-4"></div>
       </div>
       
       <BottomNavigation />
+      
+      {/* Dark mode toggle button */}
+      <motion.button
+        className="fixed bottom-20 right-4 w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-lg flex items-center justify-center z-20"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={toggleDarkMode}
+      >
+        {darkMode ? (
+          <Sun size={18} className="text-yellow-500" />
+        ) : (
+          <Moon size={18} className="text-indigo-600" />
+        )}
+      </motion.button>
     </div>
   );
 }
