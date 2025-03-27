@@ -574,11 +574,16 @@ function PersonalizedGreeting({
 function ViewTypeSelector({ viewType, setViewType }: { viewType: 'list' | 'map', setViewType: (type: 'list' | 'map') => void }) {
   const { locale } = useI18n();
   
+  const handleViewTypeChange = (type: 'list' | 'map') => {
+    console.log(`Changing view type to: ${type}`);
+    setViewType(type);
+  };
+  
   return (
     <div className="px-4 mb-2">
       <div className="bg-gray-100 dark:bg-gray-800 p-1 rounded-lg flex w-full max-w-[140px]">
         <button
-          onClick={() => setViewType('list')}
+          onClick={() => handleViewTypeChange('list')}
           className={`flex-1 py-1.5 px-3 rounded-md flex items-center justify-center text-xs font-medium transition-colors duration-200 ${
             viewType === 'list' 
               ? 'bg-white dark:bg-gray-700 text-primary shadow-sm' 
@@ -589,7 +594,7 @@ function ViewTypeSelector({ viewType, setViewType }: { viewType: 'list' | 'map',
           {locale === 'tr' ? 'Liste' : locale === 'en' ? 'List' : 'قائمة'}
         </button>
         <button
-          onClick={() => setViewType('map')}
+          onClick={() => handleViewTypeChange('map')}
           className={`flex-1 py-1.5 px-3 rounded-md flex items-center justify-center text-xs font-medium transition-colors duration-200 ${
             viewType === 'map' 
               ? 'bg-white dark:bg-gray-700 text-primary shadow-sm' 
@@ -891,6 +896,12 @@ export default function HomeView() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   
+  // Function to handle view type change
+  const handleViewTypeChange = (type: 'list' | 'map') => {
+    console.log(`Changing view type to: ${type}`);
+    setViewType(type);
+  };
+  
   // Customize sections visibility
   const [visibleSections, setVisibleSections] = useState({
     stories: true,
@@ -1018,7 +1029,7 @@ export default function HomeView() {
         {visibleSections.categories && <CategoriesSection />}
         
         {/* View type selector - toggle between list and map */}
-        <ViewTypeSelector viewType={viewType} setViewType={setViewType} />
+        <ViewTypeSelector viewType={viewType} setViewType={handleViewTypeChange} />
         
         {/* Content density toggle */}
         <DensityToggle density={density} setDensity={setDensity} />
