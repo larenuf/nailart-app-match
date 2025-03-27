@@ -6,7 +6,7 @@ import { useI18n } from "@/i18n";
 interface Step {
   title: string;
   description: string;
-  image: string;
+  image: JSX.Element;
   buttonText: string;
   buttonAction: ((e: MouseEvent<HTMLButtonElement>) => void) | undefined;
   showGenderButtons?: boolean;
@@ -27,12 +27,138 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
     console.log("Onboarding flow başlatıldı, adım:", step);
   }, [step]);
 
+  // SVG içerikleri direkt olarak React bileşenleri şeklinde tanımlayalım
+  const WelcomeSvg = () => (
+    <svg width="100%" height="100%" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g filter="url(#filter0_d)">
+        <rect x="50" y="50" width="300" height="200" rx="20" fill="#FFE4E1" />
+        <rect x="90" y="80" width="220" height="140" rx="10" fill="#FFFFFF" />
+        <circle cx="200" cy="100" r="30" fill="#30AAB9" />
+        <path d="M190 100L198 108L210 95" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+        <rect x="100" y="150" width="200" height="10" rx="5" fill="#F3F4F6" />
+        <rect x="100" y="170" width="150" height="10" rx="5" fill="#F3F4F6" />
+        <rect x="100" y="190" width="100" height="10" rx="5" fill="#F3F4F6" />
+        <circle cx="130" cy="220" r="15" fill="#30AAB9" opacity="0.3" />
+        <circle cx="170" cy="220" r="15" fill="#30AAB9" opacity="0.5" />
+        <circle cx="210" cy="220" r="15" fill="#30AAB9" opacity="0.7" />
+        <circle cx="250" cy="220" r="15" fill="#30AAB9" />
+      </g>
+      <defs>
+        <filter id="filter0_d" x="0" y="0" width="400" height="300" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+          <feOffset />
+          <feGaussianBlur stdDeviation="25" />
+          <feColorMatrix type="matrix" values="0 0 0 0 0.2 0 0 0 0 0.2 0 0 0 0 0.2 0 0 0 0.15 0" />
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow" />
+          <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+        </filter>
+      </defs>
+    </svg>
+  );
+
+  const LocationSvg = () => (
+    <svg width="100%" height="100%" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g filter="url(#filter0_d_loc)">
+        <circle cx="200" cy="150" r="100" fill="#F0FBFC" />
+        <path d="M200 100C178.954 100 162 116.954 162 138C162 167.167 200 200 200 200C200 200 238 167.167 238 138C238 116.954 221.046 100 200 100ZM200 152C192.268 152 186 145.732 186 138C186 130.268 192.268 124 200 124C207.732 124 214 130.268 214 138C214 145.732 207.732 152 200 152Z" fill="#30AAB9" />
+        <circle cx="200" cy="138" r="8" fill="white" />
+        <path d="M240 140C240 140 260 145 280 160" stroke="#30AAB9" strokeWidth="2" strokeDasharray="4 4" />
+        <path d="M160 140C160 140 140 145 120 160" stroke="#30AAB9" strokeWidth="2" strokeDasharray="4 4" />
+        <circle cx="120" cy="160" r="10" fill="#30AAB9" opacity="0.3" />
+        <circle cx="280" cy="160" r="10" fill="#30AAB9" opacity="0.3" />
+        <circle cx="140" cy="200" r="15" fill="#30AAB9" opacity="0.2" />
+        <circle cx="260" cy="200" r="15" fill="#30AAB9" opacity="0.2" />
+      </g>
+      <defs>
+        <filter id="filter0_d_loc" x="50" y="0" width="300" height="300" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+          <feOffset />
+          <feGaussianBlur stdDeviation="25" />
+          <feColorMatrix type="matrix" values="0 0 0 0 0.2 0 0 0 0 0.2 0 0 0 0 0.2 0 0 0 0.1 0" />
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow" />
+          <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+        </filter>
+      </defs>
+    </svg>
+  );
+
+  const NotificationsSvg = () => (
+    <svg width="100%" height="100%" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g filter="url(#filter0_d_notif)">
+        <path d="M240 140C240 117.909 222.091 100 200 100C177.909 100 160 117.909 160 140V160L140 180V190H260V180L240 160V140Z" fill="#30AAB9" opacity="0.1" />
+        <path d="M200 210C209.941 210 218 201.941 218 192H182C182 201.941 190.059 210 200 210Z" fill="#30AAB9" opacity="0.2" />
+        <path d="M240 140C240 117.909 222.091 100 200 100C177.909 100 160 117.909 160 140V160L140 180V190H260V180L240 160V140Z" stroke="#30AAB9" strokeWidth="2" />
+        <path d="M200 210C209.941 210 218 201.941 218 192H182C182 201.941 190.059 210 200 210Z" stroke="#30AAB9" strokeWidth="2" />
+        <circle cx="200" cy="80" r="10" fill="#30AAB9" />
+        <path d="M240 100L250 90" stroke="#30AAB9" strokeWidth="2" />
+        <path d="M250 160L260 170" stroke="#30AAB9" strokeWidth="2" />
+        <path d="M150 160L140 170" stroke="#30AAB9" strokeWidth="2" />
+        <path d="M150 100L140 90" stroke="#30AAB9" strokeWidth="2" />
+        <circle cx="260" cy="170" r="5" fill="#30AAB9" opacity="0.5" />
+        <circle cx="140" cy="170" r="5" fill="#30AAB9" opacity="0.5" />
+        <circle cx="140" cy="90" r="5" fill="#30AAB9" opacity="0.5" />
+        <circle cx="250" cy="90" r="5" fill="#30AAB9" opacity="0.5" />
+      </g>
+      <defs>
+        <filter id="filter0_d_notif" x="85" y="25" width="230" height="230" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+          <feOffset />
+          <feGaussianBlur stdDeviation="25" />
+          <feColorMatrix type="matrix" values="0 0 0 0 0.2 0 0 0 0 0.2 0 0 0 0 0.2 0 0 0 0.1 0" />
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow" />
+          <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+        </filter>
+      </defs>
+    </svg>
+  );
+
+  const PreferencesSvg = () => (
+    <svg width="100%" height="100%" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g filter="url(#filter0_d_pref)">
+        <rect x="150" y="70" width="100" height="160" rx="10" fill="#F0FBFC" />
+        <circle cx="160" cy="100" r="5" fill="#30AAB9" opacity="0.5" />
+        <circle cx="180" cy="100" r="5" fill="#30AAB9" opacity="0.7" />
+        <circle cx="200" cy="100" r="5" fill="#30AAB9" />
+        <rect x="160" y="120" width="80" height="10" rx="5" fill="#30AAB9" opacity="0.2" />
+        <rect x="160" y="140" width="60" height="10" rx="5" fill="#30AAB9" opacity="0.2" />
+        <rect x="160" y="160" width="80" height="10" rx="5" fill="#30AAB9" opacity="0.2" />
+        <rect x="160" y="180" width="70" height="10" rx="5" fill="#30AAB9" opacity="0.2" />
+        <rect x="160" y="200" width="50" height="10" rx="5" fill="#30AAB9" opacity="0.2" />
+        <circle cx="240" cy="120" r="5" stroke="#30AAB9" strokeWidth="1.5" />
+        <circle cx="240" cy="140" r="5" fill="#30AAB9" />
+        <circle cx="240" cy="160" r="5" stroke="#30AAB9" strokeWidth="1.5" />
+        <circle cx="240" cy="180" r="5" fill="#30AAB9" />
+        <circle cx="240" cy="200" r="5" stroke="#30AAB9" strokeWidth="1.5" />
+        
+        <circle cx="140" cy="160" r="20" fill="#30AAB9" opacity="0.1" />
+        <path d="M135 160L140 165L145 155" stroke="#30AAB9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        
+        <circle cx="260" cy="160" r="20" fill="#30AAB9" opacity="0.1" />
+        <path d="M255 160L260 165L265 155" stroke="#30AAB9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </g>
+      <defs>
+        <filter id="filter0_d_pref" x="70" y="0" width="260" height="300" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+          <feOffset />
+          <feGaussianBlur stdDeviation="25" />
+          <feColorMatrix type="matrix" values="0 0 0 0 0.2 0 0 0 0 0.2 0 0 0 0 0.2 0 0 0 0.1 0" />
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow" />
+          <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+        </filter>
+      </defs>
+    </svg>
+  );
+
   const steps: (Step & { showGenderButtons?: boolean })[] = [
     // Welcome step
     {
       title: "Nail Art Match'e Hoş Geldin!",
       description: "En iyi stüdyoları keşfet, yorumları oku ve telefon görüşmesine gerek kalmadan kolayca randevu al.",
-      image: "/images/onboarding/welcome.svg",
+      image: <WelcomeSvg />,
       buttonText: "Başla",
       buttonAction: (e: MouseEvent<HTMLButtonElement>) => setStep(1)
     },
@@ -40,7 +166,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
     {
       title: "Yakındakileri Keşfet",
       description: "Sana en uygun stüdyoları bulabilmemiz için konum servislerini aç.",
-      image: "/images/onboarding/location.svg",
+      image: <LocationSvg />,
       buttonText: "Devam Et",
       buttonAction: (e: MouseEvent<HTMLButtonElement>) => setStep(2)
     },
@@ -48,7 +174,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
     {
       title: "Randevularını Kaçırma",
       description: "Hatırlatmalar ve önemli güncellemeler için bildirimlere izin ver.",
-      image: "/images/onboarding/notifications.svg",
+      image: <NotificationsSvg />,
       buttonText: "Devam Et",
       buttonAction: (e: MouseEvent<HTMLButtonElement>) => setStep(3)
     },
@@ -56,7 +182,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
     {
       title: "Senin İçin Doğru Hizmetleri Keşfet",
       description: "Sana özel hizmetleri gösterelim...",
-      image: "/images/onboarding/preferences.svg",
+      image: <PreferencesSvg />,
       buttonText: "Atla",
       buttonAction: (e: MouseEvent<HTMLButtonElement>) => {
         if (onComplete) {
@@ -210,10 +336,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
               stiffness: 200 
             }}
           >
-            <motion.img 
-              src={currentStep.image} 
-              alt={currentStep.title} 
-              className="w-full h-auto drop-shadow-lg"
+            <motion.div 
               whileHover={{ 
                 scale: 1.05, 
                 rotate: [0, 2, 0, -2, 0],
@@ -222,7 +345,10 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
               drag
               dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
               dragElastic={0.1}
-            />
+              className="w-full h-auto drop-shadow-lg"
+            >
+              {currentStep.image}
+            </motion.div>
           </motion.div>
 
           {/* Text with animations */}
