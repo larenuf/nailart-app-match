@@ -26,6 +26,7 @@ export default function ArtistDetailView() {
   const [calendarDate, setCalendarDate] = useState<Date>(new Date());
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const [showBookingConfirmation, setShowBookingConfirmation] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const { data: services, isLoading: servicesLoading } = useQuery<Service[]>({
     queryKey: [`/api/artists/${selectedArtist?.id}/services`],
@@ -136,11 +137,13 @@ export default function ArtistDetailView() {
             <div className="mt-2 flex space-x-2">
               <button 
                 onClick={() => handleServiceSelect(services?.[0])}
-                className="bg-[#F9E0E7] dark:bg-pink-900 text-[#333333] dark:text-white px-4 py-1.5 rounded-full text-sm font-medium">
+                className="bg-[#6A5ACD] text-white px-4 py-1.5 rounded-full text-sm font-medium shadow-sm hover:bg-[#5D4FB7] transition-colors">
                 <i className="far fa-calendar-check mr-1"></i> Randevu Al
               </button>
-              <button className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 p-2 rounded-full">
-                <i className="far fa-heart text-gray-400 dark:text-gray-300"></i>
+              <button 
+                onClick={() => setIsFavorite(!isFavorite)}
+                className={`${isFavorite ? 'bg-pink-50 border-pink-200' : 'bg-white border-gray-200'} border p-2 rounded-full shadow-sm transition-colors`}>
+                <i className={`${isFavorite ? 'fas text-pink-500' : 'far text-gray-400'} fa-heart`}></i>
               </button>
             </div>
           </div>
@@ -300,7 +303,7 @@ export default function ArtistDetailView() {
                           e.stopPropagation();
                           handleServiceSelect(service);
                         }}
-                        className="text-xs bg-[#F9E0E7] hover:bg-[#F9E0E7]/80 text-[#333333] px-3 py-1 rounded-full mt-1">
+                        className="text-xs bg-[#6A5ACD] hover:bg-[#6A5ACD]/90 text-white px-3 py-1 rounded-full mt-1 shadow-sm">
                         Randevu Al
                       </button>
                     </div>
@@ -370,11 +373,20 @@ export default function ArtistDetailView() {
               
               {/* Seçilen servis bilgisi varsa göster */}
               {selectedService && (
-                <div className="mb-4 p-3 bg-[#FDF4F8] rounded-lg">
-                  <h4 className="font-medium text-gray-800">{selectedService.name}</h4>
-                  <div className="flex justify-between items-center mt-1">
-                    <span className="text-sm text-gray-600">{selectedService.durationMinutes} dakika</span>
-                    <span className="font-bold">${selectedService.price}</span>
+                <div className="mb-4 p-4 bg-[#F8F6FD] border border-[#E9E6F9] rounded-lg shadow-sm">
+                  <div className="flex items-center">
+                    <div className="w-8 h-8 rounded-full bg-[#6A5ACD] bg-opacity-10 flex items-center justify-center mr-3">
+                      <i className="fas fa-cut text-[#6A5ACD] text-sm"></i>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-800">{selectedService.name}</h4>
+                      <div className="flex items-center mt-1 text-sm text-gray-600">
+                        <i className="far fa-clock mr-1 text-xs"></i>
+                        <span>{selectedService.durationMinutes} dakika</span>
+                        <span className="mx-2">•</span>
+                        <span className="font-semibold">${selectedService.price}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -391,12 +403,12 @@ export default function ArtistDetailView() {
                     <button
                       key={slot.id}
                       className={`
-                        py-2 rounded-md text-sm transition relative
+                        py-2 rounded-md text-sm font-medium transition relative shadow-sm
                         ${slot.isBooked 
                           ? "bg-gray-100 text-gray-400 cursor-not-allowed" 
                           : selectedSlot?.id === slot.id
-                            ? "bg-pink-500 text-white font-medium"
-                            : "bg-[#F5F1EB] bg-opacity-40 hover:bg-[#F9E0E7] hover:bg-opacity-30 text-gray-700"
+                            ? "bg-[#6A5ACD] text-white"
+                            : "bg-white border border-gray-200 hover:border-[#6A5ACD] hover:text-[#6A5ACD] text-gray-700"
                         }
                       `}
                       disabled={slot.isBooked}
@@ -451,10 +463,10 @@ export default function ArtistDetailView() {
               </div>
             ) : (
               <div className="mt-6">
-                <div className="bg-white border border-green-100 rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center mb-3">
-                    <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center mr-3">
-                      <CheckCircle2 className="h-5 w-5 text-green-500" />
+                <div className="bg-white border border-[#E9E6F9] rounded-xl p-4 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <div className="w-10 h-10 rounded-full bg-[#6A5ACD] bg-opacity-10 flex items-center justify-center mr-3">
+                      <CheckCircle2 className="h-5 w-5 text-[#6A5ACD]" />
                     </div>
                     <div>
                       <h4 className="font-medium text-gray-800">Randevu Seçiminiz</h4>
@@ -494,7 +506,7 @@ export default function ArtistDetailView() {
                   </div>
                   
                   <button 
-                    className="w-full bg-[#FF5864] hover:bg-[#FF5864]/90 text-white py-3 rounded-lg font-medium transition"
+                    className="w-full bg-[#6A5ACD] hover:bg-[#6A5ACD]/90 text-white py-3 rounded-lg font-medium transition shadow-md"
                     onClick={handleConfirmBooking}
                     disabled={!selectedService}
                   >
@@ -517,13 +529,13 @@ export default function ArtistDetailView() {
                   </div>
                 </div>
                 
-                <div className="mt-4 bg-blue-50 p-3 rounded-lg flex items-start">
-                  <div className="text-blue-500 mr-3 mt-0.5">
-                    <i className="fas fa-info-circle"></i>
+                <div className="mt-4 bg-[#F0F7FF] border border-[#E6F0FF] p-4 rounded-lg flex items-start shadow-sm">
+                  <div className="text-[#3B82F6] mr-3 mt-0.5">
+                    <i className="fas fa-info-circle text-lg"></i>
                   </div>
-                  <div className="text-xs text-blue-700">
+                  <div className="text-sm text-[#1E40AF]">
                     <p>Randevunuz onaylandıktan sonra, takvim uygulamanıza eklemek için bir seçenek sunulacaktır.</p>
-                    <p className="mt-1">İptal ve erteleme için en az 24 saat önceden haber verilmelidir.</p>
+                    <p className="mt-2">İptal ve erteleme için en az 24 saat önceden haber verilmelidir.</p>
                   </div>
                 </div>
               </div>
