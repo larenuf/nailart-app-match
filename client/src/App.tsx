@@ -28,9 +28,17 @@ function Router() {
   // Oturum kontrolü için useState hook kullanıyoruz
   const [isFirstVisit, setIsFirstVisit] = useState(() => {
     try {
+      // Lokasyon /auth ise ve local storage'da firstVisit değerini true olarak ayarla
+      const path = window.location.pathname;
+      if (path === "/auth") {
+        localStorage.removeItem('firstVisit');
+        return true;
+      }
+      
       // localStorage içinde firstVisit değerini kontrol et
       const visited = localStorage.getItem('firstVisit');
       console.log("İlk ziyaret durumu:", visited);
+      
       // Eğer değer yoksa veya boşsa, ilk ziyaret olarak kabul et
       return visited === null || visited !== 'false';
     } catch (e) {
@@ -47,17 +55,20 @@ function Router() {
   
   return (
     <Switch>
-      <Route path="/">
-        {isFirstVisit ? 
-          <Onboarding onComplete={completeOnboarding} /> : 
-          <HomeView />
-        }
+      <Route path="/auth">
+        <Onboarding onComplete={completeOnboarding} />
       </Route>
       <Route path="/onboarding">
         <Onboarding onComplete={completeOnboarding} />
       </Route>
       <Route path="/home">
         <HomeView />
+      </Route>
+      <Route path="/">
+        {isFirstVisit ? 
+          <Onboarding onComplete={completeOnboarding} /> : 
+          <HomeView />
+        }
       </Route>
       <Route path="/salons" component={SalonList} />
       <Route path="/salons/:id" component={SalonDetail} />
@@ -74,11 +85,6 @@ function Router() {
       <Route path="/admin" children={<Dashboard />} />
       <Route path="/admin/dashboard" children={<Dashboard />} />
       <Route path="/admin/create-salon" children={<CreateSalon />} />
-      
-      {/* Auth sayfası ekliyoruz */}
-      <Route path="/auth">
-        <Onboarding onComplete={completeOnboarding} />
-      </Route>
       
       <Route component={NotFound} />
     </Switch>
