@@ -935,36 +935,43 @@ export default function HomeView() {
   }, []);
   
   // Set up pull-to-refresh
+  const pullRef = useRef({
+    startY: 0,
+    isPulling: false,
+    pullProgress: 0
+  });
+  const pullThreshold = 80; // pixels to trigger refresh
+  
   useEffect(() => {
     // Create pull-to-refresh instance on document
     (document as any).pullToRefreshInstance = {
       handleTouchStart: (e: TouchEvent) => {
         if (window.scrollY === 0) {
-          startY.current = e.touches[0].clientY;
-          setIsPulling(true);
+          pullRef.current.startY = e.touches[0].clientY;
+          pullRef.current.isPulling = true;
         }
       },
       handleTouchMove: (e: TouchEvent) => {
-        if (!isPulling) return;
+        if (!pullRef.current.isPulling) return;
         
         const currentY = e.touches[0].clientY;
-        const diff = currentY - startY.current;
+        const diff = currentY - pullRef.current.startY;
         
         if (diff > 0) {
           const resistance = 0.4;
-          const newProgress = Math.min(100, (diff * resistance / thresholdToRefresh) * 100);
-          setPullProgress(newProgress);
+          const newProgress = Math.min(100, (diff * resistance / pullThreshold) * 100);
+          pullRef.current.pullProgress = newProgress;
         } else {
-          setPullProgress(0);
+          pullRef.current.pullProgress = 0;
         }
       },
       handleTouchEnd: () => {
-        if (isPulling && pullProgress > 70) {
+        if (pullRef.current.isPulling && pullRef.current.pullProgress > 70) {
           handleRefresh();
         }
         
-        setIsPulling(false);
-        setPullProgress(0);
+        pullRef.current.isPulling = false;
+        pullRef.current.pullProgress = 0;
       }
     };
     
@@ -972,13 +979,7 @@ export default function HomeView() {
       // Clean up
       delete (document as any).pullToRefreshInstance;
     };
-  }, [isPulling, pullProgress]);
-  
-  // Declaration for pullProgress in main component scope
-  const [isPulling, setIsPulling] = useState(false);
-  const [pullProgress, setPullProgress] = useState(0);
-  const startY = useRef(0);
-  const thresholdToRefresh = 80; // pixels needed to pull down to trigger refresh
+  }, [handleRefresh]);
 
   return (
     <div 
