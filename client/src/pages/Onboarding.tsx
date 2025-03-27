@@ -1,4 +1,4 @@
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, useEffect } from "react";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/i18n";
@@ -12,46 +12,59 @@ interface Step {
   showGenderButtons?: boolean;
 }
 
-export default function Onboarding() {
+interface OnboardingProps {
+  onComplete?: () => void;
+}
+
+export default function Onboarding({ onComplete }: OnboardingProps) {
   console.log("Onboarding component rendered");
   const [step, setStep] = useState(0);
   const [_, navigate] = useLocation();
   const { t } = useI18n();
+  
+  // Bileşen her yüklendiğinde konsola bir log yazdıralım
+  useEffect(() => {
+    console.log("Onboarding flow başlatıldı, adım:", step);
+  }, [step]);
 
   const steps: (Step & { showGenderButtons?: boolean })[] = [
     // Welcome step
     {
-      title: "NailBook'a Hoş Geldiniz!",
-      description: "En iyi nail artistleri bulun, yorumları görün ve istediğiniz zaman randevu alın - telefon aramaya gerek yok.",
+      title: "Nail Art Match'e Hoş Geldin!",
+      description: "En iyi stüdyoları keşfet, yorumları oku ve telefon görüşmesine gerek kalmadan kolayca randevu al.",
       image: "/images/onboarding/welcome.svg",
-      buttonText: "Başlayalım",
+      buttonText: "Başla",
       buttonAction: (e: MouseEvent<HTMLButtonElement>) => setStep(1)
     },
     // Location step
     {
-      title: "Yakınınızdakileri Keşfedin",
-      description: "Konum servislerini açarak tarzınıza uyan yerel işletmeleri bulun.",
+      title: "Yakındakileri Keşfet",
+      description: "Sana en uygun stüdyoları bulabilmemiz için konum servislerini aç.",
       image: "/images/onboarding/location.svg",
       buttonText: "Devam Et",
       buttonAction: (e: MouseEvent<HTMLButtonElement>) => setStep(2)
     },
     // Notifications step
     {
-      title: "Hiçbir Randevuyu Kaçırmayın",
-      description: "Hatırlatıcılar ve önemli güncellemeler için bildirimlere izin verin.",
+      title: "Randevularını Kaçırma",
+      description: "Hatırlatmalar ve önemli güncellemeler için bildirimlere izin ver.",
       image: "/images/onboarding/notifications.svg",
       buttonText: "Devam Et",
       buttonAction: (e: MouseEvent<HTMLButtonElement>) => setStep(3)
     },
     // Preferences step
     {
-      title: "Size Özel Hizmetleri Keşfedin",
-      description: "Size uygun hizmetleri gösterelim...",
+      title: "Senin İçin Doğru Hizmetleri Keşfet",
+      description: "Sana özel hizmetleri gösterelim...",
       image: "/images/onboarding/preferences.svg",
       buttonText: "Atla",
       buttonAction: (e: MouseEvent<HTMLButtonElement>) => {
-        localStorage.setItem('firstVisit', 'false');
-        navigate("/");
+        if (onComplete) {
+          onComplete();
+        } else {
+          localStorage.setItem('firstVisit', 'false');
+          navigate("/");
+        }
       },
       showGenderButtons: true
     }
@@ -60,8 +73,13 @@ export default function Onboarding() {
   const handleGenderSelection = (gender: string) => {
     // Seçilen cinsiyeti ve onboarding tamamlama durumunu saklayalım
     localStorage.setItem("preferredGender", gender);
-    localStorage.setItem("firstVisit", "false");
-    navigate("/");
+    
+    if (onComplete) {
+      onComplete(); // App.tsx'deki completeOnboarding işlevini çağır
+    } else {
+      localStorage.setItem("firstVisit", "false");
+      navigate("/");
+    }
   };
 
   // Swiping animation
@@ -125,19 +143,19 @@ export default function Onboarding() {
                 onClick={() => handleGenderSelection("women")}
                 className="w-full bg-[#30AAB9] hover:bg-[#2A99A7] text-white font-medium rounded-md py-3 px-4 transition"
               >
-                Kadın
+                Kadınlar için
               </button>
               <button 
                 onClick={() => handleGenderSelection("men")}
                 className="w-full bg-[#30AAB9] hover:bg-[#2A99A7] text-white font-medium rounded-md py-3 px-4 transition"
               >
-                Erkek
+                Erkekler için
               </button>
               <button 
-                onClick={() => handleGenderSelection("both")}
-                className="w-full bg-[#30AAB9] hover:bg-[#2A99A7] text-white font-medium rounded-md py-3 px-4 transition"
+                onClick={currentStep.buttonAction}
+                className="w-full border border-[#30AAB9] text-[#30AAB9] hover:bg-gray-50 font-medium rounded-md py-3 px-4 transition mt-2"
               >
-                Her İkisi
+                {currentStep.buttonText}
               </button>
             </div>
           ) : (

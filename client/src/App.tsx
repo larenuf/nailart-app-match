@@ -49,12 +49,12 @@ function Router() {
     <Switch>
       <Route path="/">
         {isFirstVisit ? 
-          <Onboarding /> : 
+          <Onboarding onComplete={completeOnboarding} /> : 
           <HomeView />
         }
       </Route>
       <Route path="/onboarding">
-        <Onboarding />
+        <Onboarding onComplete={completeOnboarding} />
       </Route>
       <Route path="/home">
         <HomeView />
