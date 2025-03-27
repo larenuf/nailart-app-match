@@ -115,32 +115,49 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
     </svg>
   );
 
-  const PreferencesSvg = () => (
+  const ReadySvg = () => (
     <svg width="100%" height="100%" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g filter="url(#filter0_d_pref)">
-        <rect x="150" y="70" width="100" height="160" rx="10" fill="#F0FBFC" />
-        <circle cx="160" cy="100" r="5" fill="#30AAB9" opacity="0.5" />
-        <circle cx="180" cy="100" r="5" fill="#30AAB9" opacity="0.7" />
-        <circle cx="200" cy="100" r="5" fill="#30AAB9" />
-        <rect x="160" y="120" width="80" height="10" rx="5" fill="#30AAB9" opacity="0.2" />
-        <rect x="160" y="140" width="60" height="10" rx="5" fill="#30AAB9" opacity="0.2" />
-        <rect x="160" y="160" width="80" height="10" rx="5" fill="#30AAB9" opacity="0.2" />
-        <rect x="160" y="180" width="70" height="10" rx="5" fill="#30AAB9" opacity="0.2" />
-        <rect x="160" y="200" width="50" height="10" rx="5" fill="#30AAB9" opacity="0.2" />
-        <circle cx="240" cy="120" r="5" stroke="#30AAB9" strokeWidth="1.5" />
-        <circle cx="240" cy="140" r="5" fill="#30AAB9" />
-        <circle cx="240" cy="160" r="5" stroke="#30AAB9" strokeWidth="1.5" />
-        <circle cx="240" cy="180" r="5" fill="#30AAB9" />
-        <circle cx="240" cy="200" r="5" stroke="#30AAB9" strokeWidth="1.5" />
+      <g filter="url(#filter0_d_ready)">
+        {/* Arka plan */}
+        <circle cx="200" cy="150" r="120" fill="#F0FBFC" />
         
-        <circle cx="140" cy="160" r="20" fill="#30AAB9" opacity="0.1" />
-        <path d="M135 160L140 165L145 155" stroke="#30AAB9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        {/* Parlayan rozet */}
+        <circle cx="200" cy="150" r="80" fill="#30AAB9" opacity="0.1" />
+        <circle cx="200" cy="150" r="70" fill="#30AAB9" opacity="0.15" />
+        <circle cx="200" cy="150" r="60" fill="white" />
         
-        <circle cx="260" cy="160" r="20" fill="#30AAB9" opacity="0.1" />
-        <path d="M255 160L260 165L265 155" stroke="#30AAB9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        {/* Onay işareti */}
+        <path d="M175 150L190 165L225 130" stroke="#30AAB9" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
+        
+        {/* Dekoratif ışınlar */}
+        <path d="M200 50V80" stroke="#30AAB9" strokeWidth="3" strokeLinecap="round" />
+        <path d="M200 220V250" stroke="#30AAB9" strokeWidth="3" strokeLinecap="round" />
+        <path d="M100 150H130" stroke="#30AAB9" strokeWidth="3" strokeLinecap="round" />
+        <path d="M270 150H300" stroke="#30AAB9" strokeWidth="3" strokeLinecap="round" />
+        
+        <path d="M136 86L156 106" stroke="#30AAB9" strokeWidth="3" strokeLinecap="round" />
+        <path d="M244 194L264 214" stroke="#30AAB9" strokeWidth="3" strokeLinecap="round" />
+        <path d="M136 214L156 194" stroke="#30AAB9" strokeWidth="3" strokeLinecap="round" />
+        <path d="M244 106L264 86" stroke="#30AAB9" strokeWidth="3" strokeLinecap="round" />
+        
+        {/* Dekoratif noktalar */}
+        <circle cx="110" cy="110" r="8" fill="#30AAB9" opacity="0.3" />
+        <circle cx="290" cy="110" r="8" fill="#30AAB9" opacity="0.3" />
+        <circle cx="110" cy="190" r="8" fill="#30AAB9" opacity="0.3" />
+        <circle cx="290" cy="190" r="8" fill="#30AAB9" opacity="0.3" />
+        
+        {/* Konfetiler */}
+        <circle cx="140" cy="80" r="5" fill="#FF9494" />
+        <circle cx="260" cy="80" r="5" fill="#94CAFF" />
+        <circle cx="140" cy="220" r="5" fill="#94CAFF" />
+        <circle cx="260" cy="220" r="5" fill="#FF9494" />
+        <circle cx="100" cy="130" r="4" fill="#FFD79C" />
+        <circle cx="300" cy="130" r="4" fill="#FFD79C" />
+        <circle cx="100" cy="170" r="4" fill="#B5E8A0" />
+        <circle cx="300" cy="170" r="4" fill="#B5E8A0" />
       </g>
       <defs>
-        <filter id="filter0_d_pref" x="70" y="0" width="260" height="300" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+        <filter id="filter0_d_ready" x="50" y="0" width="300" height="300" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
           <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
           <feOffset />
@@ -178,12 +195,12 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
       buttonText: "Devam Et",
       buttonAction: (e: MouseEvent<HTMLButtonElement>) => setStep(3)
     },
-    // Preferences step
+    // Ready step
     {
-      title: "Senin İçin Doğru Hizmetleri Keşfet",
-      description: "Sana özel hizmetleri gösterelim...",
-      image: <PreferencesSvg />,
-      buttonText: "Atla",
+      title: "Hazırsın!",
+      description: "En yakın ve en iyi nail art stüdyolarını keşfetmeye başlayalım.",
+      image: <ReadySvg />,
+      buttonText: "Başla",
       buttonAction: (e: MouseEvent<HTMLButtonElement>) => {
         if (onComplete) {
           onComplete();
@@ -191,8 +208,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
           localStorage.setItem('firstVisit', 'false');
           navigate("/");
         }
-      },
-      showGenderButtons: true
+      }
     }
   ];
 
