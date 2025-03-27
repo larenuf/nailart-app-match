@@ -325,8 +325,142 @@ function PremiumFeaturesSection() {
   );
 }
 
+// Notifications popup component
+function NotificationsPopup({ onClose }: { onClose: () => void }) {
+  const { locale } = useI18n();
+  const notificationRef = useRef<HTMLDivElement>(null);
+  
+  // Sample notifications data
+  const notifications = [
+    {
+      id: 1,
+      title: locale === 'tr' ? 'Yeni Randevu Onaylandı' : locale === 'en' ? 'New Appointment Confirmed' : 'تم تأكيد موعد جديد',
+      message: locale === 'tr' ? 'NAM Nail Studio randevunuz onaylandı' : locale === 'en' ? 'Your appointment at NAM Nail Studio has been confirmed' : 'تم تأكيد موعدك في استوديو NAM للأظافر',
+      time: '14:30 - Bugün',
+      isRead: false,
+      type: 'appointment'
+    },
+    {
+      id: 2,
+      title: locale === 'tr' ? 'Özel İndirim' : locale === 'en' ? 'Special Discount' : 'خصم خاص',
+      message: locale === 'tr' ? '%15 indirim kuponunuz hazır' : locale === 'en' ? 'Your 15% discount coupon is ready' : 'كوبون الخصم الخاص بك بنسبة 15٪ جاهز',
+      time: '09:45 - Dün',
+      isRead: true,
+      type: 'promotion'
+    }
+  ];
+  
+  // Close when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    }
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
+  
+  return (
+    <motion.div 
+      className="fixed inset-0 bg-black/30 z-50 flex items-start justify-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
+      <motion.div
+        ref={notificationRef}
+        className="bg-white dark:bg-gray-800 w-11/12 max-w-sm mt-16 rounded-xl shadow-lg overflow-hidden"
+        initial={{ scale: 0.9, y: -20 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.9, y: -20 }}
+        transition={{ type: 'spring', damping: 25 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+          <h3 className="font-semibold text-gray-800 dark:text-white">
+            {locale === 'tr' ? 'Bildirimler' : locale === 'en' ? 'Notifications' : 'الإشعارات'}
+          </h3>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+            <XCircle size={20} />
+          </button>
+        </div>
+        
+        <div className="max-h-96 overflow-y-auto">
+          {notifications.length > 0 ? (
+            <div>
+              {notifications.map((notification) => (
+                <motion.div 
+                  key={notification.id} 
+                  className={`p-4 border-b border-gray-100 dark:border-gray-700 ${notification.isRead ? 'opacity-70' : ''}`}
+                  whileHover={{ backgroundColor: 'rgba(0,0,0,0.02)' }}
+                >
+                  <div className="flex items-start">
+                    <div className={`p-2 rounded-full mr-3 ${
+                      notification.type === 'appointment' 
+                        ? 'bg-blue-100 dark:bg-blue-900 text-blue-500 dark:text-blue-300' 
+                        : 'bg-purple-100 dark:bg-purple-900 text-purple-500 dark:text-purple-300'
+                    }`}>
+                      {notification.type === 'appointment' ? (
+                        <Calendar size={16} />
+                      ) : (
+                        <Megaphone size={16} />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex justify-between">
+                        <h4 className="font-medium text-gray-800 dark:text-white text-sm">{notification.title}</h4>
+                        {!notification.isRead && (
+                          <div className="w-2 h-2 rounded-full bg-primary"></div>
+                        )}
+                      </div>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{notification.message}</p>
+                      <div className="flex justify-between items-center mt-2">
+                        <span className="text-[10px] text-gray-500 dark:text-gray-500">{notification.time}</span>
+                        <button className="text-[10px] font-medium text-primary">
+                          {locale === 'tr' ? 'Detaylar' : locale === 'en' ? 'Details' : 'تفاصيل'}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-8 text-center">
+              <Bell size={32} className="mx-auto text-gray-300 dark:text-gray-600 mb-3" />
+              <p className="text-gray-500 dark:text-gray-400 text-sm">
+                {locale === 'tr' ? 'Henüz bildiriminiz yok' : locale === 'en' ? 'No notifications yet' : 'لا توجد إشعارات حتى الآن'}
+              </p>
+            </div>
+          )}
+        </div>
+        
+        <div className="p-3 bg-gray-50 dark:bg-gray-850 flex justify-between">
+          <button className="text-xs text-primary font-medium">
+            {locale === 'tr' ? 'Tümünü Okundu İşaretle' : locale === 'en' ? 'Mark All as Read' : 'تحديد الكل كمقروء'}
+          </button>
+          <button className="text-xs text-primary font-medium">
+            {locale === 'tr' ? 'Tüm Bildirimleri Gör' : locale === 'en' ? 'See All Notifications' : 'عرض كل الإشعارات'}
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 // Personalized greeting section based on time of day
-function PersonalizedGreeting() {
+function PersonalizedGreeting({ 
+  showNotifications, 
+  setShowNotifications 
+}: { 
+  showNotifications: boolean; 
+  setShowNotifications: (show: boolean) => void 
+}) {
   const { t, locale } = useI18n();
   const { userLocation } = useAppContext();
   const [timeBasedGreeting, setTimeBasedGreeting] = useState<string>("");
@@ -419,7 +553,11 @@ function PersonalizedGreeting() {
             className="p-2 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center relative"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => navigate('/notifications')}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowNotifications(!showNotifications);
+            }}
           >
             <Bell size={18} className="text-gray-600 dark:text-gray-400" />
             <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
@@ -751,6 +889,7 @@ export default function HomeView() {
   const [viewType, setViewType] = useState<'list' | 'map'>('list');
   const [density, setDensity] = useState<'compact' | 'normal' | 'expanded'>('normal');
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   
   // Customize sections visibility
   const [visibleSections, setVisibleSections] = useState({
@@ -795,6 +934,52 @@ export default function HomeView() {
       });
   }, []);
   
+  // Set up pull-to-refresh
+  useEffect(() => {
+    // Create pull-to-refresh instance on document
+    (document as any).pullToRefreshInstance = {
+      handleTouchStart: (e: TouchEvent) => {
+        if (window.scrollY === 0) {
+          startY.current = e.touches[0].clientY;
+          setIsPulling(true);
+        }
+      },
+      handleTouchMove: (e: TouchEvent) => {
+        if (!isPulling) return;
+        
+        const currentY = e.touches[0].clientY;
+        const diff = currentY - startY.current;
+        
+        if (diff > 0) {
+          const resistance = 0.4;
+          const newProgress = Math.min(100, (diff * resistance / thresholdToRefresh) * 100);
+          setPullProgress(newProgress);
+        } else {
+          setPullProgress(0);
+        }
+      },
+      handleTouchEnd: () => {
+        if (isPulling && pullProgress > 70) {
+          handleRefresh();
+        }
+        
+        setIsPulling(false);
+        setPullProgress(0);
+      }
+    };
+    
+    return () => {
+      // Clean up
+      delete (document as any).pullToRefreshInstance;
+    };
+  }, [isPulling, pullProgress]);
+  
+  // Declaration for pullProgress in main component scope
+  const [isPulling, setIsPulling] = useState(false);
+  const [pullProgress, setPullProgress] = useState(0);
+  const startY = useRef(0);
+  const thresholdToRefresh = 80; // pixels needed to pull down to trigger refresh
+
   return (
     <div 
       className="max-w-md mx-auto bg-white dark:bg-gray-900 min-h-screen relative pb-16 transition-colors duration-200"
@@ -803,9 +988,6 @@ export default function HomeView() {
         e.stopPropagation();
       }}
       dir={locale === 'ar' ? 'rtl' : 'ltr'} // Support for RTL layouts in Arabic
-      onTouchStart={handleRefresh ? (e) => (document as any).pullToRefreshInstance?.handleTouchStart(e) : undefined}
-      onTouchMove={handleRefresh ? (e) => (document as any).pullToRefreshInstance?.handleTouchMove(e) : undefined}
-      onTouchEnd={handleRefresh ? () => (document as any).pullToRefreshInstance?.handleTouchEnd() : undefined}
     >
       <TopNavigation />
       <PullToRefresh onRefresh={handleRefresh} />
@@ -822,7 +1004,10 @@ export default function HomeView() {
       
       <div className="pb-16" onClick={(e) => e.stopPropagation()}>
         {/* New personalized greeting section */}
-        <PersonalizedGreeting />
+        <PersonalizedGreeting 
+          showNotifications={showNotifications} 
+          setShowNotifications={setShowNotifications} 
+        />
         
         {visibleSections.stories && <StorySection2 />}
         
@@ -872,6 +1057,13 @@ export default function HomeView() {
           <Moon size={18} className="text-indigo-600" />
         )}
       </motion.button>
+      
+      {/* Notifications popup */}
+      <AnimatePresence>
+        {showNotifications && (
+          <NotificationsPopup onClose={() => setShowNotifications(false)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
