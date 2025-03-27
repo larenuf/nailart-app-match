@@ -1,4 +1,5 @@
 import { Switch, Route } from "wouter";
+import { useState } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -23,21 +24,41 @@ import AiChat from "@/components/AiChat";
 import Onboarding from "@/pages/Onboarding";
 
 function Router() {
-  // İlk kez giriş yapılıp yapılmadığını kontrol edelim
-  const isFirstVisit = localStorage.getItem('firstVisit') !== 'false';
+  // İlk ziyareti kontrol et, localStorage'da saklayalım
+  // Oturum kontrolü için useState hook kullanıyoruz
+  const [isFirstVisit, setIsFirstVisit] = useState(() => {
+    try {
+      // localStorage içinde firstVisit değerini kontrol et
+      const visited = localStorage.getItem('firstVisit');
+      console.log("İlk ziyaret durumu:", visited);
+      // Eğer değer yoksa veya boşsa, ilk ziyaret olarak kabul et
+      return visited === null || visited !== 'false';
+    } catch (e) {
+      console.error("localStorage erişim hatası:", e);
+      return true; // Hata durumunda ilk ziyaret olarak kabul et
+    }
+  });
   
-  // İlk ziyaretse, kullanıcıyı onboarding'e yönlendirelim
-  if(isFirstVisit) {
+  // Ana sayfaya ilk girişte çalışacak handler
+  const completeOnboarding = () => {
     localStorage.setItem('firstVisit', 'false');
-  }
+    setIsFirstVisit(false);
+  };
   
   return (
     <Switch>
       <Route path="/">
-        {isFirstVisit ? <Onboarding /> : <HomeView />}
+        {isFirstVisit ? 
+          <Onboarding /> : 
+          <HomeView />
+        }
       </Route>
-      <Route path="/onboarding" component={Onboarding} />
-      <Route path="/home" component={HomeView} />
+      <Route path="/onboarding">
+        <Onboarding />
+      </Route>
+      <Route path="/home">
+        <HomeView />
+      </Route>
       <Route path="/salons" component={SalonList} />
       <Route path="/salons/:id" component={SalonDetail} />
       <Route path="/artists/:id" component={ArtistDetail} />

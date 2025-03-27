@@ -1,6 +1,6 @@
 import { useAppContext } from "@/context/AppContext";
 import { useTheme } from "@/context/ThemeContext";
-import { Moon, Sun, Settings, ArrowLeft } from "lucide-react";
+import { Moon, Sun, Settings, ArrowLeft, RefreshCw } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
@@ -61,6 +61,12 @@ export default function TopNavigation({ title, showBackButton }: { title?: strin
   // Geri butonu için handler
   const handleBackButtonClick = useCallback(() => {
     window.history.back();
+  }, []);
+  
+  // Onboarding'i sıfırlama butonu için handler
+  const resetOnboarding = useCallback(() => {
+    localStorage.removeItem('firstVisit');
+    window.location.href = '/';
   }, []);
 
   return (
@@ -132,6 +138,14 @@ export default function TopNavigation({ title, showBackButton }: { title?: strin
               <i className="fas fa-chevron-down text-xs ml-1 text-gray-400 dark:text-gray-500"></i>
             </div>
             <div className="flex gap-1 items-center">
+              <button
+                className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded-lg text-xs flex items-center mr-1"
+                onClick={resetOnboarding}
+                type="button"
+              >
+                <RefreshCw size={12} className="mr-1" />
+                Intro
+              </button>
               <LanguageSelector />
               <CurrencySelector />
             </div>
