@@ -276,7 +276,7 @@ export default function FeaturedSalonsSection() {
       </div>
 
       <div 
-        className="space-y-4"
+        className="grid grid-cols-1 gap-4"
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -296,124 +296,102 @@ export default function FeaturedSalonsSection() {
           return (
             <div
               key={salon.id}
-              className={`bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer transition-all duration-300 ${isExpanded ? 'shadow-lg' : ''}`}
+              className={`bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md overflow-hidden cursor-pointer transition-all duration-300 ${isExpanded ? 'shadow-lg scale-[1.02]' : ''}`}
             >
-              {/* Daraltılmış görünümde sadece başlık ve minimal bilgi */}
               <div 
-                className="flex items-center p-3 border-b dark:border-gray-700"
+                className="relative h-48 w-full overflow-hidden"
                 onClick={toggleExpand}
               >
-                <div className="h-10 w-10 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center flex-shrink-0 mr-3">
-                  <span className="text-pink-600 dark:text-pink-300 font-bold text-lg">
-                    {salon.name.charAt(0)}
-                  </span>
+                <img
+                  src={salon.id === 1 ? "https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-1.2.1&w=400&h=300&fit=crop&q=80" : 
+                       salon.id === 2 ? "https://images.unsplash.com/photo-1604902396830-aca29e19b067?ixlib=rb-1.2.1&w=400&h=300&fit=crop&q=80" :
+                       salon.id === 3 ? "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?ixlib=rb-1.2.1&w=400&h=300&fit=crop&q=80" :
+                       "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?ixlib=rb-1.2.1&w=400&h=300&fit=crop&q=80"}
+                  alt={salon.name}
+                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+                />
+                
+                {/* Overlay gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                
+                {/* Badges on top */}
+                <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
+                  {salon.isPremium && (
+                    <span className="bg-amber-500/90 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-medium shadow-sm">
+                      <Sparkles size={10} className="inline mr-1" />
+                      Premium
+                    </span>
+                  )}
+                  {salon.discount && (
+                    <span className="bg-purple-500/90 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-medium shadow-sm">
+                      <Percent size={10} className="inline mr-1" />
+                      {salon.discount} İndirim
+                    </span>
+                  )}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-gray-800 dark:text-white truncate">{salon.name}</h3>
-                  <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
-                    <MapPin size={10} className="mr-1" />
-                    <span className="truncate">{salon.distance} km</span>
-                    <div className="mx-2 h-1 w-1 rounded-full bg-gray-300 dark:bg-gray-600"></div>
-                    <div className="flex text-yellow-400 items-center">
-                      <Star size={10} className="mr-0.5 fill-current" />
-                      <span>{salon.rating.toFixed(1)}</span>
+                
+                {/* Salon name at bottom */}
+                <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <h3 className="text-lg font-bold text-white drop-shadow-md">{salon.name}</h3>
+                  <div className="flex items-center mt-1">
+                    <div className="flex text-amber-400 mr-2 drop-shadow-sm">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} size={12} className={`${i < Math.floor(salon.rating) ? 'fill-current' : 'stroke-current fill-none'}`} />
+                      ))}
                     </div>
+                    <span className="text-xs text-white/90">
+                      {salon.rating.toFixed(1)} ({salon.reviewCount})
+                    </span>
                   </div>
                 </div>
-                <button
-                  className={`flex items-center justify-center h-6 w-6 rounded-full text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700`}
-                  onClick={toggleExpand}
-                >
-                  <i className={`fas ${isExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} text-sm`}></i>
-                </button>
               </div>
               
-              {/* Genişletilmiş görünüm */}
-              {isExpanded && (
-                <div className="transition-all duration-300 ease-in-out">
-                  <img
-                    src={salon.id === 1 ? "https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80" : 
-                         salon.id === 2 ? "https://images.unsplash.com/photo-1604902396830-aca29e19b067?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80" :
-                         salon.id === 3 ? "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80" :
-                         "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?ixlib=rb-1.2.1&w=400&h=250&fit=crop&q=80"}
-                    alt={salon.name}
-                    className="w-full h-40 object-cover"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                    onError={(e) => {
-                      console.error("Salon resmi yüklenemedi:", salon.id);
-                      (e.target as HTMLImageElement).src = 'https://placekitten.com/400/300';
-                    }}
-                  />
-                  
-                  <div className="p-3 space-y-3">
-                    {/* Salon detaylarını göster */}
-                    <div className="flex flex-wrap gap-1">
-                      {salon.discount && (
-                        <span className="bg-[#F9E0E7] text-[#333333] text-xs font-semibold px-2 py-1 rounded-full inline-flex items-center">
-                          <Percent size={10} className="mr-1" />
-                          {salon.discount} İndirim
-                        </span>
-                      )}
-                      {salon.isPremium && (
-                        <span className="bg-[#D6C3E5] text-[#333333] text-xs font-semibold px-2 py-1 rounded-full inline-flex items-center">
-                          <Sparkles size={10} className="mr-1" />
-                          Premium
-                        </span>
-                      )}
-                      <span className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-semibold px-2 py-1 rounded-full inline-flex items-center">
-                        <Clock size={10} className="mr-1" />
-                        {salon.openTime} - {salon.closeTime}
-                      </span>
-                    </div>
-                    
-                    <div className="text-xs text-gray-600 dark:text-gray-400">
-                      <p className="mb-1 flex items-start">
-                        <MapPin size={12} className="mr-1 flex-shrink-0 mt-0.5" />
-                        <span>{salon.address}</span>
-                      </p>
-                      <div className="flex items-center">
-                        <div className="flex text-yellow-400">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} size={12} className={`${i < Math.floor(salon.rating) ? 'fill-current' : 'fill-none stroke-current'}`} />
-                          ))}
-                        </div>
-                        <span className="ml-1">
-                          {salon.rating.toFixed(1)} ({salon.reviewCount} değerlendirme)
-                        </span>
-                      </div>
-                    </div>
-                    
-                    {/* Aksiyon butonları */}
-                    <div className="flex gap-2 pt-1">
-                      <Button 
-                        size="sm" 
-                        className="flex-1 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleSelectSalon(salon);
-                        }}
-                      >
-                        Detaylar
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        className="flex-1"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          navigate(`/booking/${salon.id}`);
-                        }}
-                      >
-                        Randevu Al
-                      </Button>
-                    </div>
+              {/* Salon bilgileri ve butonlar */}
+              <div className="p-4">
+                {/* Adres bilgisi */}
+                <div className="flex items-start mb-3">
+                  <MapPin size={18} className="text-primary flex-shrink-0 mt-0.5" />
+                  <div className="ml-3">
+                    <p className="text-sm text-gray-600 dark:text-gray-300">{salon.address}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                      <Clock size={12} className="inline mr-1" />
+                      {salon.openTime} - {salon.closeTime}
+                    </p>
                   </div>
                 </div>
-              )}
+                
+                {/* Hizmetler */}
+                <div className="mb-4">
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Sağlanan Hizmetler:</p>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="bg-gray-100 dark:bg-gray-800 text-xs px-2 py-1 rounded-lg">Manikür</span>
+                    <span className="bg-gray-100 dark:bg-gray-800 text-xs px-2 py-1 rounded-lg">Pedikür</span>
+                    <span className="bg-gray-100 dark:bg-gray-800 text-xs px-2 py-1 rounded-lg">Kalıcı Oje</span>
+                    {salon.isPremium && (
+                      <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs px-2 py-1 rounded-lg">
+                        Özel Tasarımlar
+                      </span>
+                    )}
+                  </div>
+                </div>
+                
+                {/* Butonlar */}
+                <div className="flex gap-3">
+                  <button className="flex-1 bg-primary hover:bg-primary/90 text-white py-2.5 px-4 rounded-xl font-medium text-sm shadow-sm hover:shadow-md transition-all duration-200">
+                    Randevu Al
+                  </button>
+                  <button 
+                    className="w-12 aspect-square bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleSelectSalon(salon);
+                    }}
+                  >
+                    <ArrowRight size={18} className="text-primary" />
+                  </button>
+                </div>
+              </div>
             </div>
           );
         })}
