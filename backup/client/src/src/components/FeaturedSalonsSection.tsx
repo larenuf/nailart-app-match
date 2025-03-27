@@ -147,7 +147,7 @@ export default function FeaturedSalonsSection() {
         </div>
         
         <div 
-          className="grid grid-cols-2 gap-4"
+          className="grid grid-cols-2 gap-3"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -162,16 +162,16 @@ export default function FeaturedSalonsSection() {
               handleProductCategory(e, 'nail-care');
             }}
           >
-            <div className="relative overflow-hidden rounded-xl aspect-[1/1] shadow-md transition-transform duration-300 group-hover:scale-[1.03] bg-gradient-to-br from-[#F9F8FF] via-[#E6E4FF] to-[#6A5ACD]/30">
+            <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02] bg-gradient-to-b from-slate-100 via-slate-200 to-slate-400">
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-[#6A5ACD] text-xl font-bold opacity-40">Nail Care</div>
+                <div className="text-slate-500 text-2xl font-medium">Tırnak Bakım Ürünleri</div>
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-[#6A5ACD] via-[#6A5ACD]/20 to-transparent opacity-50"></div>
-              <div className="absolute bottom-0 left-0 p-3.5 text-white">
-                <h3 className="text-base font-bold drop-shadow-md">💅 Tırnak Bakım Ürünleri</h3>
-                <div className="flex items-center mt-2">
-                  <span className="text-xs mr-2 bg-white/30 px-2.5 py-1 rounded-full backdrop-blur-sm shadow-sm">Özel Fiyatlar</span>
-                  <span className="text-xs bg-gradient-to-r from-[#6A5ACD] to-pink-500 px-2.5 py-1 rounded-full shadow-sm">%15 İndirim</span>
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
+              <div className="absolute bottom-0 left-0 p-2.5 text-white">
+                <h3 className="text-sm font-bold">💅 Tırnak Bakım Ürünleri</h3>
+                <div className="flex items-center mt-1">
+                  <span className="text-xs mr-2 bg-white/30 px-2 py-0.5 rounded-full backdrop-blur-sm">Özel Fiyatlar</span>
+                  <span className="text-xs bg-primary/80 px-2 py-0.5 rounded-full">%15 İndirim</span>
                 </div>
               </div>
             </div>
@@ -186,16 +186,16 @@ export default function FeaturedSalonsSection() {
               handleProductCategory(e, 'nail-art-kits');
             }}
           >
-            <div className="relative overflow-hidden rounded-xl aspect-[1/1] shadow-md transition-transform duration-300 group-hover:scale-[1.03] bg-gradient-to-br from-[#FFF1F9] via-[#FFDFEF] to-pink-300/30">
+            <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02] bg-gradient-to-b from-slate-100 via-slate-200 to-slate-400">
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-pink-500 text-xl font-bold opacity-40">Nail Art</div>
+                <div className="text-slate-500 text-2xl font-medium">Nail Art Kitleri</div>
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-pink-500 via-pink-400/20 to-transparent opacity-50"></div>
-              <div className="absolute bottom-0 left-0 p-3.5 text-white">
-                <h3 className="text-base font-bold drop-shadow-md">✨ Nail Art Kitleri</h3>
-                <div className="flex items-center mt-2">
-                  <span className="text-xs mr-2 bg-white/30 px-2.5 py-1 rounded-full backdrop-blur-sm shadow-sm">Yeni Ürünler</span>
-                  <span className="text-xs bg-gradient-to-r from-pink-500 to-purple-500 px-2.5 py-1 rounded-full shadow-sm">%20 İndirim</span>
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
+              <div className="absolute bottom-0 left-0 p-2.5 text-white">
+                <h3 className="text-sm font-bold">✨ Nail Art Kitleri</h3>
+                <div className="flex items-center mt-1">
+                  <span className="text-xs mr-2 bg-white/30 px-2 py-0.5 rounded-full backdrop-blur-sm">Yeni Ürünler</span>
+                  <span className="text-xs bg-primary/80 px-2 py-0.5 rounded-full">%20 İndirim</span>
                 </div>
               </div>
             </div>
@@ -209,16 +209,16 @@ export default function FeaturedSalonsSection() {
           <Button 
             size="sm" 
             variant={filterType === "all" ? "default" : "outline"}
-            className={`rounded-full text-xs whitespace-nowrap ${filterType === "all" ? 'bg-[#6A5ACD] hover:bg-[#5D4FB7] text-white' : 'border-[#6A5ACD]/30 text-[#6A5ACD]'}`}
+            className="rounded-full text-xs whitespace-nowrap"
             onClick={() => setFilterType("all")}
           >
             <Filter size={12} className="mr-1" />
-            Tümü
+            Sırala
           </Button>
           <Button 
             size="sm" 
             variant={filterType === "nearest" ? "default" : "outline"}
-            className={`rounded-full text-xs whitespace-nowrap ${filterType === "nearest" ? 'bg-[#6A5ACD] hover:bg-[#5D4FB7] text-white' : 'border-[#6A5ACD]/30 text-[#6A5ACD]'}`}
+            className="rounded-full text-xs whitespace-nowrap"
             onClick={() => setFilterType("nearest")}
           >
             <MapPin size={12} className="mr-1" />
@@ -227,7 +227,7 @@ export default function FeaturedSalonsSection() {
           <Button 
             size="sm" 
             variant={filterType === "top-rated" ? "default" : "outline"}
-            className={`rounded-full text-xs whitespace-nowrap ${filterType === "top-rated" ? 'bg-[#6A5ACD] hover:bg-[#5D4FB7] text-white' : 'border-[#6A5ACD]/30 text-[#6A5ACD]'}`}
+            className="rounded-full text-xs whitespace-nowrap"
             onClick={() => setFilterType("top-rated")}
           >
             <Star size={12} className="mr-1" />
@@ -236,11 +236,11 @@ export default function FeaturedSalonsSection() {
           <Button 
             size="sm" 
             variant={filterType === "discounts" ? "default" : "outline"}
-            className={`rounded-full text-xs whitespace-nowrap ${filterType === "discounts" ? 'bg-[#6A5ACD] hover:bg-[#5D4FB7] text-white' : 'border-[#6A5ACD]/30 text-[#6A5ACD]'}`}
+            className="rounded-full text-xs whitespace-nowrap"
             onClick={() => setFilterType("discounts")}
           >
             <Percent size={12} className="mr-1" />
-            İndirimli
+            Kampanya
           </Button>
         </div>
       </ScrollArea>
@@ -253,17 +253,17 @@ export default function FeaturedSalonsSection() {
         }}
       >
         <h2 
-          className="text-base font-semibold tracking-tight text-gray-800 dark:text-gray-100 flex items-center"
+          className="text-sm font-medium tracking-tight text-gray-700 dark:text-gray-300 flex items-center"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
           }}
         >
-          <Sparkles size={16} className="text-[#6A5ACD] mr-2"/>
+          <Sparkles size={14} className="text-amber-500 mr-1"/>
           Öne Çıkan Salonlar
         </h2>
         <button 
-          className="text-xs font-medium text-[#6A5ACD] dark:text-[#9B90E3] flex items-center bg-[#F9F8FF] dark:bg-[#4F4A9F]/10 px-3 py-1.5 rounded-full shadow-sm hover:shadow-md transition-all duration-200"
+          className="text-xs font-medium text-primary dark:text-pink-400 flex items-center"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -271,12 +271,12 @@ export default function FeaturedSalonsSection() {
           }}
           type="button"
         >
-          Tümünü Gör <ArrowRight size={10} className="ml-1"/>
+          Tümünü Gör <ArrowRight size={10} className="ml-0.5"/>
         </button>
       </div>
 
       <div 
-        className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
+        className="grid grid-cols-1 gap-4"
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -312,18 +312,18 @@ export default function FeaturedSalonsSection() {
                 />
                 
                 {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                 
                 {/* Badges on top */}
                 <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
                   {salon.isPremium && (
-                    <span className="bg-gradient-to-r from-amber-500 to-amber-400 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-medium shadow-sm">
+                    <span className="bg-amber-500/90 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-medium shadow-sm">
                       <Sparkles size={10} className="inline mr-1" />
                       Premium
                     </span>
                   )}
                   {salon.discount && (
-                    <span className="bg-gradient-to-r from-[#6A5ACD] to-pink-500 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-medium shadow-sm">
+                    <span className="bg-purple-500/90 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-medium shadow-sm">
                       <Percent size={10} className="inline mr-1" />
                       {salon.discount} İndirim
                     </span>
@@ -377,18 +377,18 @@ export default function FeaturedSalonsSection() {
                 
                 {/* Butonlar */}
                 <div className="flex gap-3">
-                  <button className="flex-1 bg-gradient-to-r from-[#6A5ACD] to-[#5D4FB7] hover:from-[#5D4FB7] hover:to-[#4F4A9F] text-white py-3 rounded-xl font-medium text-sm shadow-md hover:shadow-lg transition-all duration-200">
+                  <button className="flex-1 bg-primary hover:bg-primary/90 text-white py-2.5 px-4 rounded-xl font-medium text-sm shadow-sm hover:shadow-md transition-all duration-200">
                     Randevu Al
                   </button>
                   <button 
-                    className="w-12 aspect-square bg-white text-[#6A5ACD] border border-[#6A5ACD]/20 rounded-xl flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200"
+                    className="w-12 aspect-square bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200"
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
                       handleSelectSalon(salon);
                     }}
                   >
-                    <ArrowRight size={18} />
+                    <ArrowRight size={18} className="text-primary" />
                   </button>
                 </div>
               </div>
