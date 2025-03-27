@@ -13,6 +13,7 @@ interface Step {
 }
 
 export default function Onboarding() {
+  console.log("Onboarding component rendered");
   const [step, setStep] = useState(0);
   const [_, navigate] = useLocation();
   const { t } = useI18n();
@@ -48,14 +49,18 @@ export default function Onboarding() {
       description: "Size uygun hizmetleri gösterelim...",
       image: "/images/onboarding/preferences.svg",
       buttonText: "Atla",
-      buttonAction: (e: MouseEvent<HTMLButtonElement>) => navigate("/"),
+      buttonAction: (e: MouseEvent<HTMLButtonElement>) => {
+        localStorage.setItem('firstVisit', 'false');
+        navigate("/");
+      },
       showGenderButtons: true
     }
   ];
 
   const handleGenderSelection = (gender: string) => {
-    // Burada seçilen cinsiyeti saklayabilirsiniz
+    // Seçilen cinsiyeti ve onboarding tamamlama durumunu saklayalım
     localStorage.setItem("preferredGender", gender);
+    localStorage.setItem("firstVisit", "false");
     navigate("/");
   };
 
