@@ -941,29 +941,33 @@ function TrendingDesigns() {
     </svg>
   );
   
-  // Use SVG components instead of images
+  // Use colors instead of images
   const designs = [
     {
       id: 1,
-      SvgComponent: FrenchManicureSvg,
+      color: '#ffdedc',
+      borderColor: '#ffbdba',
       title: locale === 'tr' ? 'Fransız Manikürü' : locale === 'en' ? 'French Manicure' : 'مانيكير فرنسي',
       likes: 243
     },
     {
       id: 2,
-      SvgComponent: GelDesignSvg,
+      color: '#d9e9ff',
+      borderColor: '#b0d0fc',
       title: locale === 'tr' ? 'Jel Tasarım' : locale === 'en' ? 'Gel Design' : 'تصميم جل',
       likes: 187
     },
     {
       id: 3,
-      SvgComponent: MinimalistLinesSvg,
+      color: '#f9f9f9',
+      borderColor: '#eeeeee',
       title: locale === 'tr' ? 'Minimalist Çizgiler' : locale === 'en' ? 'Minimalist Lines' : 'خطوط بسيطة',
       likes: 312
     },
     {
       id: 4,
-      SvgComponent: GlitterShineSvg,
+      color: '#fbe3f3',
+      borderColor: '#f8c7e9',
       title: locale === 'tr' ? 'Glitter Parlaklık' : locale === 'en' ? 'Glitter Shine' : 'بريق لامع',
       likes: 276
     }
@@ -994,8 +998,23 @@ function TrendingDesigns() {
             transition={{ duration: 0.2 }}
             onClick={() => navigate(`/design/${design.id}`)}
           >
-            <div className="aspect-square w-full overflow-hidden relative">
-              <design.SvgComponent />
+            <div className="aspect-square w-full overflow-hidden relative" style={{ backgroundColor: design.color, borderColor: design.borderColor }}>
+              <div className="absolute inset-0 flex items-center justify-center">
+                {design.id === 1 && (
+                  <div className="w-16 h-8 rounded-md bg-white border border-gray-200 mb-8"></div>
+                )}
+                {design.id === 2 && (
+                  <div className="w-4 h-4 rounded-full bg-white border border-gray-200 absolute" style={{ top: '30%', left: '30%' }}></div>
+                )}
+                {design.id === 3 && (
+                  <div className="w-16 h-0.5 bg-gray-800 absolute" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}></div>
+                )}
+                {design.id === 4 && (
+                  <div className="absolute" style={{ top: '40%', left: '40%' }}>
+                    <div className="w-3 h-3 rounded-full bg-white border border-pink-200"></div>
+                  </div>
+                )}
+              </div>
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
               <div className="absolute bottom-2 left-2 right-2">
                 <h3 className="text-white text-sm font-medium drop-shadow-sm">{design.title}</h3>
