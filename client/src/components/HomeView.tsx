@@ -817,28 +817,153 @@ function TrendingDesigns() {
   const { t, locale } = useI18n();
   const [_, navigate] = useLocation();
   
+  // Define a simple SVG component for French Manicure
+  const FrenchManicureSvg = () => (
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="#fff9f9" />
+      <g>
+        <path d="M40,40 L160,40 C170,40 180,50 180,60 L180,140 C180,150 170,160 160,160 L40,160 C30,160 20,150 20,140 L20,60 C20,50 30,40 40,40 Z" fill="#ffecec" />
+        <path d="M30,60 L170,60 L170,140 L30,140 Z" fill="#fff" />
+        <path d="M40,70 L160,70 C165,70 170,75 170,80 L170,120 C170,125 165,130 160,130 L40,130 C35,130 30,125 30,120 L30,80 C30,75 35,70 40,70 Z" fill="#fff5f5" />
+        
+        {/* Finger nails */}
+        <path d="M50,90 C50,80 70,80 70,90 L70,110 C70,120 50,120 50,110 Z" fill="#ffdedc" />
+        <path d="M80,85 C80,75 100,75 100,85 L100,115 C100,125 80,125 80,115 Z" fill="#ffdedc" />
+        <path d="M110,80 C110,70 130,70 130,80 L130,120 C130,130 110,130 110,120 Z" fill="#ffdedc" />
+        <path d="M140,85 C140,75 160,75 160,85 L160,115 C160,125 140,125 140,115 Z" fill="#ffdedc" />
+        
+        {/* White tips */}
+        <path d="M50,90 C50,85 70,85 70,90 L70,95 C70,100 50,100 50,95 Z" fill="#ffffff" stroke="#f0f0f0" strokeWidth="0.5" />
+        <path d="M80,85 C80,80 100,80 100,85 L100,90 C100,95 80,95 80,90 Z" fill="#ffffff" stroke="#f0f0f0" strokeWidth="0.5" />
+        <path d="M110,80 C110,75 130,75 130,80 L130,85 C130,90 110,90 110,85 Z" fill="#ffffff" stroke="#f0f0f0" strokeWidth="0.5" />
+        <path d="M140,85 C140,80 160,80 160,85 L160,90 C160,95 140,95 140,90 Z" fill="#ffffff" stroke="#f0f0f0" strokeWidth="0.5" />
+      </g>
+    </svg>
+  );
+  
+  // Define a simple SVG component for Gel Design
+  const GelDesignSvg = () => (
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="#f5f9ff" />
+      <g>
+        <path d="M40,40 L160,40 C170,40 180,50 180,60 L180,140 C180,150 170,160 160,160 L40,160 C30,160 20,150 20,140 L20,60 C20,50 30,40 40,40 Z" fill="#eff5fd" />
+        <path d="M30,60 L170,60 L170,140 L30,140 Z" fill="#f9fcff" />
+        
+        {/* Gel nails with glitter */}
+        <path d="M50,80 C50,70 70,70 70,80 L70,120 C70,130 50,130 50,120 Z" fill="#e8f1ff" />
+        <path d="M80,75 C80,65 100,65 100,75 L100,125 C100,135 80,135 80,125 Z" fill="#d9e9ff" />
+        <path d="M110,70 C110,60 130,60 130,70 L130,130 C130,140 110,140 110,130 Z" fill="#c5dcfc" />
+        <path d="M140,75 C140,65 160,65 160,75 L160,125 C160,135 140,135 140,125 Z" fill="#b0d0fc" />
+        
+        {/* Glitter spots */}
+        <circle cx="60" cy="90" r="2" fill="#ffffff" />
+        <circle cx="65" cy="110" r="1" fill="#ffffff" />
+        <circle cx="55" cy="100" r="1.5" fill="#ffffff" />
+        
+        <circle cx="90" cy="85" r="2" fill="#ffffff" />
+        <circle cx="95" cy="105" r="1" fill="#ffffff" />
+        <circle cx="85" cy="120" r="1.5" fill="#ffffff" />
+        
+        <circle cx="120" cy="80" r="2" fill="#ffffff" />
+        <circle cx="125" cy="100" r="1" fill="#ffffff" />
+        <circle cx="115" cy="110" r="1.5" fill="#ffffff" />
+        
+        <circle cx="150" cy="90" r="2" fill="#ffffff" />
+        <circle cx="155" cy="110" r="1" fill="#ffffff" />
+        <circle cx="145" cy="100" r="1.5" fill="#ffffff" />
+      </g>
+    </svg>
+  );
+  
+  // Define a simple SVG component for Minimalist Lines
+  const MinimalistLinesSvg = () => (
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="#f9f9f9" />
+      <g>
+        <path d="M40,40 L160,40 C170,40 180,50 180,60 L180,140 C180,150 170,160 160,160 L40,160 C30,160 20,150 20,140 L20,60 C20,50 30,40 40,40 Z" fill="#f5f5f5" />
+        <path d="M30,60 L170,60 L170,140 L30,140 Z" fill="#fff" />
+        
+        {/* Minimalist nails */}
+        <path d="M50,80 C50,70 70,70 70,80 L70,120 C70,130 50,130 50,120 Z" fill="#f9f9f9" />
+        <path d="M80,75 C80,65 100,65 100,75 L100,125 C100,135 80,135 80,125 Z" fill="#f9f9f9" />
+        <path d="M110,70 C110,60 130,60 130,70 L130,130 C130,140 110,140 110,130 Z" fill="#f9f9f9" />
+        <path d="M140,75 C140,65 160,65 160,75 L160,125 C160,135 140,135 140,125 Z" fill="#f9f9f9" />
+        
+        {/* Minimalist lines */}
+        <path d="M55,100 L65,100" stroke="#333" strokeWidth="0.5" />
+        <path d="M85,100 L95,100" stroke="#333" strokeWidth="0.5" />
+        <path d="M115,90 L125,90" stroke="#333" strokeWidth="0.5" />
+        <path d="M115,100 L125,100" stroke="#333" strokeWidth="0.5" />
+        <path d="M115,110 L125,110" stroke="#333" strokeWidth="0.5" />
+        <path d="M145,95 L155,105" stroke="#333" strokeWidth="0.5" />
+        <path d="M145,105 L155,95" stroke="#333" strokeWidth="0.5" />
+      </g>
+    </svg>
+  );
+  
+  // Define a simple SVG component for Glitter Shine
+  const GlitterShineSvg = () => (
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="#fff9fc" />
+      <g>
+        <path d="M40,40 L160,40 C170,40 180,50 180,60 L180,140 C180,150 170,160 160,160 L40,160 C30,160 20,150 20,140 L20,60 C20,50 30,40 40,40 Z" fill="#ffecf7" />
+        <path d="M30,60 L170,60 L170,140 L30,140 Z" fill="#fff" />
+        
+        {/* Glitter nails */}
+        <path d="M50,80 C50,70 70,70 70,80 L70,120 C70,130 50,130 50,120 Z" fill="#fdf1f8" />
+        <path d="M80,75 C80,65 100,65 100,75 L100,125 C100,135 80,135 80,125 Z" fill="#fbe3f3" />
+        <path d="M110,70 C110,60 130,60 130,70 L130,130 C130,140 110,140 110,130 Z" fill="#fad5ef" />
+        <path d="M140,75 C140,65 160,65 160,75 L160,125 C160,135 140,135 140,125 Z" fill="#f8c7e9" />
+        
+        {/* Glitter spots */}
+        <circle cx="60" cy="90" r="2" fill="#ffb6e1" />
+        <circle cx="65" cy="110" r="1" fill="#ffb6e1" />
+        <circle cx="55" cy="100" r="1.5" fill="#ffb6e1" />
+        
+        <circle cx="90" cy="85" r="2" fill="#ffb6e1" />
+        <circle cx="95" cy="105" r="1" fill="#ffb6e1" />
+        <circle cx="85" cy="120" r="1.5" fill="#ffb6e1" />
+        
+        <circle cx="120" cy="80" r="2" fill="#ffb6e1" />
+        <circle cx="125" cy="100" r="1" fill="#ffb6e1" />
+        <circle cx="115" cy="110" r="1.5" fill="#ffb6e1" />
+        
+        <circle cx="150" cy="90" r="2" fill="#ffb6e1" />
+        <circle cx="155" cy="110" r="1" fill="#ffb6e1" />
+        <circle cx="145" cy="100" r="1.5" fill="#ffb6e1" />
+        
+        {/* Shine effect */}
+        <path d="M60,85 L60,95 M55,90 L65,90" stroke="#ffffff" strokeWidth="1" />
+        <path d="M90,80 L90,90 M85,85 L95,85" stroke="#ffffff" strokeWidth="1" />
+        <path d="M120,75 L120,85 M115,80 L125,80" stroke="#ffffff" strokeWidth="1" />
+        <path d="M150,85 L150,95 M145,90 L155,90" stroke="#ffffff" strokeWidth="1" />
+      </g>
+    </svg>
+  );
+  
+  // Use SVG components instead of images
   const designs = [
     {
       id: 1,
-      imageUrl: "/images/french-manicure.jpg",
+      SvgComponent: FrenchManicureSvg,
       title: locale === 'tr' ? 'Fransız Manikürü' : locale === 'en' ? 'French Manicure' : 'مانيكير فرنسي',
       likes: 243
     },
     {
       id: 2,
-      imageUrl: "https://images.unsplash.com/photo-1632344548454-b98480d0d52d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fG5haWwlMjBhcnR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+      SvgComponent: GelDesignSvg,
       title: locale === 'tr' ? 'Jel Tasarım' : locale === 'en' ? 'Gel Design' : 'تصميم جل',
       likes: 187
     },
     {
       id: 3,
-      imageUrl: "https://images.unsplash.com/photo-1631729779973-a5430dfd9033?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bmFpbCUyMGRlc2lnbnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      SvgComponent: MinimalistLinesSvg,
       title: locale === 'tr' ? 'Minimalist Çizgiler' : locale === 'en' ? 'Minimalist Lines' : 'خطوط بسيطة',
       likes: 312
     },
     {
       id: 4,
-      imageUrl: "https://images.unsplash.com/photo-1596442928576-8a709a431750?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bmFpbCUyMGRlc2lnbnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      SvgComponent: GlitterShineSvg,
       title: locale === 'tr' ? 'Glitter Parlaklık' : locale === 'en' ? 'Glitter Shine' : 'بريق لامع',
       likes: 276
     }
@@ -870,12 +995,7 @@ function TrendingDesigns() {
             onClick={() => navigate(`/design/${design.id}`)}
           >
             <div className="aspect-square w-full overflow-hidden relative">
-              <img 
-                src={design.imageUrl} 
-                alt={design.title} 
-                className="w-full h-full object-cover"
-                loading="lazy" 
-              />
+              <design.SvgComponent />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
               <div className="absolute bottom-2 left-2 right-2">
                 <h3 className="text-white text-sm font-medium drop-shadow-sm">{design.title}</h3>
