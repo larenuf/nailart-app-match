@@ -30,6 +30,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Dosya yükleme API'lerini tanımla
   app.use('/api/upload', uploadRoutes);
   
+  // Kimlik doğrulama gerektirmeyen genel resim yükleme endpoint'i
+  app.post('/api/public-upload/image', async (req, res, next) => {
+    try {
+      const { image, folder } = req.body;
+      
+      if (!image) {
+        return res.status(400).json({ error: 'Yüklenecek görüntü sağlanmadı' });
+      }
+      
+      const { uploadImage } = require('./utils/cloudinary');
+      const imageUrl = await uploadImage(image, folder || 'public_uploads');
+      
+      res.status(200).json({ url: imageUrl });
+    } catch (error) {
+      next(error);
+    }
+  });
+  
   // ---------- ADMİN API ENDPOİNTLERİ ----------
   
   // Salon işlemleri
