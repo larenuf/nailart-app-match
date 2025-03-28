@@ -820,7 +820,7 @@ function TrendingDesigns() {
   const designs = [
     {
       id: 1,
-      imageUrl: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=500&auto=format&fit=crop",
+      imageUrl: "/images/french-manicure.jpg",
       title: locale === 'tr' ? 'Fransız Manikürü' : locale === 'en' ? 'French Manicure' : 'مانيكير فرنسي',
       likes: 243
     },
