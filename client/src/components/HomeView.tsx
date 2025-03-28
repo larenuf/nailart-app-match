@@ -813,77 +813,11 @@ function DensityToggle({ density, setDensity }: {
 }
 
 // Trending designs section
+// Import TrendingDesigns component from pages
+import TrendingDesignsPage from "../pages/TrendingDesigns";
+
 function TrendingDesigns() {
-  const { t, locale } = useI18n();
-  const [_, navigate] = useLocation();
-  
-  const designs = [
-    {
-      id: 1,
-      color: "#ffdedc",
-      title: locale === 'tr' ? 'Fransız Manikürü' : locale === 'en' ? 'French Manicure' : 'مانيكير فرنسي',
-      likes: 243
-    },
-    {
-      id: 2,
-      color: "#d9e9ff",
-      title: locale === 'tr' ? 'Jel Tasarım' : locale === 'en' ? 'Gel Design' : 'تصميم جل',
-      likes: 187
-    },
-    {
-      id: 3,
-      color: "#f5f5f5",
-      title: locale === 'tr' ? 'Minimalist Çizgiler' : locale === 'en' ? 'Minimalist Lines' : 'خطوط بسيطة',
-      likes: 312
-    },
-    {
-      id: 4,
-      color: "#fbe3f3",
-      title: locale === 'tr' ? 'Glitter Parlaklık' : locale === 'en' ? 'Glitter Shine' : 'بريق لامع',
-      likes: 276
-    }
-  ];
-  
-  return (
-    <div className="px-4 py-3 mt-1 mb-4">
-      <div className="flex justify-between items-center mb-3">
-        <h2 className="text-sm font-semibold text-gray-800 dark:text-gray-200 flex items-center">
-          <TrendingUp size={15} className="mr-1.5 text-primary" />
-          {locale === 'tr' ? 'Trend Tasarımlar' : locale === 'en' ? 'Trending Designs' : 'تصاميم رائجة'}
-        </h2>
-        <button 
-          className="text-xs text-primary dark:text-primary-dark font-medium flex items-center"
-          onClick={() => navigate('/trends')}
-        >
-          {locale === 'tr' ? 'Tümünü Gör' : locale === 'en' ? 'View All' : 'عرض الكل'}
-          <ArrowRight size={12} className="ml-1" />
-        </button>
-      </div>
-      
-      <div className="grid grid-cols-2 gap-3">
-        {designs.map((design) => (
-          <motion.div 
-            key={design.id}
-            className="rounded-lg overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800"
-            whileHover={{ y: -5, scale: 1.02 }}
-            transition={{ duration: 0.2 }}
-            onClick={() => navigate(`/design/${design.id}`)}
-          >
-            <div className="aspect-square w-full overflow-hidden relative" style={{ backgroundColor: design.color }}>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-              <div className="absolute bottom-2 left-2 right-2">
-                <h3 className="text-white text-sm font-medium drop-shadow-sm">{design.title}</h3>
-                <div className="flex items-center mt-1">
-                  <Heart size={12} className="text-red-400 fill-red-400" />
-                  <span className="text-white text-xs ml-1 drop-shadow-sm">{design.likes}</span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  );
+  return <TrendingDesignsPage />;
 }
 
 export default function HomeView() {
