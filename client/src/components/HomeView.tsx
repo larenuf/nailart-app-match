@@ -977,119 +977,164 @@ export default function HomeView() {
           </div>
         )}
         
-        {/* Bunun yerine önerilen tasarımlar bölümü */}
+        {/* Yeniden tasarlanmış trend tasarımlar bölümü */}
         {visibleSections.trendingDesigns && (
-          <div className="px-4 py-3 mt-1 mb-4">
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-sm font-semibold text-gray-800 dark:text-gray-200 flex items-center">
-                <TrendingUp size={15} className="mr-1.5 text-primary" />
-                {locale === 'tr' ? 'Önerilen Tasarımlar' : locale === 'en' ? 'Recommended Designs' : 'التصاميم الموصى بها'}
+          <div className="mb-8 bg-gradient-to-r from-pink-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 p-4 mx-4 rounded-xl">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 flex items-center">
+                <Sparkles className="mr-2 text-pink-500" size={20} />
+                {locale === 'tr' ? 'Trend Tasarımlar' : locale === 'en' ? 'Trending Designs' : 'تصاميم رائجة'}
               </h2>
-              <button 
-                className="text-xs text-primary dark:text-primary-dark font-medium flex items-center"
-              >
-                {locale === 'tr' ? 'Tümünü Gör' : locale === 'en' ? 'View All' : 'عرض الكل'}
-                <ArrowRight size={12} className="ml-1" />
-              </button>
+              <Link href="/designs" className="text-sm text-pink-600 flex items-center font-medium bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow-sm">
+                {locale === 'tr' ? 'Tümünü Gör' : locale === 'en' ? 'See All' : 'عرض الكل'} <ChevronRight size={16} />
+              </Link>
             </div>
             
-            <div className="grid grid-cols-2 gap-3">
-              <motion.div 
-                className="rounded-lg overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800"
-                whileHover={{ y: -5, scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="aspect-square w-full overflow-hidden relative bg-[#ffdedc]">
-                  <img 
-                    src={`https://i.hizliresim.com/avlzagp.png?t=${Date.now()}`}
-                    alt="Fransız Manikürü"
-                    className="absolute inset-0 w-full h-full object-cover"
-                    loading="eager"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                  <div className="absolute bottom-2 left-2 right-2">
-                    <h3 className="text-white text-sm font-medium drop-shadow-sm">
-                      {locale === 'tr' ? 'Fransız Manikürü' : locale === 'en' ? 'French Manicure' : 'مانيكير فرنسي'}
-                    </h3>
-                    <div className="flex items-center mt-1">
-                      <Heart size={12} className="text-red-400 fill-red-400" />
-                      <span className="text-white text-xs ml-1 drop-shadow-sm">243</span>
+            <div className="overflow-x-auto pb-2">
+              <div className="flex space-x-4" style={{ minWidth: 'max-content' }}>
+                {/* Fransız Manikürü */}
+                <div className="w-40 flex-shrink-0">
+                  <div className="rounded-xl overflow-hidden shadow-lg group relative">
+                    <div className="aspect-square bg-white overflow-hidden">
+                      <div 
+                        className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-300" 
+                        style={{ 
+                          backgroundImage: `url('https://images.unsplash.com/photo-1604654894610-df63bc536371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZyZW5jaCUyMG1hbmljdXJlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60')`,
+                        }}
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-70 group-hover:opacity-90 transition-opacity" />
+                    <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
+                      <p className="font-medium text-sm mb-1">
+                        {locale === 'tr' ? 'Fransız Manikürü' : locale === 'en' ? 'French Manicure' : 'مانيكير فرنسي'}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <Heart size={14} className="text-pink-400 fill-pink-400" />
+                          <span className="ml-1 text-xs">243</span>
+                        </div>
+                        <span className="text-xs bg-pink-500 py-0.5 px-2 rounded-full font-medium">Trend</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </motion.div>
-              
-              <motion.div 
-                className="rounded-lg overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800"
-                whileHover={{ y: -5, scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="aspect-square w-full overflow-hidden relative bg-[#d9e9ff]">
-                  <div className="absolute flex items-center justify-center inset-0">
-                    <div className="w-12 h-12 rounded-full bg-blue-200 opacity-50"></div>
-                    <div className="w-6 h-6 rounded-full bg-white absolute opacity-80"></div>
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                  <div className="absolute bottom-2 left-2 right-2">
-                    <h3 className="text-white text-sm font-medium drop-shadow-sm">
-                      {locale === 'tr' ? 'Jel Tasarım' : locale === 'en' ? 'Gel Design' : 'تصميم جل'}
-                    </h3>
-                    <div className="flex items-center mt-1">
-                      <Heart size={12} className="text-red-400 fill-red-400" />
-                      <span className="text-white text-xs ml-1 drop-shadow-sm">187</span>
+                
+                {/* Jel Tasarım */}
+                <div className="w-40 flex-shrink-0">
+                  <div className="rounded-xl overflow-hidden shadow-lg group relative">
+                    <div className="aspect-square bg-white overflow-hidden">
+                      <div 
+                        className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-300" 
+                        style={{ 
+                          backgroundImage: `url('https://images.unsplash.com/photo-1632345031435-8727f6897d53?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bmFpbCUyMGFydHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60')`,
+                        }}
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-70 group-hover:opacity-90 transition-opacity" />
+                    <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
+                      <p className="font-medium text-sm mb-1">
+                        {locale === 'tr' ? 'Jel Tasarım' : locale === 'en' ? 'Gel Design' : 'تصميم جل'}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <Heart size={14} className="text-pink-400 fill-pink-400" />
+                          <span className="ml-1 text-xs">187</span>
+                        </div>
+                        <span className="text-xs bg-indigo-500 py-0.5 px-2 rounded-full font-medium">Popüler</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </motion.div>
-              
-              <motion.div 
-                className="rounded-lg overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800"
-                whileHover={{ y: -5, scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="aspect-square w-full overflow-hidden relative bg-[#f5f5f5]">
-                  <div className="absolute flex items-center justify-center inset-0">
-                    <div className="w-16 h-[1px] bg-gray-700"></div>
-                    <div className="w-10 h-[1px] bg-gray-700 absolute -mt-3"></div>
-                    <div className="w-10 h-[1px] bg-gray-700 absolute mt-3"></div>
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                  <div className="absolute bottom-2 left-2 right-2">
-                    <h3 className="text-white text-sm font-medium drop-shadow-sm">
-                      {locale === 'tr' ? 'Minimalist Çizgiler' : locale === 'en' ? 'Minimalist Lines' : 'خطوط بسيطة'}
-                    </h3>
-                    <div className="flex items-center mt-1">
-                      <Heart size={12} className="text-red-400 fill-red-400" />
-                      <span className="text-white text-xs ml-1 drop-shadow-sm">312</span>
+                
+                {/* Minimalist Çizgiler */}
+                <div className="w-40 flex-shrink-0">
+                  <div className="rounded-xl overflow-hidden shadow-lg group relative">
+                    <div className="aspect-square bg-white overflow-hidden">
+                      <div 
+                        className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-300" 
+                        style={{ 
+                          backgroundImage: `url('https://images.unsplash.com/photo-1607779097040-26e80aa78e66?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bWluaW1hbGlzdCUyMG5haWx8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60')`,
+                        }}
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-70 group-hover:opacity-90 transition-opacity" />
+                    <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
+                      <p className="font-medium text-sm mb-1">
+                        {locale === 'tr' ? 'Minimalist Çizgiler' : locale === 'en' ? 'Minimalist Lines' : 'خطوط بسيطة'}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <Heart size={14} className="text-pink-400 fill-pink-400" />
+                          <span className="ml-1 text-xs">312</span>
+                        </div>
+                        <span className="text-xs bg-pink-500 py-0.5 px-2 rounded-full font-medium">Trend</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </motion.div>
-              
-              <motion.div 
-                className="rounded-lg overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800"
-                whileHover={{ y: -5, scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="aspect-square w-full overflow-hidden relative bg-[#fbe3f3]">
-                  <div className="absolute inset-0">
-                    <div className="absolute top-1/3 left-1/3 w-2 h-2 rounded-full bg-pink-200"></div>
-                    <div className="absolute top-1/2 left-1/2 w-3 h-3 rounded-full bg-pink-100"></div>
-                    <div className="absolute top-2/3 left-1/4 w-1 h-1 rounded-full bg-white"></div>
-                    <div className="absolute top-1/4 left-2/3 w-2 h-2 rounded-full bg-white"></div>
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                  <div className="absolute bottom-2 left-2 right-2">
-                    <h3 className="text-white text-sm font-medium drop-shadow-sm">
-                      {locale === 'tr' ? 'Glitter Parlaklık' : locale === 'en' ? 'Glitter Shine' : 'بريق لامع'}
-                    </h3>
-                    <div className="flex items-center mt-1">
-                      <Heart size={12} className="text-red-400 fill-red-400" />
-                      <span className="text-white text-xs ml-1 drop-shadow-sm">276</span>
+                
+                {/* Glitter Parlaklık */}
+                <div className="w-40 flex-shrink-0">
+                  <div className="rounded-xl overflow-hidden shadow-lg group relative">
+                    <div className="aspect-square bg-white overflow-hidden">
+                      <div 
+                        className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-300" 
+                        style={{ 
+                          backgroundImage: `url('https://images.unsplash.com/photo-1602619075663-91aef338bd2e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Z2xpdHRlciUyMG5haWxzfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60')`,
+                        }}
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-70 group-hover:opacity-90 transition-opacity" />
+                    <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
+                      <p className="font-medium text-sm mb-1">
+                        {locale === 'tr' ? 'Glitter Parlaklık' : locale === 'en' ? 'Glitter Shine' : 'بريق لامع'}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <Heart size={14} className="text-pink-400 fill-pink-400" />
+                          <span className="ml-1 text-xs">276</span>
+                        </div>
+                        <span className="text-xs bg-purple-500 py-0.5 px-2 rounded-full font-medium">Yeni</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </motion.div>
+                
+                {/* Özel Sanat */}
+                <div className="w-40 flex-shrink-0">
+                  <div className="rounded-xl overflow-hidden shadow-lg group relative">
+                    <div className="aspect-square bg-white overflow-hidden">
+                      <div 
+                        className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-300" 
+                        style={{ 
+                          backgroundImage: `url('https://images.unsplash.com/photo-1610908914954-fb239e48029d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8bmFpbCUyMGFydHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60')`,
+                        }}
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-70 group-hover:opacity-90 transition-opacity" />
+                    <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
+                      <p className="font-medium text-sm mb-1">
+                        {locale === 'tr' ? 'Özel Sanat' : locale === 'en' ? 'Custom Art' : 'فن مخصص'}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <Heart size={14} className="text-pink-400 fill-pink-400" />
+                          <span className="ml-1 text-xs">354</span>
+                        </div>
+                        <span className="text-xs bg-pink-500 py-0.5 px-2 rounded-full font-medium">Trend</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-3 flex justify-center">
+              <div className="flex space-x-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-pink-500"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-pink-200"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-pink-200"></div>
+              </div>
             </div>
           </div>
         )}
