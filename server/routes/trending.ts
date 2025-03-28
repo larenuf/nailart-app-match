@@ -13,8 +13,7 @@ router.get('/trending-designs', async (req, res) => {
         titleEn: "French Manicure",
         titleAr: "مانيكير فرنسي",
         likes: 243,
-        color: "#ffdedc",
-        imageUrl: "/images/french-manicure.png"
+        color: "#ffdedc"
       },
       {
         id: 2,
@@ -22,8 +21,7 @@ router.get('/trending-designs', async (req, res) => {
         titleEn: "Gel Design",
         titleAr: "تصميم جل",
         likes: 187,
-        color: "#d9e9ff",
-        imageUrl: "/images/gel-design.png"
+        color: "#d9e9ff"
       },
       {
         id: 3,
@@ -31,8 +29,7 @@ router.get('/trending-designs', async (req, res) => {
         titleEn: "Minimalist Lines",
         titleAr: "خطوط بسيطة",
         likes: 312,
-        color: "#f5f5f5",
-        imageUrl: "/images/minimalist-lines.png"
+        color: "#f5f5f5"
       },
       {
         id: 4,
@@ -40,8 +37,7 @@ router.get('/trending-designs', async (req, res) => {
         titleEn: "Glitter Shine",
         titleAr: "بريق لامع",
         likes: 276,
-        color: "#fbe3f3",
-        imageUrl: "/images/glitter-shine.png"
+        color: "#fbe3f3"
       }
     ];
     

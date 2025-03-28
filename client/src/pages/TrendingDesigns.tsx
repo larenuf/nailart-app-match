@@ -12,7 +12,6 @@ interface Design {
   titleAr: string;
   likes: number;
   color: string;
-  imageUrl?: string;
 }
 
 export default function TrendingDesignsPage() {
@@ -51,12 +50,34 @@ export default function TrendingDesignsPage() {
             onClick={() => navigate(`/design/${design.id}`)}
           >
             <div className="aspect-square w-full overflow-hidden relative" style={{ backgroundColor: design.color }}>
-              {design.imageUrl && (
-                <img 
-                  src={design.imageUrl}
-                  alt={design.title}
-                  className="absolute inset-0 w-full h-full object-cover opacity-70"
-                />
+              {/* Görsel kart tasarımı için CSS ile kaplama oluşturuyoruz */}
+              {design.id === 1 && (
+                <div className="absolute flex flex-col items-center justify-center inset-0">
+                  <div className="h-10 w-[60%] flex justify-center items-end rounded-t-lg bg-white">
+                    <div className="w-full h-2 bg-[#ffdedc] rounded-t-lg"></div>
+                  </div>
+                </div>
+              )}
+              {design.id === 2 && (
+                <div className="absolute flex items-center justify-center inset-0">
+                  <div className="w-12 h-12 rounded-full bg-blue-200 opacity-50"></div>
+                  <div className="w-6 h-6 rounded-full bg-white absolute opacity-80"></div>
+                </div>
+              )}
+              {design.id === 3 && (
+                <div className="absolute flex items-center justify-center inset-0">
+                  <div className="w-16 h-[1px] bg-gray-700"></div>
+                  <div className="w-10 h-[1px] bg-gray-700 absolute -mt-3"></div>
+                  <div className="w-10 h-[1px] bg-gray-700 absolute mt-3"></div>
+                </div>
+              )}
+              {design.id === 4 && (
+                <div className="absolute inset-0">
+                  <div className="absolute top-1/3 left-1/3 w-2 h-2 rounded-full bg-pink-200"></div>
+                  <div className="absolute top-1/2 left-1/2 w-3 h-3 rounded-full bg-pink-100"></div>
+                  <div className="absolute top-2/3 left-1/4 w-1 h-1 rounded-full bg-white"></div>
+                  <div className="absolute top-1/4 left-2/3 w-2 h-2 rounded-full bg-white"></div>
+                </div>
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
               <div className="absolute bottom-2 left-2 right-2">
