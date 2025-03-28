@@ -130,12 +130,15 @@ function App() {
     }
   };
 
+  // Force a refresh timestamp to avoid caching issues
+  const refreshKey = Date.now();
+  
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <I18nProvider>
           <AppProvider>
-            <Router />
+            <Router key={refreshKey} />
             <AiChat />
             
             {/* Tema seçici */}

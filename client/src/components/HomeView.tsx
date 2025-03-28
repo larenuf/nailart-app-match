@@ -987,7 +987,6 @@ export default function HomeView() {
               </h2>
               <button 
                 className="text-xs text-primary dark:text-primary-dark font-medium flex items-center"
-                onClick={() => navigate('/trends')}
               >
                 {locale === 'tr' ? 'Tümünü Gör' : locale === 'en' ? 'View All' : 'عرض الكل'}
                 <ArrowRight size={12} className="ml-1" />
