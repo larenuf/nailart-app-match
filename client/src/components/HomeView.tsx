@@ -843,7 +843,7 @@ export default function HomeView() {
     featuredSalons: true,
     map: true,
     products: true,
-    trendingDesigns: true,
+    trendingDesigns: false, // Tamamen kaldırıldı
     premiumFeatures: true
   });
   
