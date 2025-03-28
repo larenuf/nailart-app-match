@@ -9,8 +9,9 @@ import {
   Sparkles, Palette, Medal, MousePointerClick, ImagePlus, Megaphone, 
   SlidersHorizontal, Calendar, Sun, ArrowRight, Bell, MapPin, 
   Heart, SearchIcon, Star, LayoutGrid, Map, Moon, Settings,
-  User, Clock, Filter, TrendingUp, Menu, XCircle 
+  User, Clock, Filter, TrendingUp, Menu, XCircle, ChevronRight
 } from 'lucide-react';
+import { Link } from 'wouter';
 import { useCallback, useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { useI18n } from "@/i18n";
@@ -978,166 +979,7 @@ export default function HomeView() {
         )}
         
         {/* Yeniden tasarlanmış trend tasarımlar bölümü */}
-        {visibleSections.trendingDesigns && (
-          <div className="mb-8 bg-gradient-to-r from-pink-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 p-4 mx-4 rounded-xl">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 flex items-center">
-                <Sparkles className="mr-2 text-pink-500" size={20} />
-                {locale === 'tr' ? 'Trend Tasarımlar' : locale === 'en' ? 'Trending Designs' : 'تصاميم رائجة'}
-              </h2>
-              <Link href="/designs" className="text-sm text-pink-600 flex items-center font-medium bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow-sm">
-                {locale === 'tr' ? 'Tümünü Gör' : locale === 'en' ? 'See All' : 'عرض الكل'} <ChevronRight size={16} />
-              </Link>
-            </div>
-            
-            <div className="overflow-x-auto pb-2">
-              <div className="flex space-x-4" style={{ minWidth: 'max-content' }}>
-                {/* Fransız Manikürü */}
-                <div className="w-40 flex-shrink-0">
-                  <div className="rounded-xl overflow-hidden shadow-lg group relative">
-                    <div className="aspect-square bg-white overflow-hidden">
-                      <div 
-                        className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-300" 
-                        style={{ 
-                          backgroundImage: `url('https://images.unsplash.com/photo-1604654894610-df63bc536371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZyZW5jaCUyMG1hbmljdXJlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60')`,
-                        }}
-                      />
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-70 group-hover:opacity-90 transition-opacity" />
-                    <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
-                      <p className="font-medium text-sm mb-1">
-                        {locale === 'tr' ? 'Fransız Manikürü' : locale === 'en' ? 'French Manicure' : 'مانيكير فرنسي'}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <Heart size={14} className="text-pink-400 fill-pink-400" />
-                          <span className="ml-1 text-xs">243</span>
-                        </div>
-                        <span className="text-xs bg-pink-500 py-0.5 px-2 rounded-full font-medium">Trend</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Jel Tasarım */}
-                <div className="w-40 flex-shrink-0">
-                  <div className="rounded-xl overflow-hidden shadow-lg group relative">
-                    <div className="aspect-square bg-white overflow-hidden">
-                      <div 
-                        className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-300" 
-                        style={{ 
-                          backgroundImage: `url('https://images.unsplash.com/photo-1632345031435-8727f6897d53?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bmFpbCUyMGFydHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60')`,
-                        }}
-                      />
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-70 group-hover:opacity-90 transition-opacity" />
-                    <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
-                      <p className="font-medium text-sm mb-1">
-                        {locale === 'tr' ? 'Jel Tasarım' : locale === 'en' ? 'Gel Design' : 'تصميم جل'}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <Heart size={14} className="text-pink-400 fill-pink-400" />
-                          <span className="ml-1 text-xs">187</span>
-                        </div>
-                        <span className="text-xs bg-indigo-500 py-0.5 px-2 rounded-full font-medium">Popüler</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Minimalist Çizgiler */}
-                <div className="w-40 flex-shrink-0">
-                  <div className="rounded-xl overflow-hidden shadow-lg group relative">
-                    <div className="aspect-square bg-white overflow-hidden">
-                      <div 
-                        className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-300" 
-                        style={{ 
-                          backgroundImage: `url('https://images.unsplash.com/photo-1607779097040-26e80aa78e66?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bWluaW1hbGlzdCUyMG5haWx8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60')`,
-                        }}
-                      />
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-70 group-hover:opacity-90 transition-opacity" />
-                    <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
-                      <p className="font-medium text-sm mb-1">
-                        {locale === 'tr' ? 'Minimalist Çizgiler' : locale === 'en' ? 'Minimalist Lines' : 'خطوط بسيطة'}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <Heart size={14} className="text-pink-400 fill-pink-400" />
-                          <span className="ml-1 text-xs">312</span>
-                        </div>
-                        <span className="text-xs bg-pink-500 py-0.5 px-2 rounded-full font-medium">Trend</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Glitter Parlaklık */}
-                <div className="w-40 flex-shrink-0">
-                  <div className="rounded-xl overflow-hidden shadow-lg group relative">
-                    <div className="aspect-square bg-white overflow-hidden">
-                      <div 
-                        className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-300" 
-                        style={{ 
-                          backgroundImage: `url('https://images.unsplash.com/photo-1602619075663-91aef338bd2e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Z2xpdHRlciUyMG5haWxzfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60')`,
-                        }}
-                      />
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-70 group-hover:opacity-90 transition-opacity" />
-                    <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
-                      <p className="font-medium text-sm mb-1">
-                        {locale === 'tr' ? 'Glitter Parlaklık' : locale === 'en' ? 'Glitter Shine' : 'بريق لامع'}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <Heart size={14} className="text-pink-400 fill-pink-400" />
-                          <span className="ml-1 text-xs">276</span>
-                        </div>
-                        <span className="text-xs bg-purple-500 py-0.5 px-2 rounded-full font-medium">Yeni</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Özel Sanat */}
-                <div className="w-40 flex-shrink-0">
-                  <div className="rounded-xl overflow-hidden shadow-lg group relative">
-                    <div className="aspect-square bg-white overflow-hidden">
-                      <div 
-                        className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-300" 
-                        style={{ 
-                          backgroundImage: `url('https://images.unsplash.com/photo-1610908914954-fb239e48029d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8bmFpbCUyMGFydHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60')`,
-                        }}
-                      />
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-70 group-hover:opacity-90 transition-opacity" />
-                    <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
-                      <p className="font-medium text-sm mb-1">
-                        {locale === 'tr' ? 'Özel Sanat' : locale === 'en' ? 'Custom Art' : 'فن مخصص'}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <Heart size={14} className="text-pink-400 fill-pink-400" />
-                          <span className="ml-1 text-xs">354</span>
-                        </div>
-                        <span className="text-xs bg-pink-500 py-0.5 px-2 rounded-full font-medium">Trend</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="mt-3 flex justify-center">
-              <div className="flex space-x-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-pink-500"></div>
-                <div className="w-2.5 h-2.5 rounded-full bg-pink-200"></div>
-                <div className="w-2.5 h-2.5 rounded-full bg-pink-200"></div>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Trend Tasarımlar bölümü tamamen kaldırıldı */}
         
         {visibleSections.products && <NailProductsSection />}
         
