@@ -1001,9 +1001,10 @@ export default function HomeView() {
               >
                 <div className="aspect-square w-full overflow-hidden relative bg-[#ffdedc]">
                   <img 
-                    src="https://i.hizliresim.com/avlzagp.png" 
+                    src={`https://i.hizliresim.com/avlzagp.png?t=${Date.now()}`}
                     alt="Fransız Manikürü"
                     className="absolute inset-0 w-full h-full object-cover"
+                    loading="eager"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                   <div className="absolute bottom-2 left-2 right-2">

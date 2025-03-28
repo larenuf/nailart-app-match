@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { storage } from '../storage';
+import { uploadImage } from '../utils/cloudinary';
 
 const router = Router();
 
@@ -13,7 +14,8 @@ router.get('/trending-designs', async (req, res) => {
         titleEn: "French Manicure",
         titleAr: "مانيكير فرنسي",
         likes: 243,
-        color: "#ffdedc"
+        color: "#ffdedc",
+        imageUrl: "https://i.hizliresim.com/avlzagp.png"
       },
       {
         id: 2,
@@ -43,6 +45,25 @@ router.get('/trending-designs', async (req, res) => {
     
     res.json(designs);
   } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Upload a trending design image to Cloudinary
+router.post('/trending-designs/upload-image', async (req, res) => {
+  try {
+    const { imageUrl } = req.body;
+    
+    if (!imageUrl) {
+      return res.status(400).json({ message: 'Image URL is required' });
+    }
+    
+    // Upload to Cloudinary
+    const cloudinaryUrl = await uploadImage(imageUrl, 'nail_art_match/trending');
+    
+    res.json({ imageUrl: cloudinaryUrl });
+  } catch (error: any) {
+    console.error('Error uploading trending design image:', error);
     res.status(500).json({ message: error.message });
   }
 });
