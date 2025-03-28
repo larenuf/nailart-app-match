@@ -15,20 +15,32 @@ export async function uploadImage(
   folder: string = 'nail_art_match'
 ): Promise<string> {
   try {
-    // Base64 veriyi kontrol et
-    if (!file || !file.startsWith('data:image')) {
-      throw new ApiError(400, 'Geçersiz resim formatı. Base64 formatında bir görüntü gerekli.');
-    }
-
-    // Cloudinary'ye yükle
-    const result = await cloudinary.uploader.upload(file, {
+    // Base64 veriyi veya URL kontrolü
+    let uploadSource = file;
+    let uploadOptions: any = {
       folder,
       resource_type: 'auto',
       transformation: [
         { quality: 'auto' }, // Otomatik kalite optimizasyonu
         { fetch_format: 'auto' } // Tarayıcıya uygun format
       ]
-    });
+    };
+    
+    // Eğer dosya bir URL ise (http/https ile başlıyorsa)
+    if (file.startsWith('http://') || file.startsWith('https://')) {
+      uploadOptions.folder = folder;
+    } 
+    // Base64 veri ise
+    else if (file.startsWith('data:image')) {
+      // Zaten doğru format
+    } 
+    // Değilse hata ver
+    else {
+      throw new ApiError(400, 'Geçersiz resim formatı. Base64 veya URL formatında bir görüntü gerekli.');
+    }
+
+    // Cloudinary'ye yükle
+    const result = await cloudinary.uploader.upload(uploadSource, uploadOptions);
 
     return result.secure_url;
   } catch (error) {
