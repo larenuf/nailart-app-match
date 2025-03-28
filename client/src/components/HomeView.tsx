@@ -656,11 +656,16 @@ function QuickFilterTags() {
   
   return (
     <div className="px-4 mb-3 mt-1">
-      <div className="flex overflow-x-auto pb-2 no-scrollbar space-x-2">
+      <div className="flex overflow-x-auto pb-2 no-scrollbar space-x-2 scrollbar-hide" 
+        style={{ 
+          scrollbarWidth: 'none', 
+          msOverflowStyle: 'none',
+          WebkitOverflowScrolling: 'touch'
+        }}>
         {filters.map((filter) => (
           <motion.button
             key={filter.id}
-            className={`flex items-center px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ${
+            className={`flex-shrink-0 flex items-center px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ${
               activeFilter === filter.id 
                 ? 'bg-primary text-white' 
                 : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
