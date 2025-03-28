@@ -977,8 +977,122 @@ export default function HomeView() {
           </div>
         )}
         
-        {/* Trending designs section */}
-        {visibleSections.trendingDesigns && <TrendingDesigns />}
+        {/* Bunun yerine önerilen tasarımlar bölümü */}
+        {visibleSections.trendingDesigns && (
+          <div className="px-4 py-3 mt-1 mb-4">
+            <div className="flex justify-between items-center mb-3">
+              <h2 className="text-sm font-semibold text-gray-800 dark:text-gray-200 flex items-center">
+                <TrendingUp size={15} className="mr-1.5 text-primary" />
+                {locale === 'tr' ? 'Önerilen Tasarımlar' : locale === 'en' ? 'Recommended Designs' : 'التصاميم الموصى بها'}
+              </h2>
+              <button 
+                className="text-xs text-primary dark:text-primary-dark font-medium flex items-center"
+                onClick={() => navigate('/trends')}
+              >
+                {locale === 'tr' ? 'Tümünü Gör' : locale === 'en' ? 'View All' : 'عرض الكل'}
+                <ArrowRight size={12} className="ml-1" />
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-3">
+              <motion.div 
+                className="rounded-lg overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800"
+                whileHover={{ y: -5, scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="aspect-square w-full overflow-hidden relative bg-[#ffdedc]">
+                  <div className="absolute flex flex-col items-center justify-center inset-0">
+                    <div className="h-10 w-[60%] flex justify-center items-end rounded-t-lg bg-white">
+                      <div className="w-full h-2 bg-[#ffdedc] rounded-t-lg"></div>
+                    </div>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                  <div className="absolute bottom-2 left-2 right-2">
+                    <h3 className="text-white text-sm font-medium drop-shadow-sm">
+                      {locale === 'tr' ? 'Fransız Manikürü' : locale === 'en' ? 'French Manicure' : 'مانيكير فرنسي'}
+                    </h3>
+                    <div className="flex items-center mt-1">
+                      <Heart size={12} className="text-red-400 fill-red-400" />
+                      <span className="text-white text-xs ml-1 drop-shadow-sm">243</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              
+              <motion.div 
+                className="rounded-lg overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800"
+                whileHover={{ y: -5, scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="aspect-square w-full overflow-hidden relative bg-[#d9e9ff]">
+                  <div className="absolute flex items-center justify-center inset-0">
+                    <div className="w-12 h-12 rounded-full bg-blue-200 opacity-50"></div>
+                    <div className="w-6 h-6 rounded-full bg-white absolute opacity-80"></div>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                  <div className="absolute bottom-2 left-2 right-2">
+                    <h3 className="text-white text-sm font-medium drop-shadow-sm">
+                      {locale === 'tr' ? 'Jel Tasarım' : locale === 'en' ? 'Gel Design' : 'تصميم جل'}
+                    </h3>
+                    <div className="flex items-center mt-1">
+                      <Heart size={12} className="text-red-400 fill-red-400" />
+                      <span className="text-white text-xs ml-1 drop-shadow-sm">187</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              
+              <motion.div 
+                className="rounded-lg overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800"
+                whileHover={{ y: -5, scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="aspect-square w-full overflow-hidden relative bg-[#f5f5f5]">
+                  <div className="absolute flex items-center justify-center inset-0">
+                    <div className="w-16 h-[1px] bg-gray-700"></div>
+                    <div className="w-10 h-[1px] bg-gray-700 absolute -mt-3"></div>
+                    <div className="w-10 h-[1px] bg-gray-700 absolute mt-3"></div>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                  <div className="absolute bottom-2 left-2 right-2">
+                    <h3 className="text-white text-sm font-medium drop-shadow-sm">
+                      {locale === 'tr' ? 'Minimalist Çizgiler' : locale === 'en' ? 'Minimalist Lines' : 'خطوط بسيطة'}
+                    </h3>
+                    <div className="flex items-center mt-1">
+                      <Heart size={12} className="text-red-400 fill-red-400" />
+                      <span className="text-white text-xs ml-1 drop-shadow-sm">312</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              
+              <motion.div 
+                className="rounded-lg overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800"
+                whileHover={{ y: -5, scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="aspect-square w-full overflow-hidden relative bg-[#fbe3f3]">
+                  <div className="absolute inset-0">
+                    <div className="absolute top-1/3 left-1/3 w-2 h-2 rounded-full bg-pink-200"></div>
+                    <div className="absolute top-1/2 left-1/2 w-3 h-3 rounded-full bg-pink-100"></div>
+                    <div className="absolute top-2/3 left-1/4 w-1 h-1 rounded-full bg-white"></div>
+                    <div className="absolute top-1/4 left-2/3 w-2 h-2 rounded-full bg-white"></div>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                  <div className="absolute bottom-2 left-2 right-2">
+                    <h3 className="text-white text-sm font-medium drop-shadow-sm">
+                      {locale === 'tr' ? 'Glitter Parlaklık' : locale === 'en' ? 'Glitter Shine' : 'بريق لامع'}
+                    </h3>
+                    <div className="flex items-center mt-1">
+                      <Heart size={12} className="text-red-400 fill-red-400" />
+                      <span className="text-white text-xs ml-1 drop-shadow-sm">276</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        )}
         
         {visibleSections.products && <NailProductsSection />}
         
