@@ -1000,11 +1000,11 @@ export default function HomeView() {
                 transition={{ duration: 0.2 }}
               >
                 <div className="aspect-square w-full overflow-hidden relative bg-[#ffdedc]">
-                  <div className="absolute flex flex-col items-center justify-center inset-0">
-                    <div className="h-10 w-[60%] flex justify-center items-end rounded-t-lg bg-white">
-                      <div className="w-full h-2 bg-[#ffdedc] rounded-t-lg"></div>
-                    </div>
-                  </div>
+                  <img 
+                    src="https://i.hizliresim.com/avlzagp.png" 
+                    alt="Fransız Manikürü"
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                   <div className="absolute bottom-2 left-2 right-2">
                     <h3 className="text-white text-sm font-medium drop-shadow-sm">
