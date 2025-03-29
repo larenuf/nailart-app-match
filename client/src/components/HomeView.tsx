@@ -517,55 +517,78 @@ function PersonalizedGreeting({
   
   return (
     <motion.div 
-      className="px-4 pt-3 mb-1"
+      className="px-4 pt-4 mb-3"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="flex justify-between items-start">
-        <div>
-          <div className="flex items-center">
-            <h1 className="text-xl font-semibold text-gray-800 dark:text-white">
-              {timeBasedGreeting} {userName && <span className="font-bold">{userName}</span>}
-            </h1>
-            <span className="text-2xl ml-2">{weatherIcon}</span>
+      {/* Modern card look with glass effect */}
+      <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-850 p-4 rounded-2xl shadow-sm backdrop-blur-sm border border-gray-100 dark:border-gray-700">
+        <div className="flex justify-between items-start">
+          <div>
+            <div className="flex items-center">
+              <span className="text-3xl mr-3 animate-pulse">{weatherIcon}</span>
+              <div>
+                <h1 className="text-xl font-bold text-gray-800 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-gray-600 dark:from-white dark:to-gray-300">
+                  {timeBasedGreeting}{userName && <span>, </span>}
+                  {userName && <span className="bg-gradient-to-r from-primary to-pink-500 bg-clip-text text-transparent">{userName}</span>}
+                </h1>
+                <div className="flex items-center mt-1 text-sm text-gray-600 dark:text-gray-400">
+                  <MapPin size={14} className="mr-1 text-primary" />
+                  <span>{location}</span>
+                  <button 
+                    className="ml-1 text-primary dark:text-primary-dark text-xs font-medium hover:underline"
+                    onClick={() => navigate('/location')}
+                  >
+                    {locale === 'tr' ? 'Değiştir' : locale === 'en' ? 'Change' : 'تغيير'}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center mt-1 text-sm text-gray-600 dark:text-gray-400">
-            <MapPin size={14} className="mr-1 text-gray-500 dark:text-gray-400" />
-            <span>{location}</span>
-            <button 
-              className="ml-1 text-primary dark:text-primary-dark text-xs font-medium"
-              onClick={() => navigate('/location')}
+          
+          <div className="flex space-x-2">
+            <motion.button 
+              className="p-2 bg-white dark:bg-gray-700 rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200"
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleNavigateToSearch}
             >
-              {locale === 'tr' ? 'Değiştir' : locale === 'en' ? 'Change' : 'تغيير'}
-            </button>
+              <SearchIcon size={18} className="text-primary" />
+            </motion.button>
+            <motion.button 
+              className="p-2 bg-white dark:bg-gray-700 rounded-full flex items-center justify-center relative shadow-sm hover:shadow-md transition-all duration-200"
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setShowNotifications(!showNotifications);
+              }}
+            >
+              <Bell size={18} className="text-primary" />
+              <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center shadow-sm">
+                <span className="text-white text-[10px] font-bold">2</span>
+              </div>
+            </motion.button>
           </div>
         </div>
         
-        <div className="flex space-x-2">
-          <motion.button 
-            className="p-2 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleNavigateToSearch}
-          >
-            <SearchIcon size={18} className="text-gray-600 dark:text-gray-400" />
-          </motion.button>
-          <motion.button 
-            className="p-2 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center relative"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setShowNotifications(!showNotifications);
-            }}
-          >
-            <Bell size={18} className="text-gray-600 dark:text-gray-400" />
-            <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-              <span className="text-white text-[10px] font-bold">2</span>
-            </div>
-          </motion.button>
+        {/* Day progress bar */}
+        <div className="mt-4">
+          <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+            <span>{locale === 'tr' ? 'Sabah' : locale === 'en' ? 'Morning' : 'صباح'}</span>
+            <span>{locale === 'tr' ? 'Öğle' : locale === 'en' ? 'Noon' : 'ظهر'}</span>
+            <span>{locale === 'tr' ? 'Akşam' : locale === 'en' ? 'Evening' : 'مساء'}</span>
+          </div>
+          <div className="h-1.5 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+            <motion.div 
+              className="h-full bg-gradient-to-r from-amber-400 via-pink-500 to-indigo-400"
+              initial={{ width: "0%" }}
+              animate={{ width: `${(new Date().getHours() / 24) * 100}%` }}
+              transition={{ duration: 1, delay: 0.5 }}
+            />
+          </div>
         </div>
       </div>
     </motion.div>
@@ -598,11 +621,11 @@ function QuickFilterTags() {
   };
   
   const filters = [
-    { id: 'open', name: 'Şimdi Açık', icon: <Clock size={12} className="mr-1 text-green-600" /> },
-    { id: 'nearby', name: 'Yakınımdaki', icon: <MapPin size={12} className="mr-1 text-blue-600" /> },
-    { id: 'rated', name: 'En Yüksek Puan', icon: <Star size={12} className="mr-1 text-amber-500" /> },
-    { id: 'discount', name: 'İndirimli', icon: <Megaphone size={12} className="mr-1 text-purple-600" /> },
-    { id: 'today', name: 'Bugün Müsait', icon: <Calendar size={12} className="mr-1 text-pink-600" /> }
+    { id: 'open', name: 'Şimdi Açık', icon: <Clock size={12} className="mr-1.5 text-green-600" /> },
+    { id: 'nearby', name: 'Yakınımdaki', icon: <MapPin size={12} className="mr-1.5 text-blue-600" /> },
+    { id: 'rated', name: 'En Yüksek Puan', icon: <Star size={12} className="mr-1.5 text-amber-500" /> },
+    { id: 'discount', name: 'İndirimli', icon: <Megaphone size={12} className="mr-1.5 text-purple-600" /> },
+    { id: 'today', name: 'Bugün Müsait', icon: <Calendar size={12} className="mr-1.5 text-pink-600" /> }
   ];
   
   const handleFilterClick = (filterId: string) => {
@@ -620,29 +643,45 @@ function QuickFilterTags() {
   };
   
   return (
-    <div className="px-4 mb-3 mt-1">
-      <div className="flex overflow-x-auto pb-2 no-scrollbar space-x-2 scrollbar-hide" 
-        style={{ 
-          scrollbarWidth: 'none', 
-          msOverflowStyle: 'none',
-          WebkitOverflowScrolling: 'touch'
-        }}>
-        {filters.map((filter) => (
-          <motion.button
-            key={filter.id}
-            className={`flex-shrink-0 flex items-center px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ${
-              activeFilter === filter.id 
-                ? 'bg-primary text-white' 
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-            }`}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => handleFilterClick(filter.id)}
-          >
-            {filter.icon}
-            {getLocalizedFilterName(filter.name)}
-          </motion.button>
-        ))}
+    <div className="px-4 mb-4 mt-2">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-3 border border-gray-100 dark:border-gray-700">
+        <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200 mb-2.5 flex items-center">
+          <Filter size={14} className="mr-1.5 text-primary" />
+          {locale === 'tr' ? 'Hızlı Filtreler' : locale === 'en' ? 'Quick Filters' : 'مرشحات سريعة'}
+        </h3>
+        <div className="flex overflow-x-auto pb-2 no-scrollbar space-x-2 scrollbar-hide" 
+          style={{ 
+            scrollbarWidth: 'none', 
+            msOverflowStyle: 'none',
+            WebkitOverflowScrolling: 'touch'
+          }}>
+          {filters.map((filter) => (
+            <motion.button
+              key={filter.id}
+              className={`flex-shrink-0 flex items-center px-3.5 py-2 rounded-full text-xs font-medium whitespace-nowrap shadow-sm transition-all duration-200 ${
+                activeFilter === filter.id 
+                  ? 'bg-gradient-to-r from-primary to-pink-600 text-white' 
+                  : 'bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300'
+              }`}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => handleFilterClick(filter.id)}
+            >
+              {filter.icon}
+              {getLocalizedFilterName(filter.name)}
+              {activeFilter === filter.id && (
+                <motion.span 
+                  className="ml-1.5 bg-white bg-opacity-30 rounded-full w-4 h-4 flex items-center justify-center"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.1 }}
+                >
+                  <XCircle size={10} />
+                </motion.span>
+              )}
+            </motion.button>
+          ))}
+        </div>
       </div>
     </div>
   );
