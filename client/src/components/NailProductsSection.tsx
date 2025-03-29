@@ -23,11 +23,13 @@ export default function NailProductsSection() {
           {/* Tırnak Bakım Ürünleri */}
           <Link href="/product-category/nail-care" className="cursor-pointer group">
               <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02]">
-                <img 
-                  src="https://i.hizliresim.com/avlzagp.png" 
-                  alt="Tırnak Bakım Ürünleri" 
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
+                <div className="absolute inset-0 bg-gradient-to-br from-pink-100 to-purple-200 opacity-90">
+                  <div className="absolute inset-0 flex flex-col justify-center items-center">
+                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-2">
+                      <span className="text-3xl">💅</span>
+                    </div>
+                  </div>
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
                 <div className="absolute bottom-0 left-0 p-2.5 text-white">
                   <h3 className="text-sm font-bold">💅 {locale === 'tr' ? 'Tırnak Bakım Ürünleri' : locale === 'en' ? 'Nail Care Products' : 'منتجات العناية بالأظافر'}</h3>
@@ -46,11 +48,13 @@ export default function NailProductsSection() {
           {/* Nail Art Kitleri */}
           <Link href="/product-category/nail-art-kits" className="cursor-pointer group">
               <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02]">
-                <img 
-                  src="https://i.hizliresim.com/avlzagp.png" 
-                  alt="Nail Art Kitleri" 
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-100 to-blue-200 opacity-90">
+                  <div className="absolute inset-0 flex flex-col justify-center items-center">
+                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-2">
+                      <span className="text-3xl">✨</span>
+                    </div>
+                  </div>
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
                 <div className="absolute bottom-0 left-0 p-2.5 text-white">
                   <h3 className="text-sm font-bold">✨ {locale === 'tr' ? 'Nail Art Kitleri' : locale === 'en' ? 'Nail Art Kits' : 'مجموعات فن الأظافر'}</h3>
