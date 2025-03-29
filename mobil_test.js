@@ -1,29 +1,62 @@
-// Mobil test için doğru URL'yi ve QR kodu almak için özel bir script
-import qrcode from 'qrcode-terminal';
+/**
+ * Mobil Test URL'leri ve QR Kodları
+ * 
+ * Bu script, uygulamanızı mobil cihazlardan test etmek için
+ * çeşitli URL'ler ve QR kodları oluşturur.
+ */
 
-// Replit uygulamasının doğru dış URL'sini hesaplama
-console.log(`\nWeb uygulaması şu anda port 5000'de çalışıyor`);
-console.log(`Lokalde şu URL'den erişilebilir: http://localhost:5000`);
+import qrcodeTerminal from 'qrcode-terminal';
+const qrcode = qrcodeTerminal;
 
-// Replit'in dışarıya açtığı URL'yi hesaplıyoruz
-// .replit dosyasındaki externalPort konfigürasyonu 80 portu belirtmiştir
-const replId = process.env.REPL_ID || '';
-const replSlug = process.env.REPL_SLUG || 'workspace';
-const replOwner = process.env.REPL_OWNER || 'larenuf';
+// Tarayıcı önbelleğini atlamak için zaman damgası
+const timestamp = Date.now();
 
-// Mobil cihazla test etmek için kullanılabilecek URL'ler
-console.log(`\nLütfen bu URL'lerden birini telefonunuzda deneyin:\n`);
+// Temel Replit URL'si
+const replitDomain = process.env.REPLIT_DOMAINS || "";
+const baseUrl = `https://${replitDomain}`;
 
-const urls = [
-  `https://${replSlug}.${replOwner}.repl.co`,
-  `https://${replId}.id.repl.co`,
-  `https://${replSlug}-${replOwner}.repl.co`,
+// Önbellek kırıcı URL
+const cacheBustUrl = `${baseUrl}/?_t=${timestamp}`;
+
+// LocalTunnel URL'leri (bu sabit URL'ler ve başlatmanız gerekir)
+const localTunnelUrls = [
+  "https://nailartapp-5939.loca.lt",
+  "https://nailartmatch-5666.loca.lt"
 ];
 
-// Tüm muhtemel URL'leri göster ve QR kodları oluştur
-urls.forEach((url, index) => {
-  console.log(`URL ${index + 1}: ${url}`);
-  console.log('QR Kod:');
-  qrcode.generate(url, { small: true });
-  console.log('\n');
+console.log("\n=============================================================");
+console.log("NAIL ART MATCH MOBİL TEST URL'LERİ");
+console.log("=============================================================");
+
+console.log("\nREPLIT URL'LERİ:");
+console.log("-------------------------------------------------------------");
+console.log(`1. ${baseUrl}`);
+console.log(`2. ${cacheBustUrl} (önbellek kırıcı)`);
+
+console.log("\nLOCALTUNNEL URL'LERİ:");
+console.log("-------------------------------------------------------------");
+localTunnelUrls.forEach((url, index) => {
+  console.log(`${index + 1}. ${url}`);
 });
+
+console.log("\n=============================================================");
+console.log("MOBİL CİHAZLAR İÇİN QR KODLAR");
+console.log("=============================================================");
+
+console.log("\n📱 REPLIT URL İÇİN QR KOD:\n");
+qrcode.generate(baseUrl, {small: true});
+
+console.log("\n📱 ÖNBELLEK KIRICI REPLIT URL İÇİN QR KOD:\n");
+qrcode.generate(cacheBustUrl, {small: true});
+
+console.log("\n📱 LOCALTUNNEL URL İÇİN QR KOD:\n");
+qrcode.generate(localTunnelUrls[0], {small: true});
+
+console.log("\n=============================================================");
+console.log("ÖNERİLER:");
+console.log("=============================================================");
+console.log("1. LocalTunnel URL'sini kullanırken hatırlatma sayfası görürseniz");
+console.log("   doğrudan Replit URL'sini kullanın.");
+console.log("2. Replit URL'leriyle içerik güncellenmiyorsa ?_t= parametreli URL'yi deneyin");
+console.log("3. Telefonunuzla yukarıdaki QR kodlarını tarayıp doğrudan erişebilirsiniz");
+console.log("=============================================================");
