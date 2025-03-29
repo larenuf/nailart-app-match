@@ -27,13 +27,13 @@ export default function NailProductsSection() {
         </div>
         
         <div className="grid grid-cols-2 gap-3">
-          {/* Tırnak Bakım Ürünleri */}
+          {/* Tırnak Bakım Ürün 1 */}
           <Link href={`/product-category/nail-care?v=${timestamp}`} className="cursor-pointer group">
               <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02]">
                 {/* Local Görsel */}
                 <img 
                   src={`/attached_assets/nailartbakim.png?t=${timestamp}`} 
-                  alt="Tırnak Bakım Ürün"
+                  alt="Tırnak Bakım Ürün 1"
                   className="absolute inset-0 w-full h-full object-cover"
                   onError={(e) => {
                     // Hata durumunda fallback görünüm
@@ -55,7 +55,7 @@ export default function NailProductsSection() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
                 <div className="absolute bottom-0 left-0 p-2.5 text-white">
-                  <h3 className="text-sm font-bold">💅 {locale === 'tr' ? 'Tırnak Bakım Ürün' : locale === 'en' ? 'Nail Care Product' : 'منتج العناية بالأظافر'}</h3>
+                  <h3 className="text-sm font-bold">💅 {locale === 'tr' ? 'Tırnak Bakım Ürün 1' : locale === 'en' ? 'Nail Care Product 1' : 'منتج العناية بالأظافر 1'}</h3>
                   <div className="flex items-center mt-1">
                     <span className="text-xs mr-2 bg-white/30 px-2 py-0.5 rounded-full backdrop-blur-sm">
                       {locale === 'tr' ? 'Özel Fiyatlar' : locale === 'en' ? 'Special Prices' : 'أسعار خاصة'}
