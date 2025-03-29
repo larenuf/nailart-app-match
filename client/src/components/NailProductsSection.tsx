@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { ShoppingCart, ArrowRight } from "lucide-react";
 import { useI18n } from "@/i18n";
 import { useEffect, useState } from "react";
+import { nailartbakimImage, nailartKitImage } from "./ImportedImages";
 
 export default function NailProductsSection() {
   const { t, locale } = useI18n();
@@ -32,7 +33,7 @@ export default function NailProductsSection() {
               <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02]">
                 {/* Tırnak Bakım Ürün Görseli */}
                 <img 
-                  src={`/assets/nailartbakim.png?t=${timestamp}`} 
+                  src={nailartbakimImage} 
                   alt="Tırnak Bakım Ürün 1"
                   className="absolute inset-0 w-full h-full object-cover"
                   onError={(e) => {
@@ -73,7 +74,7 @@ export default function NailProductsSection() {
               <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02]">
                 {/* Nail Art Kit Görseli */}
                 <img 
-                  src={`/assets/nailartkit.png?t=${timestamp}`} 
+                  src={nailartKitImage} 
                   alt="Nail Art Kitler"
                   className="absolute inset-0 w-full h-full object-cover"
                   onError={(e) => {
