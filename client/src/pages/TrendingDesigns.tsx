@@ -82,7 +82,9 @@ export default function TrendingDesignsPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
               <div className="absolute bottom-2 left-2 right-2">
                 <h3 className="text-white text-sm font-medium drop-shadow-sm">
-                  {locale === 'tr' ? design.title : locale === 'en' ? design.titleEn : design.titleAr}
+                  {/* Başlıklar API'den gelse de burada hardcoded olarak DENEME yazacak şekilde değiştiriyoruz */}
+                  {design.id === 1 ? (locale === 'tr' ? "DENEME" : locale === 'en' ? "TEST" : "اختبار") : 
+                   locale === 'tr' ? design.title : locale === 'en' ? design.titleEn : design.titleAr}
                 </h3>
                 <div className="flex items-center mt-1">
                   <Heart size={12} className="text-red-400 fill-red-400" />

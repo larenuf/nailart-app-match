@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 const NAIL_STYLES = [
   {
     id: 1,
-    name: "Fransız Manikür",
+    name: "DENEME Manikür",
     imageUrl: "https://images.unsplash.com/photo-1604654894610-df63bc536371",
     description: "Klasik ve zarif bir stil, her ortama uygun."
   },
@@ -136,14 +136,14 @@ export default function VirtualConsultation() {
     setTimeout(() => {
       let response = "Tırnak bakımı hakkında daha fazla bilgi almak ister misiniz?";
       
-      if (message.toLowerCase().includes("french") || message.toLowerCase().includes("fransız")) {
-        response = "Fransız manikürü klasik ve her zaman moda olan bir seçenektir. İnce beyaz uçlar zarif bir görünüm sağlar.";
+      if (message.toLowerCase().includes("french") || message.toLowerCase().includes("fransız") || message.toLowerCase().includes("deneme")) {
+        response = "DENEME manikürü klasik ve her zaman moda olan bir seçenektir. İnce beyaz uçlar zarif bir görünüm sağlar.";
       } else if (message.toLowerCase().includes("ombre")) {
         response = "Ombre tırnaklar, bir renkten diğerine yumuşak bir geçiş sağlayan modern bir stildir. Özel günler için harika bir seçim!";
       } else if (message.toLowerCase().includes("geometri") || message.toLowerCase().includes("çizgi")) {
         response = "Geometrik desenler cesur ve modern bir görünüm ister. İnce fırça veya tırnak bantları kullanarak kolayca uygulanabilir.";
       } else if (message.toLowerCase().includes("fiyat") || message.toLowerCase().includes("ücret")) {
-        response = "Fiyatlar seçtiğiniz tırnak stiline ve salona göre değişiklik gösterir. Fransız manikür genellikle 150-200₺ arasındadır.";
+        response = "Fiyatlar seçtiğiniz tırnak stiline ve salona göre değişiklik gösterir. DENEME manikür genellikle 150-200₺ arasındadır.";
       } else if (message.toLowerCase().includes("süre") || message.toLowerCase().includes("ne kadar sürer")) {
         response = "Tırnak uygulaması genellikle 30-60 dakika arasında sürer. Karmaşık desenler için bu süre 90 dakikaya kadar uzayabilir.";
       }
