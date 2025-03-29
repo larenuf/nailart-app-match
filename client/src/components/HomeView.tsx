@@ -567,22 +567,7 @@ function PersonalizedGreeting({
           </div>
         </div>
         
-        {/* Day progress bar */}
-        <div className="mt-4">
-          <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
-            <span>{locale === 'tr' ? 'Sabah' : locale === 'en' ? 'Morning' : 'صباح'}</span>
-            <span>{locale === 'tr' ? 'Öğle' : locale === 'en' ? 'Noon' : 'ظهر'}</span>
-            <span>{locale === 'tr' ? 'Akşam' : locale === 'en' ? 'Evening' : 'مساء'}</span>
-          </div>
-          <div className="h-1.5 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-            <motion.div 
-              className="h-full bg-gradient-to-r from-amber-400 via-pink-500 to-indigo-400"
-              initial={{ width: "0%" }}
-              animate={{ width: `${(new Date().getHours() / 24) * 100}%` }}
-              transition={{ duration: 1, delay: 0.5 }}
-            />
-          </div>
-        </div>
+
       </div>
     </motion.div>
   );
