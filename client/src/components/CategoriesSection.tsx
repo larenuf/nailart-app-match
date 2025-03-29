@@ -41,7 +41,7 @@ export default function CategoriesSection() {
             }}
           >
             <img 
-              src={category.id === 1 ? "/attached_assets/manikur.png" : 
+              src={category.id === 1 ? "/images/manikur.png" : 
                    category.id === 2 ? "https://images.unsplash.com/photo-1604902396830-aca29e19b067?ixlib=rb-1.2.1&q=80" :
                    category.id === 3 ? "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?ixlib=rb-1.2.1&q=80" :
                    "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?ixlib=rb-1.2.1&q=80"}
