@@ -25,8 +25,12 @@ const suggestedQuestions = [
   { text: "Tırnak bakımı için önerilerin neler?", icon: <Scissors size={14} /> },
   { text: "Bu sezonun trendleri neler?", icon: <Sparkles size={14} /> },
   { text: "Ten rengime uygun ojeler?", icon: <Compass size={14} /> },
+  { text: "Kırılan tırnaklar için ne yapabilirim?", icon: <RefreshCw size={14} /> },
+  { text: "Jel oje ve normal oje arasındaki farklar?", icon: <Info size={14} /> },
   { text: "Özel fırsatlar var mı?", icon: <Gift size={14} /> },
-  { text: "Manikür ne kadar sürer?", icon: <CalendarClock size={14} /> }
+  { text: "Manikür ne kadar sürer?", icon: <CalendarClock size={14} /> },
+  { text: "Nail art için kolay teknikler nelerdir?", icon: <Sparkles size={14} /> },
+  { text: "Evde yapabileceğim tırnak bakımları?", icon: <Scissors size={14} /> }
 ];
 
 // Kullanıcı profili tipi
@@ -168,10 +172,19 @@ export default function AiChat() {
         <PopoverTrigger asChild>
           <Button 
             size="icon" 
-            className="w-14 h-14 rounded-full shadow-lg bg-gradient-to-r from-[#FF5864] to-[#FF876C] hover:opacity-90 relative"
+            className="w-16 h-16 rounded-full shadow-lg bg-gradient-to-r from-[#FF5864] to-[#FF876C] hover:opacity-90 relative animate-pulse-slow"
+            onClick={() => {
+              if (!open) {
+                toast({
+                  title: "AI Güzellik Danışmanı Aktif",
+                  description: "Tırnak bakımı, makyaj ve güzellik tavsiyeleri için sorularınızı sorabilirsiniz!",
+                  variant: "default",
+                });
+              }
+            }}
           >
-            <MessageCircle className="h-7 w-7 text-white" />
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-[10px] text-white font-bold">AI</span>
+            <MessageCircle className="h-8 w-8 text-white" />
+            <span className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-[10px] text-white font-bold">AI</span>
           </Button>
         </PopoverTrigger>
         <PopoverContent 
@@ -197,6 +210,27 @@ export default function AiChat() {
               </div>
             </div>
             <div className="flex gap-1">
+              {messages.length > 0 && (
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-white hover:bg-white/20 h-8 w-8" 
+                  onClick={() => {
+                    if (confirm("Konuşma geçmişini temizlemek istediğinize emin misiniz?")) {
+                      // This is a mock function since we don't have an actual API endpoint for this
+                      // In production, you would make an API call to clear the conversation
+                      queryClient.setQueryData(['/api/ai-chat/messages'], []);
+                      toast({
+                        title: "Konuşma geçmişi temizlendi",
+                        description: "Yeni bir konuşmaya başlayabilirsiniz",
+                      });
+                    }
+                  }}
+                  title="Konuşmayı Temizle"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
               <Button 
                 variant="ghost" 
                 size="icon" 
@@ -313,23 +347,35 @@ export default function AiChat() {
                 <Loader2 className="h-8 w-8 animate-spin text-[#FF5864]" />
               </div>
             ) : messages.length === 0 ? (
-              <div className="flex flex-col items-center py-10 space-y-6 text-center">
-                <div className="w-16 h-16 rounded-full bg-pink-50 flex items-center justify-center">
-                  <Sparkles className="h-8 w-8 text-[#FF5864]" />
+              <div className="flex flex-col items-center py-6 space-y-6 text-center">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-100 to-pink-300 flex items-center justify-center shadow-md">
+                  <Sparkles className="h-10 w-10 text-[#FF5864]" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800">Güzellik Danışmanınız</h3>
-                  <p className="mt-1 text-sm text-gray-500 max-w-[250px]">
-                    Tırnak bakımı, oje renkleri, nail art ve daha fazlası hakkında size yardımcı olabilirim.
+                  <h3 className="text-xl font-bold text-gray-800">AI Güzellik Danışmanınız</h3>
+                  <p className="mt-2 text-sm text-gray-600 max-w-[280px] leading-relaxed">
+                    Tırnak bakımı, oje renkleri, nail art teknikleri ve en son trendler hakkında size kişisel öneriler sunabilirim.
                   </p>
+                  <div className="mt-3 flex flex-wrap gap-2 justify-center">
+                    <Badge variant="outline" className="bg-pink-50 text-pink-700 border-pink-200">
+                      <Scissors className="w-3 h-3 mr-1" /> Nail Art
+                    </Badge>
+                    <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                      <Compass className="w-3 h-3 mr-1" /> Ten Uyumu
+                    </Badge>
+                    <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+                      <Sparkles className="w-3 h-3 mr-1" /> Trendler
+                    </Badge>
+                  </div>
                 </div>
                 
-                <div className="grid grid-cols-1 gap-2 w-full mt-4">
+                <div className="grid grid-cols-1 gap-2 w-full mt-2">
+                  <p className="text-xs text-gray-500 font-medium mb-1">Hemen sormak isteyebileceğiniz sorular:</p>
                   {suggestedQuestions.map((question, index) => (
                     <Button 
                       key={index} 
                       variant="outline" 
-                      className="justify-start text-xs gap-2 h-auto py-2 bg-gray-50 hover:bg-gray-100 border-gray-100"
+                      className="justify-start text-xs gap-2 h-auto py-2 bg-gray-50 hover:bg-pink-50 border-gray-100 hover:border-pink-200 transition-colors"
                       onClick={() => handleSuggestedQuestionClick(question.text)}
                     >
                       {question.icon}
@@ -355,13 +401,16 @@ export default function AiChat() {
                     )}
                     <div
                       className={cn(
-                        "px-4 py-2 rounded-lg max-w-[80%]",
+                        "px-4 py-3 rounded-lg max-w-[80%] shadow-sm",
                         message.isUser
-                          ? "bg-[#FF5864] text-white rounded-br-none"
-                          : "bg-gray-100 text-gray-800 rounded-bl-none"
+                          ? "bg-gradient-to-r from-[#FF5864] to-[#FF876C] text-white rounded-br-none"
+                          : "bg-white border border-gray-100 text-gray-800 rounded-bl-none"
                       )}
                     >
                       <p className="text-sm leading-relaxed">{formatMessageText(message.text)}</p>
+                      <div className="mt-1 text-xs opacity-70 text-right">
+                        {new Date(message.timestamp).toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'})}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -372,11 +421,14 @@ export default function AiChat() {
                     <Avatar className="h-8 w-8 mr-2">
                       <img src="https://images.pexels.com/photos/3065015/pexels-photo-3065015.jpeg?auto=compress&cs=tinysrgb&w=800" alt="AI Assistant" />
                     </Avatar>
-                    <div className="bg-gray-100 text-gray-800 rounded-lg rounded-bl-none px-4 py-3">
-                      <div className="flex space-x-1">
-                        <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                        <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                        <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '600ms' }}></div>
+                    <div className="bg-white border border-gray-100 text-gray-800 rounded-lg rounded-bl-none px-4 py-3 shadow-sm">
+                      <div className="flex space-x-2 items-center h-5">
+                        <span className="text-xs text-gray-500 mr-1">AI yanıtlıyor</span>
+                        <div className="flex space-x-1">
+                          <div className="w-2 h-2 rounded-full bg-pink-400 animate-pulse" style={{ animationDelay: '0ms' }}></div>
+                          <div className="w-2 h-2 rounded-full bg-pink-400 animate-pulse" style={{ animationDelay: '300ms' }}></div>
+                          <div className="w-2 h-2 rounded-full bg-pink-400 animate-pulse" style={{ animationDelay: '600ms' }}></div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -388,38 +440,48 @@ export default function AiChat() {
           </ScrollArea>
 
           {messages.length > 0 && !typing && (
-            <div className="px-3 py-2 bg-gray-50 border-t border-gray-100 flex gap-1 overflow-x-auto scrollbar-none">
-              {suggestedQuestions.slice(0, 3).map((question, index) => (
-                <Badge 
-                  key={index}
-                  variant="outline"
-                  className="cursor-pointer whitespace-nowrap text-xs py-1 px-2 bg-white hover:bg-gray-100"
-                  onClick={() => handleSuggestedQuestionClick(question.text)}
-                >
-                  {question.icon} 
-                  <span className="ml-1">{question.text}</span>
-                </Badge>
-              ))}
+            <div className="px-3 py-2 bg-gray-50 border-t border-gray-100 overflow-x-auto scrollbar-none">
+              <p className="text-xs text-gray-500 mb-2 font-medium">Daha fazla soru için öneriler:</p>
+              <div className="flex flex-wrap gap-2">
+                {suggestedQuestions.slice(0, 4).map((question, index) => (
+                  <Badge 
+                    key={index}
+                    variant="outline"
+                    className="cursor-pointer whitespace-nowrap text-xs py-1.5 px-3 bg-white hover:bg-pink-50 hover:text-pink-600 hover:border-pink-200 shadow-sm transition-all duration-200 flex items-center"
+                    onClick={() => handleSuggestedQuestionClick(question.text)}
+                  >
+                    <span className="mr-1.5">{question.icon}</span>
+                    <span className="truncate max-w-[150px]">{question.text}</span>
+                  </Badge>
+                ))}
+              </div>
             </div>
           )}
 
           <form 
             onSubmit={handleSendMessage} 
-            className="border-t p-3 flex gap-2"
+            className="border-t p-3 flex gap-2 relative"
           >
             <Input
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Mesajınızı yazın..."
-              className="flex-1"
+              placeholder="Güzellik ve tırnak bakımı soruları..."
+              className="flex-1 pl-3 pr-12 py-3 border-pink-100 focus-visible:ring-pink-400 bg-gray-50"
               disabled={sendMessageMutation.isPending || typing}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey && input.trim()) {
+                  e.preventDefault();
+                  handleSendMessage(e);
+                }
+              }}
             />
             <Button 
               type="submit"
               size="icon"
               disabled={!input.trim() || sendMessageMutation.isPending || typing}
-              className="bg-[#FF5864] hover:bg-[#FF5864]/90"
+              className="bg-[#FF5864] hover:bg-[#FF5864]/90 absolute right-4 top-1/2 transform -translate-y-1/2 transition-all duration-200"
+              style={{ opacity: input.trim() ? 1 : 0.5 }}
             >
               {sendMessageMutation.isPending ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
