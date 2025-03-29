@@ -7,7 +7,7 @@ import type { ChatMessage } from './storage';
 import { setupAuth } from "./auth";
 import { setupWebSocketServer, broadcastToAll } from './websocket';
 import uploadRoutes from './routes/upload';
-// Trend tasarımlar endpoint'i kaldırıldı
+import apiToolsRoutes from './routes/api-tools';
 
 // Mock Stripe implementation for now
 const mockStripe = {
@@ -31,7 +31,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Dosya yükleme API'lerini tanımla
   app.use('/api/upload', uploadRoutes);
   
-  // Trend tasarımlar API'leri kaldırıldı
+  // API Araçları rotalarını tanımla
+  app.use('/api/tools', apiToolsRoutes);
   
   // Kimlik doğrulama gerektirmeyen genel resim yükleme endpoint'i
   app.post('/api/public-upload/image', async (req, res, next) => {
