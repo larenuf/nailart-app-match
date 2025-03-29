@@ -814,12 +814,7 @@ function DensityToggle({ density, setDensity }: {
 }
 
 // Trending designs section
-// Import TrendingDesigns component from pages
-import TrendingDesignsPage from "../pages/TrendingDesigns";
-
-function TrendingDesigns() {
-  return <TrendingDesignsPage />;
-}
+// Bu bölüm tamamen kaldırıldı
 
 export default function HomeView() {
   const { locale } = useI18n();
