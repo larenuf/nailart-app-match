@@ -30,9 +30,9 @@ export default function NailProductsSection() {
           {/* Tırnak Bakım Ürünleri */}
           <Link href={`/product-category/nail-care?v=${timestamp}`} className="cursor-pointer group">
               <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02]">
-                {/* Hizliresim görseli */}
+                {/* Local Görsel */}
                 <img 
-                  src={`https://i.hizliresim.com/avlzagp.png?t=${timestamp}`} 
+                  src={`/attached_assets/nailartbakim.png?t=${timestamp}`} 
                   alt="Tırnak Bakım Ürün"
                   className="absolute inset-0 w-full h-full object-cover"
                   onError={(e) => {
@@ -71,9 +71,9 @@ export default function NailProductsSection() {
           {/* Nail Art Kitleri */}
           <Link href={`/product-category/nail-art-kits?v=${timestamp}`} className="cursor-pointer group">
               <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02]">
-                {/* Hizliresim görseli - aynı görsel kullanılıyor */}
+                {/* Local Görsel - aynı görsel kullanılıyor */}
                 <img 
-                  src={`https://i.hizliresim.com/avlzagp.png?t=${timestamp}`} 
+                  src={`/attached_assets/nailartbakim.png?t=${timestamp}`} 
                   alt="Nail Art Kitleri"
                   className="absolute inset-0 w-full h-full object-cover"
                   onError={(e) => {
