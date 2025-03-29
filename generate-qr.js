@@ -1,26 +1,17 @@
 import qrcode from 'qrcode-terminal';
-import { execSync } from 'child_process';
 
-// Replit'in gerçek URL'sini almak için komut çalıştırma
-let url;
-try {
-  // Replit metadatasından URL'yi alma girişimi
-  const result = execSync('curl -s $REPLIT_DB_URL/urls/public').toString().trim();
-  if (result && result.startsWith('http')) {
-    url = result;
-  } else {
-    // Fallback: Replit değişkenlerinden URL oluşturma
-    url = process.env.REPL_SLUG && process.env.REPL_OWNER
-      ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`
-      : 'https://replit.com/@larenuf/workspace';
-  }
-} catch (error) {
-  // Hata durumunda standart URL'ye dönüş
-  url = 'https://replit.com/@larenuf/workspace';
-}
+// Doğrudan URL'yi belirleme
+const url = 'https://cc585201-25b3-46d4-ae88-91fabbe0d50a-00-2img5bddmditq.spock.replit.dev/?_t=' + Date.now();
 
-console.log(`\nUygulama URL'i: ${url}\n`);
+// Önbelleklemeyi engellemek için zaman damgalı URL versiyonu
+const cacheBusterUrl = `${url}&cache_buster=${Date.now()}`;
+
+console.log(`\nÖnbellek Korumalı Uygulama URL'i: ${url}\n`);
+console.log(`Alternatif URL: ${cacheBusterUrl}\n`);
 console.log('Aşağıdaki QR kodu telefonunuzla tarayın:\n');
 
 // URL için QR kod oluşturma
-qrcode.generate(url, { small: true });
+qrcode.generate(cacheBusterUrl, { small: true });
+
+console.log('\nBu URL\'ler önbellek sorunlarını çözmek için zaman damgası içeriyor.');
+console.log('Uygulamaya göz atarken sorun yaşarsanız, bu URL\'lerden birini kullanın.');
