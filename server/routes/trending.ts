@@ -7,37 +7,38 @@ const router = Router();
 // Get all trending designs
 router.get('/trending-designs', async (req, res) => {
   try {
+    // Bu bölüm tamamen değiştirildi - Fransız Manikürü yerine DENEME olarak değiştirildi
     const designs = [
       {
         id: 1,
-        title: "Fransız Manikürü",
-        titleEn: "French Manicure",
-        titleAr: "مانيكير فرنسي",
+        title: "DENEME",
+        titleEn: "TEST",
+        titleAr: "اختبار",
         likes: 243,
         color: "#ffdedc",
         imageUrl: "https://i.hizliresim.com/avlzagp.png"
       },
       {
         id: 2,
-        title: "Jel Tasarım",
-        titleEn: "Gel Design",
-        titleAr: "تصميم جل",
+        title: "DENEME 2",
+        titleEn: "TEST 2",
+        titleAr: "2 اختبار",
         likes: 187,
         color: "#d9e9ff"
       },
       {
         id: 3,
-        title: "Minimalist Çizgiler",
-        titleEn: "Minimalist Lines",
-        titleAr: "خطوط بسيطة",
+        title: "DENEME 3",
+        titleEn: "TEST 3",
+        titleAr: "3 اختبار",
         likes: 312,
         color: "#f5f5f5"
       },
       {
         id: 4,
-        title: "Glitter Parlaklık",
-        titleEn: "Glitter Shine",
-        titleAr: "بريق لامع",
+        title: "DENEME 4",
+        titleEn: "TEST 4",
+        titleAr: "4 اختبار",
         likes: 276,
         color: "#fbe3f3"
       }
