@@ -1,9 +1,16 @@
 import { Link } from "wouter";
 import { ShoppingCart, ArrowRight } from "lucide-react";
 import { useI18n } from "@/i18n";
+import { useEffect, useState } from "react";
 
 export default function NailProductsSection() {
   const { t, locale } = useI18n();
+  const [timestamp, setTimestamp] = useState(Date.now());
+  
+  // Cache bypass için her 5 saniyede bir timestamp güncellenecek
+  useEffect(() => {
+    setTimestamp(Date.now());
+  }, []);
   
   return (
     <div className="px-4 py-4">
@@ -14,14 +21,14 @@ export default function NailProductsSection() {
             <ShoppingCart size={14} className="text-purple-500 mr-1"/>
             {locale === 'tr' ? 'Tırnak Ürünleri' : locale === 'en' ? 'Nail Products' : 'منتجات الأظافر'}
           </h2>
-          <Link href="/shop" className="text-xs font-medium text-primary dark:text-pink-400 flex items-center cursor-pointer">
+          <Link href={`/shop?v=${timestamp}`} className="text-xs font-medium text-primary dark:text-pink-400 flex items-center cursor-pointer">
             {locale === 'tr' ? 'Mağazaya Git' : locale === 'en' ? 'Go to Shop' : 'الذهاب إلى المتجر'} <ArrowRight size={10} className="ml-0.5"/>
           </Link>
         </div>
         
         <div className="grid grid-cols-2 gap-3">
           {/* Tırnak Bakım Ürünleri */}
-          <Link href="/product-category/nail-care" className="cursor-pointer group">
+          <Link href={`/product-category/nail-care?v=${timestamp}`} className="cursor-pointer group">
               <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02]">
                 <div className="absolute inset-0 bg-gradient-to-br from-pink-100 to-purple-200 opacity-90">
                   <div className="absolute inset-0 flex flex-col justify-center items-center">
@@ -46,7 +53,7 @@ export default function NailProductsSection() {
           </Link>
           
           {/* Nail Art Kitleri */}
-          <Link href="/product-category/nail-art-kits" className="cursor-pointer group">
+          <Link href={`/product-category/nail-art-kits?v=${timestamp}`} className="cursor-pointer group">
               <div className="relative overflow-hidden rounded-lg aspect-[1/1] shadow-sm transition-transform duration-300 group-hover:scale-[1.02]">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-100 to-blue-200 opacity-90">
                   <div className="absolute inset-0 flex flex-col justify-center items-center">
