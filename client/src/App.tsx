@@ -18,7 +18,7 @@ import Profile from "@/pages/Profile";
 import Search from "@/pages/Search";
 import VirtualConsultation from "@/pages/VirtualConsultation";
 import ColorMatcher from "@/pages/ColorMatcher";
-import TrendingDesignsPage from "@/pages/TrendingDesigns";
+// Trending Designs sayfası tamamen kaldırıldı
 import Dashboard from "@/pages/admin/Dashboard";
 import CreateSalon from "@/pages/admin/CreateSalonNew";
 import AiChat from "@/components/AiChat";
@@ -116,7 +116,7 @@ function Router() {
         <Route path="/search" component={Search} />
         <Route path="/virtual-consultation" component={VirtualConsultation} />
         <Route path="/color-matcher" component={ColorMatcher} />
-        <Route path="/trends" component={TrendingDesignsPage} />
+        {/* Trend Tasarımlar sayfası tamamen kaldırıldı */}
         
         {/* Salon Yönetim Sayfaları - Tam eşleşme kullan */}
         <Route path="/admin" children={<Dashboard />} />
