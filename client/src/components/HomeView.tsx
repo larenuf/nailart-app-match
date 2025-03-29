@@ -840,7 +840,7 @@ export default function HomeView() {
     featuredSalons: true,
     map: true,
     products: true,
-    trendingDesigns: true, // Trend tasarımlar bölümünü etkinleştirelim
+    trendingDesigns: false, // Trend tasarımlar bölümünü kaldır
     premiumFeatures: true
   });
   
