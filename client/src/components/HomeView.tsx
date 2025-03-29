@@ -466,7 +466,6 @@ function PersonalizedGreeting({
   const { t, locale } = useI18n();
   const { userLocation } = useAppContext();
   const [timeBasedGreeting, setTimeBasedGreeting] = useState<string>("");
-  const [weatherIcon, setWeatherIcon] = useState<string>("☀️");
   const [userName, setUserName] = useState<string>("");
   const [location, setLocation] = useState<string>(userLocation || "İstanbul");
   const [_, navigate] = useLocation();
@@ -476,21 +475,16 @@ function PersonalizedGreeting({
     const getGreeting = () => {
       const hour = new Date().getHours();
       let greeting = "";
-      let icon = "";
       
       if (hour >= 5 && hour < 12) {
         greeting = locale === 'tr' ? 'Günaydın' : locale === 'en' ? 'Good Morning' : 'صباح الخير';
-        icon = "☀️";
       } else if (hour >= 12 && hour < 18) {
         greeting = locale === 'tr' ? 'İyi Günler' : locale === 'en' ? 'Good Afternoon' : 'مساء الخير';
-        icon = "🌤️";
       } else {
         greeting = locale === 'tr' ? 'İyi Akşamlar' : locale === 'en' ? 'Good Evening' : 'مساء الخير';
-        icon = "🌙";
       }
       
       setTimeBasedGreeting(greeting);
-      setWeatherIcon(icon);
     };
     
     getGreeting();
@@ -527,7 +521,6 @@ function PersonalizedGreeting({
         <div className="flex justify-between items-start">
           <div>
             <div className="flex items-center">
-              <span className="text-3xl mr-3 animate-pulse">{weatherIcon}</span>
               <div>
                 <h1 className="text-xl font-bold text-gray-800 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-gray-600 dark:from-white dark:to-gray-300">
                   {timeBasedGreeting}{userName && <span>, </span>}
