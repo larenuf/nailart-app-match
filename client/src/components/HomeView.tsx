@@ -572,44 +572,7 @@ function PersonalizedGreeting({
   );
 }
 
-// View type selector component (List vs Map)
-function ViewTypeSelector({ viewType, setViewType }: { viewType: 'list' | 'map', setViewType: (type: 'list' | 'map') => void }) {
-  const { locale } = useI18n();
-  
-  const handleViewTypeChange = (type: 'list' | 'map') => {
-    console.log(`Changing view type to: ${type}`);
-    setViewType(type);
-  };
-  
-  return (
-    <div className="px-4 mb-2">
-      <div className="bg-gray-100 dark:bg-gray-800 p-1 rounded-lg flex w-full max-w-[140px]">
-        <button
-          onClick={() => handleViewTypeChange('list')}
-          className={`flex-1 py-1.5 px-3 rounded-md flex items-center justify-center text-xs font-medium transition-colors duration-200 ${
-            viewType === 'list' 
-              ? 'bg-white dark:bg-gray-700 text-primary shadow-sm' 
-              : 'text-gray-600 dark:text-gray-400'
-          }`}
-        >
-          <LayoutGrid size={14} className="mr-1.5" />
-          {locale === 'tr' ? 'Liste' : locale === 'en' ? 'List' : 'قائمة'}
-        </button>
-        <button
-          onClick={() => handleViewTypeChange('map')}
-          className={`flex-1 py-1.5 px-3 rounded-md flex items-center justify-center text-xs font-medium transition-colors duration-200 ${
-            viewType === 'map' 
-              ? 'bg-white dark:bg-gray-700 text-primary shadow-sm' 
-              : 'text-gray-600 dark:text-gray-400'
-          }`}
-        >
-          <Map size={14} className="mr-1.5" />
-          {locale === 'tr' ? 'Harita' : locale === 'en' ? 'Map' : 'خريطة'}
-        </button>
-      </div>
-    </div>
-  );
-}
+// View type selector component was removed as requested
 
 // Quick filter tags component
 function QuickFilterTags() {
@@ -761,58 +724,7 @@ function PullToRefresh({ onRefresh }: { onRefresh: () => void }) {
   );
 }
 
-// Density toggle for content display
-function DensityToggle({ density, setDensity }: { 
-  density: 'compact' | 'normal' | 'expanded', 
-  setDensity: (d: 'compact' | 'normal' | 'expanded') => void 
-}) {
-  const { locale } = useI18n();
-  
-  return (
-    <motion.div 
-      className="px-4 my-2 flex items-center justify-end"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.3 }}
-    >
-      <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-        <button
-          onClick={() => setDensity('compact')}
-          className={`p-1.5 rounded flex items-center justify-center ${
-            density === 'compact' 
-              ? 'bg-white dark:bg-gray-700 text-primary shadow-sm' 
-              : 'text-gray-600 dark:text-gray-400'
-          }`}
-          title={locale === 'tr' ? 'Sıkışık Görünüm' : locale === 'en' ? 'Compact View' : 'عرض مدمج'}
-        >
-          <Menu size={14} className="rotate-90" />
-        </button>
-        <button
-          onClick={() => setDensity('normal')}
-          className={`p-1.5 rounded mx-1 flex items-center justify-center ${
-            density === 'normal' 
-              ? 'bg-white dark:bg-gray-700 text-primary shadow-sm' 
-              : 'text-gray-600 dark:text-gray-400'
-          }`}
-          title={locale === 'tr' ? 'Normal Görünüm' : locale === 'en' ? 'Normal View' : 'عرض عادي'}
-        >
-          <Menu size={14} />
-        </button>
-        <button
-          onClick={() => setDensity('expanded')}
-          className={`p-1.5 rounded flex items-center justify-center ${
-            density === 'expanded' 
-              ? 'bg-white dark:bg-gray-700 text-primary shadow-sm' 
-              : 'text-gray-600 dark:text-gray-400'
-          }`}
-          title={locale === 'tr' ? 'Genişletilmiş Görünüm' : locale === 'en' ? 'Expanded View' : 'عرض موسع'}
-        >
-          <LayoutGrid size={14} />
-        </button>
-      </div>
-    </motion.div>
-  );
-}
+// Density toggle for content display was removed as requested
 
 // Trending designs section
 // Bu bölüm tamamen kaldırıldı
@@ -821,16 +733,9 @@ export default function HomeView() {
   const { locale } = useI18n();
   const { darkMode, toggleDarkMode } = useTheme();
   const [salons, setSalons] = useState([]);
-  const [viewType, setViewType] = useState<'list' | 'map'>('list');
-  const [density, setDensity] = useState<'compact' | 'normal' | 'expanded'>('normal');
+  // View type and density settings are removed as requested
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  
-  // Function to handle view type change
-  const handleViewTypeChange = (type: 'list' | 'map') => {
-    console.log(`Changing view type to: ${type}`);
-    setViewType(type);
-  };
   
   // Customize sections visibility
   const [visibleSections, setVisibleSections] = useState({
@@ -958,17 +863,11 @@ export default function HomeView() {
         
         {visibleSections.categories && <CategoriesSection />}
         
-        {/* View type selector - toggle between list and map */}
-        <ViewTypeSelector viewType={viewType} setViewType={handleViewTypeChange} />
-        
-        {/* Content density toggle */}
-        <DensityToggle density={density} setDensity={setDensity} />
-        
         {visibleSections.weatherPromo && <WeatherPromoBanner />}
         
         {visibleSections.featuredSalons && <FeaturedSalonsSectionNew />}
         
-        {viewType === 'map' && visibleSections.map && (
+        {visibleSections.map && (
           <div className="px-4" onClick={(e) => e.stopPropagation()}>
             <LeafletClusterMap salons={salons} />
           </div>
