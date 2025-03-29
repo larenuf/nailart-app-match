@@ -2,8 +2,9 @@
  * LocalTunnel Özel Subdomain İle Başlatma
  */
 
-const localtunnel = require('localtunnel');
-const qrcode = require('qrcode-terminal');
+import localtunnel from 'localtunnel';
+import qrcodeTerminal from 'qrcode-terminal';
+const qrcode = qrcodeTerminal;
 
 const PORT = process.env.PORT || 5000;
 const subdomain = `nailartmatch-${Math.floor(Math.random() * 10000)}`;
