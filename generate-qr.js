@@ -1,17 +1,38 @@
-import qrcode from 'qrcode-terminal';
+/**
+ * QR Kod Oluşturucu
+ * 
+ * Bu script, Replit URL'niz için QR kod oluşturur.
+ * Mobil cihazlardan kolayca test edebilmek için kullanabilirsiniz.
+ */
 
-// Doğrudan URL'yi belirleme
-const url = 'https://cc585201-25b3-46d4-ae88-91fabbe0d50a-00-2img5bddmditq.spock.replit.dev/?_t=' + Date.now();
+import qrcodeTerminal from 'qrcode-terminal';
+const qrcode = qrcodeTerminal;
 
-// Önbelleklemeyi engellemek için zaman damgalı URL versiyonu
-const cacheBusterUrl = `${url}&cache_buster=${Date.now()}`;
+// Tarayıcı önbelleğini atlamak için zaman damgası
+const timestamp = Date.now();
 
-console.log(`\nÖnbellek Korumalı Uygulama URL'i: ${url}\n`);
-console.log(`Alternatif URL: ${cacheBusterUrl}\n`);
-console.log('Aşağıdaki QR kodu telefonunuzla tarayın:\n');
+// Temel Replit URL'si
+const replitDomain = process.env.REPLIT_DOMAINS || "";
+const baseUrl = `https://${replitDomain}`;
 
-// URL için QR kod oluşturma
-qrcode.generate(cacheBusterUrl, { small: true });
+// Önbellek kırıcı URL
+const cacheBustUrl = `${baseUrl}/?_t=${timestamp}`;
 
-console.log('\nBu URL\'ler önbellek sorunlarını çözmek için zaman damgası içeriyor.');
-console.log('Uygulamaya göz atarken sorun yaşarsanız, bu URL\'lerden birini kullanın.');
+console.log("\n=============================================================");
+console.log("MOBIL TEST IÇIN QR KODLAR");
+console.log("=============================================================");
+
+console.log("\n📱 STANDART URL İÇİN QR KOD:\n");
+qrcode.generate(baseUrl, {small: true});
+
+console.log("\n📱 ÖNBELLEK KIRICI URL İÇİN QR KOD:\n");
+qrcode.generate(cacheBustUrl, {small: true});
+
+console.log("\n=============================================================");
+console.log("KULLANIM:");
+console.log("=============================================================");
+console.log("1. Telefonunuzda bir QR kod okuyucu açın");
+console.log("2. Yukarıdaki QR kodlardan birini tarayın");
+console.log("3. Açılan URL'yi telefonunuzun tarayıcısında görüntüleyin");
+console.log("\nSorun yaşarsanız önbellek kırıcı URL için olan QR kodu kullanın.");
+console.log("=============================================================");
