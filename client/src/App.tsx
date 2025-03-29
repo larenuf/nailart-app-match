@@ -38,6 +38,20 @@ function Router() {
         return true;
       }
       
+      // Önbellek sorunlarını gidermek için anasayfada query cache'i temizleyelim
+      if (path === "/" || path === "/home") {
+        // Mevcut URL'yi al ve önbelleği geçersiz kılmak için zaman damgası ekle
+        window.history.replaceState(
+          null, 
+          document.title, 
+          window.location.pathname + "?t=" + Date.now()
+        );
+        
+        // React Query önbelleğini temizle
+        queryClient.clear();
+        queryClient.invalidateQueries();
+      }
+      
       // localStorage içinde firstVisit değerini kontrol et
       const visited = localStorage.getItem('firstVisit');
       console.log("İlk ziyaret durumu:", visited);
@@ -133,7 +147,8 @@ function App() {
   };
 
   // Force a refresh timestamp to avoid caching issues
-  const refreshKey = Date.now();
+  // Caching sorunlarını düzeltmek için yeni bir refresh key oluşturalım
+  const refreshKey = Date.now() + Math.random();
   
   return (
     <QueryClientProvider client={queryClient}>
