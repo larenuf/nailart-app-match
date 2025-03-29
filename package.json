@@ -69,6 +69,7 @@
     "google-map-react": "^2.2.1",
     "input-otp": "^1.2.4",
     "leaflet": "^1.9.4",
+    "localtunnel": "^2.0.2",
     "lucide-react": "^0.453.0",
     "memorystore": "^1.6.7",
     "node-fetch": "^3.3.2",
