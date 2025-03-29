@@ -1,47 +1,41 @@
-// Replit'in gerçek URL'sini almak için özel bir script
-import qrcode from 'qrcode-terminal';
+/**
+ * Doğru URL Oluşturucu
+ * 
+ * Bu script, uygulamanıza erişmek için kullanabileceğiniz tüm URL'leri gösterir.
+ * Önbellek sorunlarını çözmek için zaman damgalı URL'ler de içerir.
+ */
 
-// Replit ID'sini kullanarak dış URL oluşturma (bu muhtemelen çalışacaktır)
-// Replit Domain bilgisini doğrudan kullanma
+// Tarayıcı önbelleğini atlamak için zaman damgası
+const timestamp = Date.now();
+
+// Temel Replit URL'si
 const replitDomain = process.env.REPLIT_DOMAINS || "";
-const replId = process.env.REPL_ID || "";
+const baseUrl = `https://${replitDomain}`;
 
-// Alternatif URL'ler oluşturalım
-const urls = [];
+// Önbellek kırıcı URL'ler
+const cacheBustUrl = `${baseUrl}/?_t=${timestamp}`;
+const cacheBustUrl2 = `${baseUrl}/?v=${timestamp}`;
 
-if (replitDomain) {
-  // Eğer REPLIT_DOMAINS çevresel değişkeni mevcutsa kullan
-  const domainUrl = `https://${replitDomain}`;
-  urls.push(domainUrl);
-}
+console.log("=============================================================");
+console.log("NAIL ART MATCH UYGULAMASINA ERİŞİM URL'LERİ");
+console.log("=============================================================");
 
-// Replit ID tabanlı URL
-if (replId) {
-  const idUrl = `https://${replId}.id.repl.co`;
-  urls.push(idUrl);
-}
+console.log("\nÖNBELLEK SORUNLARINI ÇÖZEN URL'LER (EN GÜNCEL İÇERİK İÇİN):");
+console.log("-------------------------------------------------------------");
+console.log(`1. ${cacheBustUrl}`);
+console.log(`2. ${cacheBustUrl2}`);
 
-// Standart Replit URL formatı
-const replSlug = process.env.REPL_SLUG || 'workspace';
-const replOwner = process.env.REPL_OWNER || 'larenuf';
-const standardUrl = `https://${replSlug}.${replOwner}.repl.co`;
-urls.push(standardUrl);
+console.log("\nSTANDART URL'LER:");
+console.log("-------------------------------------------------------------");
+console.log(`3. ${baseUrl}`);
 
-// Bir başka format
-const dashUrl = `https://${replSlug}-${replOwner}.repl.co`;
-urls.push(dashUrl);
-
-console.log("\nREPLIT_DOMAINS:", replitDomain);
-console.log("REPL_ID:", replId);
-console.log("PORT:", process.env.PORT || 5000);
-
-console.log("\nLütfen aşağıdaki URL'lerden birini telefonunuzda deneyin:");
-console.log("-----------------------------------------------------------\n");
-
-// Her URL için QR kod oluştur
-urls.forEach((url, index) => {
-  console.log(`${index + 1}. URL: ${url}`);
-  console.log("QR Kod:");
-  qrcode.generate(url, { small: true });
-  console.log("\n");
-});
+console.log("\n=============================================================");
+console.log("ÖNERİLER:");
+console.log("=============================================================");
+console.log("1. Önbellek sorunlarını çözmek için yukarıdaki 1. veya 2. URL'yi kullanın");
+console.log("2. Tarayıcınızda Ctrl+F5 (Windows) veya Cmd+Shift+R (Mac) tuşlarıyla sayfayı yenileyin");
+console.log("3. Tarayıcınızın önbelleğini ve çerezlerini temizleyin");
+console.log("4. Gizli/Özel pencerede deneyin (Incognito/Private Window)");
+console.log("5. Farklı bir tarayıcı deneyin (Chrome, Firefox, Edge, vb.)");
+console.log("6. LocalTunnel ile erişin: 'node localtunnel-baslat.js'");
+console.log("=============================================================");
