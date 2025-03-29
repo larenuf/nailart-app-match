@@ -5,6 +5,7 @@ import CategoriesSection from "./CategoriesSection";
 import FeaturedSalonsSectionNew from "./FeaturedSalonsSectionNew";
 import NailProductsSection from "@/components/NailProductsSection";
 import LeafletClusterMap from "./LeafletClusterMap";
+import TrendingDesigns from "./TrendingDesigns";
 import { 
   Sparkles, Palette, Medal, MousePointerClick, ImagePlus, Megaphone, 
   SlidersHorizontal, Calendar, Sun, ArrowRight, Bell, MapPin, 
@@ -839,7 +840,7 @@ export default function HomeView() {
     featuredSalons: true,
     map: true,
     products: true,
-    trendingDesigns: false, // Tamamen kaldırıldı
+    trendingDesigns: true, // Trend tasarımlar bölümünü etkinleştirelim
     premiumFeatures: true
   });
   
@@ -974,7 +975,7 @@ export default function HomeView() {
         )}
         
         {/* Yeniden tasarlanmış trend tasarımlar bölümü */}
-        {/* Trend Tasarımlar bölümü tamamen kaldırıldı */}
+        {visibleSections.trendingDesigns && <TrendingDesigns />}
         
         {visibleSections.products && <NailProductsSection />}
         
