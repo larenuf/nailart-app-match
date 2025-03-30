@@ -150,6 +150,51 @@ function App() {
   // Caching sorunlarını düzeltmek için yeni bir refresh key oluşturalım
   const refreshKey = Date.now() + Math.random();
   
+  // Replit Webview'da önbellek sorunlarını çözmek için useEffect hook kullanıyoruz
+  useEffect(() => {
+    // Bu sadece Replit webview'da çalışacak
+    const isReplitWebview = window.location.host.includes('replit.dev');
+    
+    if (isReplitWebview) {
+      console.log('Replit Webview algılandı, önbellek yenileniyor...');
+      
+      // Service worker'ı devre dışı bırakarak önbellek sorunlarını önleyelim
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for (let registration of registrations) {
+            registration.unregister();
+            console.log('Service worker kaydı silindi');
+          }
+        });
+      }
+      
+      // Tüm kaynakları yeniden yüklemek için sayfayı yenilemek için bir buton oluşturalım
+      const refreshButton = document.createElement('button');
+      refreshButton.innerHTML = '🔄 Önbelleği Temizle';
+      refreshButton.style.position = 'fixed';
+      refreshButton.style.bottom = '70px';
+      refreshButton.style.right = '10px';
+      refreshButton.style.zIndex = '9999';
+      refreshButton.style.backgroundColor = '#f472b6';
+      refreshButton.style.color = 'white';
+      refreshButton.style.padding = '8px 12px';
+      refreshButton.style.borderRadius = '20px';
+      refreshButton.style.border = 'none';
+      refreshButton.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+      refreshButton.style.cursor = 'pointer';
+      
+      refreshButton.onclick = () => {
+        // Mevcut URL'yi al ve önbelleği geçersiz kılmak için zaman damgası ekle
+        window.location.href = window.location.pathname + "?t=" + Date.now();
+      };
+      
+      // Sayfaya butonu ekle
+      setTimeout(() => {
+        document.body.appendChild(refreshButton);
+      }, 1000);
+    }
+  }, []);
+  
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
