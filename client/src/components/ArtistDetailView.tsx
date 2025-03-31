@@ -10,6 +10,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { format, isSameDay, addDays, isToday } from "date-fns";
 import { tr } from "date-fns/locale";
 import { Calendar as CalendarIcon, Clock, CheckCircle2 } from "lucide-react";
+import { useBackButton } from "@/hooks/useBackButton";
 
 export default function ArtistDetailView() {
   const { 
@@ -50,8 +51,13 @@ export default function ArtistDetailView() {
     "https://images.unsplash.com/photo-1604902396830-aca29e19b067?w=500&auto=format&fit=crop"
   ];
 
+  // useBackButton hook'unu kullanarak geri gitme işlevini alalım
+  const { goBack } = useBackButton();
+  
   const handleBackToSalon = () => {
     setSelectedArtist(null);
+    // Önceki sayfaya git, eğer yoksa anasayfaya yönlendirilecek
+    goBack();
   };
 
   const handleServiceSelect = (service: Service | undefined) => {

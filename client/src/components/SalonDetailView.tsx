@@ -5,6 +5,7 @@ import BottomNavigation from "./BottomNavigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useLocation } from "wouter";
+import { useBackButton } from "@/hooks/useBackButton";
 
 export default function SalonDetailView() {
   const { selectedSalon, setSelectedSalon, setSelectedArtist } = useAppContext();
@@ -34,8 +35,13 @@ export default function SalonDetailView() {
     { id: 4, name: "Kalıcı Oje", price: 40, durationMinutes: 45, description: "2-3 hafta dayanan kalıcı oje uygulaması" }
   ];
 
+  // useBackButton hook'unu kullanarak geri gitme işlevini alalım
+  const { goBack } = useBackButton();
+  
   const handleBackToHome = () => {
     setSelectedSalon(null);
+    // Önceki sayfaya git, eğer yoksa anasayfaya yönlendirilecek
+    goBack();
   };
 
   const [_, navigate] = useLocation();
