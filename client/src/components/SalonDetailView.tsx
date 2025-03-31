@@ -124,11 +124,11 @@ export default function SalonDetailView() {
       </div>
 
       {/* Sekme Yapısı */}
-      <Tabs defaultValue="about" className="w-full">
+      <Tabs defaultValue="services" className="w-full">
         <div className="px-4 border-b">
           <TabsList className="grid grid-cols-4 h-10">
-            <TabsTrigger value="about" className="text-xs">Hakkında</TabsTrigger>
             <TabsTrigger value="services" className="text-xs">Hizmetler</TabsTrigger>
+            <TabsTrigger value="about" className="text-xs">Hakkında</TabsTrigger>
             <TabsTrigger value="artists" className="text-xs">Sanatçılar</TabsTrigger>
             <TabsTrigger value="gallery" className="text-xs">Galeri</TabsTrigger>
           </TabsList>
