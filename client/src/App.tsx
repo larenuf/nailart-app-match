@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { useState, useEffect } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -25,8 +25,12 @@ import AiChat from "@/components/AiChat";
 import Onboarding from "@/pages/Onboarding";
 import { PageTransition } from "@/components/PageTransition";
 import { ThemeSelector } from "@/components/ThemeSelector";
+import { navigationHistory } from "./lib/navigationHistory";
 
 function Router() {
+  // Geçerli konum
+  const [location] = useLocation();
+  
   // İlk ziyareti kontrol et, localStorage'da saklayalım
   // Oturum kontrolü için useState hook kullanıyoruz
   const [isFirstVisit, setIsFirstVisit] = useState(() => {
@@ -69,6 +73,14 @@ function Router() {
     localStorage.setItem('firstVisit', 'false');
     setIsFirstVisit(false);
   };
+  
+  // Her yol değişikliğinde gezinme geçmişini güncelle
+  useEffect(() => {
+    // URL sorgu parametrelerini temizleme (cache busting parametreleri gibi)
+    const cleanPath = location.split('?')[0];
+    console.log('Sayfa değişti, gezinme geçmişine ekleniyor:', cleanPath);
+    navigationHistory.push(cleanPath);
+  }, [location]);
   
   // PWA için meta tagları ayarla
   useEffect(() => {

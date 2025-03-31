@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import LocationPicker from "./LocationPicker";
 import { LanguageSelector } from "./LanguageSelector";
 import { CurrencySelector } from "./CurrencySelector";
+import { useBackButton } from "@/hooks/useBackButton";
 
 export default function TopNavigation({ title, showBackButton }: { title?: string; showBackButton?: boolean }) {
   const { userLocation } = useAppContext();
@@ -58,10 +59,11 @@ export default function TopNavigation({ title, showBackButton }: { title?: strin
     setLocationPickerOpen(true);
   }, []);
 
-  // Geri butonu için handler
+  // Geri butonu için handler - özel navigationHistory servisimizi kullanıyoruz
+  const { goBack } = useBackButton();
   const handleBackButtonClick = useCallback(() => {
-    window.history.back();
-  }, []);
+    goBack();
+  }, [goBack]);
   
   // Onboarding'i sıfırlama butonu için handler
   const resetOnboarding = useCallback(() => {
