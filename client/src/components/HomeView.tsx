@@ -3,6 +3,7 @@ import BottomNavigation from "./BottomNavigation";
 import StorySection2 from "./StorySection2";
 import CategoriesSection from "./CategoriesSection";
 import FeaturedSalonsSectionNew from "./FeaturedSalonsSectionNew";
+import FeaturedPremiumSalons from "./FeaturedPremiumSalons";
 import NailProductsSection from "@/components/NailProductsSection";
 import LeafletClusterMap from "./LeafletClusterMap";
 //import TrendingDesigns from "./TrendingDesigns";
@@ -760,6 +761,7 @@ export default function HomeView() {
     categories: true,
     weatherPromo: true,
     featuredSalons: true,
+    featuredPremiumSalons: true,
     map: true,
     products: true,
     trendingDesigns: false, // Trend tasarımlar bölümünü kaldır
@@ -881,6 +883,8 @@ export default function HomeView() {
         {visibleSections.categories && <CategoriesSection />}
         
         {visibleSections.weatherPromo && <WeatherPromoBanner />}
+        
+        {visibleSections.featuredPremiumSalons && <FeaturedPremiumSalons />}
         
         {visibleSections.featuredSalons && <FeaturedSalonsSectionNew />}
         
