@@ -37,7 +37,9 @@ import {
   Check, 
   ChevronDown, 
   DollarSign, 
-  Percent 
+  Percent,
+  Image,
+  ThumbsUp
 } from 'lucide-react';
 
 interface Salon {
@@ -53,6 +55,8 @@ interface Salon {
   isPremium: boolean;
   openTime: string;
   closeTime: string;
+  likeCount?: number;       // Beğeni sayısı
+  galleryCount?: number;    // Galeri fotoğraf sayısı
 }
 
 interface SalonWithCity extends Salon {
@@ -133,7 +137,7 @@ export default function SalonList() {
     navigate(`/salons/${salon.id}`);
   };
 
-  // Salonlar için şehir bilgisi ekle
+  // Salonlar için şehir bilgisi ve yeni özellikler ekle
   const salonsWithCity: SalonWithCity[] = salons ? salons.map((salon): SalonWithCity => {
     // Adresten şehir bilgisini çıkar
     let city = "İstanbul";
@@ -144,9 +148,16 @@ export default function SalonList() {
       city = "İzmir";
     }
     
+    // Demo amaçlı beğeni sayısı ve galeri fotoğraf sayısı ekle
+    // Gerçek uygulamada bu veriler API'dan gelecektir
+    const likeCount = (salon.id * 17) % 200 + 20; // Rastgele beğeni sayısı
+    const galleryCount = (salon.id * 7) % 10 + 3; // 3-12 arası fotoğraf sayısı
+    
     return {
       ...salon,
-      city
+      city,
+      likeCount,
+      galleryCount
     };
   }) : [];
   
@@ -498,16 +509,32 @@ export default function SalonList() {
                       Premium
                     </div>
                   )}
+                  {/* Galeri Fotoğraf Sayısı Butonu */}
                   <Button
                     variant="outline"
-                    size="icon"
-                    className="absolute bottom-2 right-2 bg-white rounded-full h-8 w-8"
+                    size="sm"
+                    className="absolute bottom-2 left-2 bg-white bg-opacity-90 rounded-lg py-1 px-2 flex items-center"
                     onClick={(e) => {
                       e.stopPropagation();
-                      // Favorilere ekleme işlevi
+                      // Galeri fotoğraflarını görüntüleme işlevi
                     }}
                   >
-                    <Heart className="h-4 w-4" />
+                    <Image className="h-3.5 w-3.5 mr-1" />
+                    <span className="text-xs">{salon.galleryCount} Fotoğraf</span>
+                  </Button>
+                  
+                  {/* Beğeni/Kalp Butonu */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="absolute bottom-2 right-2 bg-white bg-opacity-90 rounded-lg py-1 px-2 flex items-center"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // Beğeni ekleme işlevi
+                    }}
+                  >
+                    <Heart className="h-3.5 w-3.5 mr-1" />
+                    <span className="text-xs">{salon.likeCount}</span>
                   </Button>
                 </div>
                 <CardContent className="p-4">
