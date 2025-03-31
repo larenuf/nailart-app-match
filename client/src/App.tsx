@@ -12,6 +12,7 @@ import SalonDetail from "@/pages/SalonDetail";
 import ArtistDetail from "@/pages/ArtistDetail";
 import SalonList from "@/pages/SalonList";
 import Booking from "@/pages/Booking";
+import BookingWizard from "@/pages/BookingWizard";
 import Checkout from "@/pages/Checkout";
 import PaymentSuccess from "@/pages/PaymentSuccess";
 import Profile from "@/pages/Profile";
@@ -122,6 +123,7 @@ function Router() {
         <Route path="/salons/:id" component={SalonDetail} />
         <Route path="/artists/:id" component={ArtistDetail} />
         <Route path="/booking/:id" component={Booking} />
+        <Route path="/booking-wizard/:id" component={BookingWizard} />
         <Route path="/checkout" component={Checkout} />
         <Route path="/payment-success" component={PaymentSuccess} />
         <Route path="/profile" component={Profile} />

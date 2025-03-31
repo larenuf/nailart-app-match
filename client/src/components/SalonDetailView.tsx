@@ -134,14 +134,14 @@ export default function SalonDetailView() {
         <div className="px-4 border-b">
           <TabsList className="grid grid-cols-4 h-10">
             <TabsTrigger value="services" className="text-xs">Randevu Al</TabsTrigger>
-            <TabsTrigger value="about" className="text-xs">Hakkında</TabsTrigger>
+            <TabsTrigger value="info" className="text-xs">Hakkında</TabsTrigger>
             <TabsTrigger value="artists" className="text-xs">Sanatçılar</TabsTrigger>
             <TabsTrigger value="gallery" className="text-xs">Galeri</TabsTrigger>
           </TabsList>
         </div>
 
         {/* Hakkında Sekmesi */}
-        <TabsContent value="about" className="px-4 py-3">
+        <TabsContent value="info" className="px-4 py-3">
           <h3 className="font-bold mb-2">Salon Hakkında</h3>
           <p className="text-sm text-gray-600 mb-4">
             Şehrin merkezinde yer alan {selectedSalon.name}, modern ve şık tasarımı, 
@@ -212,7 +212,15 @@ export default function SalonDetailView() {
                 <p className="text-sm text-gray-600 my-1">{service.description}</p>
                 <div className="flex justify-between items-center mt-2">
                   <span className="text-xs text-gray-500">{service.durationMinutes} dakika</span>
-                  <button className="text-xs bg-[#F9E0E7] hover:bg-[#F9E0E7]/80 text-[#333333] px-3 py-1 rounded-full">
+                  <button 
+                    className="text-xs bg-[#F9E0E7] hover:bg-[#F9E0E7]/80 text-[#333333] px-3 py-1 rounded-full"
+                    onClick={() => {
+                      if (selectedSalon) {
+                        // Yeni randevu akışına yönlendir
+                        window.location.href = `/booking-wizard/${selectedSalon.id}`;
+                      }
+                    }}
+                  >
                     Randevu Al
                   </button>
                 </div>
