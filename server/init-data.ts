@@ -28,6 +28,11 @@ export async function initializeData() {
     // Kategorileri ekle
     const categoriesData = [
       {
+        name: "AI Tırnak Önizleme",
+        iconName: "image-plus",
+        backgroundColor: "#D8BFD8" // Mor tonunda
+      },
+      {
         name: "Manikür",
         iconName: "hand-sparkles",
         backgroundColor: "#FFD1DC"

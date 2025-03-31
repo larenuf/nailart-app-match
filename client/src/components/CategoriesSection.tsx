@@ -37,13 +37,19 @@ export default function CategoriesSection() {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              navigate(`/search?category=${category.id}`);
+              // AI Tırnak Önizleme kategorisine tıklandığında nail-art-preview sayfasına yönlendir
+              if (category.name === "AI Tırnak Önizleme") {
+                navigate('/nail-art-preview');
+              } else {
+                navigate(`/search?category=${category.id}`);
+              }
             }}
           >
             <img 
-              src={category.id === 1 ? "/images/manikur.png" : 
-                   category.id === 2 ? "https://images.unsplash.com/photo-1604902396830-aca29e19b067?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" :
-                   category.id === 3 ? "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" :
+              src={category.name === "AI Tırnak Önizleme" ? "https://images.unsplash.com/photo-1604902396830-aca29e19b067?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80&purple=true" : 
+                   category.name === "Manikür" ? "/images/manikur.png" : 
+                   category.name === "Pedikür" ? "https://images.unsplash.com/photo-1604902396830-aca29e19b067?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" :
+                   category.name === "Jel Tırnak" ? "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" :
                    "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"}
               alt={category.name}
               className="w-full h-full object-cover brightness-110 contrast-110"
