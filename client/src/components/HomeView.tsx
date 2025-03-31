@@ -200,6 +200,14 @@ function PremiumFeaturesSection() {
   
   const featureData = [
     {
+      trTitle: "AI Tırnak Önizleme",
+      trDescription: "Tırnaklarınızda farklı tasarımları yapay zeka ile görselleştirin",
+      icon: <ImagePlus size={14} />,
+      onClick: (e: React.MouseEvent) => handleNavigate(e, '/nail-art-preview'),
+      available: true,
+      gradient: "linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)" // Mor
+    },
+    {
       trTitle: "Sanal Danışmanlık",
       trDescription: "Uzman stilist avatarımız ile kişiselleştirilmiş tırnak sanatı tavsiyeleri alın",
       icon: <Sparkles size={14} />,
