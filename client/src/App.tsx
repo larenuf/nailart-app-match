@@ -15,6 +15,7 @@ import Booking from "@/pages/Booking";
 import BookingWizard from "@/pages/BookingWizard";
 import Checkout from "@/pages/Checkout";
 import PaymentSuccess from "@/pages/PaymentSuccess";
+import NailArtPreview from "@/pages/NailArtPreview";
 import Profile from "@/pages/Profile";
 import Search from "@/pages/Search";
 import VirtualConsultation from "@/pages/VirtualConsultation";
@@ -130,6 +131,7 @@ function Router() {
         <Route path="/search" component={Search} />
         <Route path="/virtual-consultation" component={VirtualConsultation} />
         <Route path="/color-matcher" component={ColorMatcher} />
+        <Route path="/nail-art-preview" component={NailArtPreview} />
         {/* Trend Tasarımlar sayfası tamamen kaldırıldı */}
         
         {/* Salon Yönetim Sayfaları - Tam eşleşme kullan */}
