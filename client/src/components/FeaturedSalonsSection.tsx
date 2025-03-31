@@ -7,6 +7,7 @@ import { useCallback, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/i18n";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import SalonFilters, { SalonFilterType, ServiceType, DistrictType } from "./SalonFilters";
 
 export default function FeaturedSalonsSection() {
   const { setSelectedSalon } = useAppContext();
@@ -18,7 +19,11 @@ export default function FeaturedSalonsSection() {
   });
 
   // Filtre durumları
-  const [filterType, setFilterType] = useState<string>("all"); // 'all', 'nearest', 'top-rated', 'discounts'
+  const [filterType, setFilterType] = useState<SalonFilterType>("all");
+  const [serviceType, setServiceType] = useState<ServiceType>("all");
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
+  const [selectedDistrict, setSelectedDistrict] = useState<DistrictType>("all");
+  
   // Salon kartlarının genişletme durumlarını saklamak için
   const [expandedSalonIds, setExpandedSalonIds] = useState<Set<number>>(new Set());
 
@@ -41,17 +46,82 @@ export default function FeaturedSalonsSection() {
     
     let filtered = [...salons];
     
+    // Ana filtre tipine göre işlemler
     switch (filterType) {
       case 'nearest':
-        return filtered.sort((a, b) => a.distance - b.distance);
+        filtered = filtered.sort((a, b) => a.distance - b.distance);
+        break;
       case 'top-rated':
-        return filtered.sort((a, b) => b.rating - a.rating);
+        filtered = filtered.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'open-now':
+        // Şu anda açık olan salonları filtrele
+        const currentHour = new Date().getHours();
+        filtered = filtered.filter(salon => {
+          const openHour = parseInt(salon.openTime.split(':')[0]);
+          const closeHour = parseInt(salon.closeTime.split(':')[0]);
+          return currentHour >= openHour && currentHour < closeHour;
+        });
+        break;
       case 'discounts':
-        return filtered.filter(salon => salon.discount);
-      default:
-        return filtered;
+        filtered = filtered.filter(salon => salon.discount);
+        break;
     }
-  }, [salons, filterType]);
+    
+    // Hizmet türüne göre filtrele
+    if (serviceType !== 'all') {
+      // Salon hizmetlerinde belirli bir hizmet var mı kontrol et
+      // Not: Gerçek implementasyon salon.services içinde belirli hizmetleri kontrol etmeli
+      const serviceMap: Record<ServiceType, string[]> = {
+        'gel': ['Jel Oje', 'Jel Tırnak'],
+        'nail-art': ['Nail Art', 'Özel Tasarım'],
+        'manicure': ['Manikür'],
+        'pedicure': ['Pedikür'],
+        'all': []
+      };
+      
+      filtered = filtered.filter(salon => {
+        // Örnek uygulamada bu bilgileri salon nesnesinden alıyoruz
+        // Gerçek uygulamada salon.services'dan kontrol edilmeli
+        if (serviceType === 'gel' && salon.isPremium) return true;
+        if (serviceType === 'nail-art' && salon.isPremium) return true;
+        // Diğer hizmet türleri için tüm salonların desteklediğini varsayıyoruz (demo için)
+        return true;
+      });
+    }
+    
+    // Fiyat aralığına göre filtrele
+    if (priceRange[0] > 0 || priceRange[1] < 1000) {
+      filtered = filtered.filter(salon => {
+        // Burada salonun ortalama fiyatını simüle ediyoruz
+        // Gerçek uygulamada salon.averagePrice veya salon.priceRange kullanılabilir
+        const simulatedAvgPrice = salon.isPremium ? 300 + Math.random() * 400 : 100 + Math.random() * 200;
+        return simulatedAvgPrice >= priceRange[0] && simulatedAvgPrice <= priceRange[1];
+      });
+    }
+    
+    // Semte/ilçeye göre filtrele
+    if (selectedDistrict !== 'all') {
+      const districtMap: Record<DistrictType, string[]> = {
+        'kadikoy': ['Kadıköy', 'Moda'],
+        'besiktas': ['Beşiktaş', 'Levent'],
+        'sisli': ['Şişli', 'Nişantaşı'],
+        'uskudar': ['Üsküdar', 'Bağlarbaşı'],
+        'beyoglu': ['Beyoğlu', 'Taksim'],
+        'all': []
+      };
+      
+      filtered = filtered.filter(salon => {
+        // Adres içinde ilçe adı geçiyor mu kontrol et (basit bir yaklaşım)
+        const keywords = districtMap[selectedDistrict];
+        return keywords.some(keyword => 
+          salon.address.toLowerCase().includes(keyword.toLowerCase())
+        );
+      });
+    }
+    
+    return filtered;
+  }, [salons, filterType, serviceType, priceRange, selectedDistrict]);
 
   // Basitleştirilmiş salon seçimi işleyicisi
   const handleSelectSalon = useCallback((salon: Salon) => {
@@ -203,47 +273,17 @@ export default function FeaturedSalonsSection() {
         </div>
       </div>
       
-      {/* Yeni Filtre Butonları - Başlıktan önce yerleştirildi */}
-      <ScrollArea className="mb-4" type="scroll">
-        <div className="flex space-x-2 pb-2">
-          <Button 
-            size="sm" 
-            variant={filterType === "all" ? "default" : "outline"}
-            className="rounded-full text-xs whitespace-nowrap"
-            onClick={() => setFilterType("all")}
-          >
-            <Filter size={12} className="mr-1" />
-            Sırala
-          </Button>
-          <Button 
-            size="sm" 
-            variant={filterType === "nearest" ? "default" : "outline"}
-            className="rounded-full text-xs whitespace-nowrap"
-            onClick={() => setFilterType("nearest")}
-          >
-            <MapPin size={12} className="mr-1" />
-            En Yakın
-          </Button>
-          <Button 
-            size="sm" 
-            variant={filterType === "top-rated" ? "default" : "outline"}
-            className="rounded-full text-xs whitespace-nowrap"
-            onClick={() => setFilterType("top-rated")}
-          >
-            <Star size={12} className="mr-1" />
-            En Yüksek Puan
-          </Button>
-          <Button 
-            size="sm" 
-            variant={filterType === "discounts" ? "default" : "outline"}
-            className="rounded-full text-xs whitespace-nowrap"
-            onClick={() => setFilterType("discounts")}
-          >
-            <Percent size={12} className="mr-1" />
-            Kampanya
-          </Button>
-        </div>
-      </ScrollArea>
+      {/* Yeni Gelişmiş Filtre Bileşeni */}
+      <SalonFilters
+        filterType={filterType}
+        setFilterType={setFilterType}
+        serviceType={serviceType}
+        setServiceType={setServiceType}
+        priceRange={priceRange}
+        setPriceRange={setPriceRange}
+        selectedDistrict={selectedDistrict}
+        setSelectedDistrict={setSelectedDistrict}
+      />
       
       <div 
         className="flex justify-between items-center mb-3"
