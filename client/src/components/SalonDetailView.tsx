@@ -127,7 +127,7 @@ export default function SalonDetailView() {
       <Tabs defaultValue="services" className="w-full">
         <div className="px-4 border-b">
           <TabsList className="grid grid-cols-4 h-10">
-            <TabsTrigger value="services" className="text-xs">Hizmetler</TabsTrigger>
+            <TabsTrigger value="services" className="text-xs">Randevu Al</TabsTrigger>
             <TabsTrigger value="about" className="text-xs">Hakkında</TabsTrigger>
             <TabsTrigger value="artists" className="text-xs">Sanatçılar</TabsTrigger>
             <TabsTrigger value="gallery" className="text-xs">Galeri</TabsTrigger>
@@ -190,9 +190,9 @@ export default function SalonDetailView() {
           </div>
         </TabsContent>
 
-        {/* Hizmetler Sekmesi */}
+        {/* Randevu Al Sekmesi */}
         <TabsContent value="services" className="px-4 py-3">
-          <h3 className="font-bold mb-3">Sunulan Hizmetler</h3>
+          <h3 className="font-bold mb-3">Randevu Alabileceğiniz Hizmetler</h3>
           <div className="space-y-3">
             {mockServices.map((service) => (
               <div 
