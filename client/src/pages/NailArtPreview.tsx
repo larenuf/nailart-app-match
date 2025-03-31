@@ -78,15 +78,26 @@ const NailArtPreview: React.FC = () => {
     setIsProcessing(true);
 
     try {
-      // API isteği için simüle edilmiş gecikme
-      // Gerçek uygulamada bu kısımda backend API'ye istek yapılacak
-      setTimeout(() => {
-        // Başarılı işleme sonrası
-        // Gerçek API entegrasyonunda, API'den dönen görsel URL'i kullanılacak
-        setResultImage(DEFAULT_DESIGNS[selectedDesign - 1].imageUrl);
-        setIsProcessing(false);
-        setStep("result");
-      }, 3000);
+      // Gerçek API isteği
+      const response = await fetch('/api/nail-art-preview', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          image: uploadedImage,
+          designId: selectedDesign,
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('API isteği başarısız oldu');
+      }
+      
+      const data = await response.json();
+      setResultImage(data.resultImage);
+      setIsProcessing(false);
+      setStep("result");
     } catch (error) {
       console.error("İşleme hatası:", error);
       toast({
