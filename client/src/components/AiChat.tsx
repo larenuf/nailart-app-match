@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
-import { Loader2, Send, X, MessageCircle, Sparkles, Scissors, Compass, Gift, CalendarClock, User, Lightbulb, Settings, Palette, Info, RefreshCw } from 'lucide-react';
+import { Loader2, Send, X, MessageCircle, Sparkles, Scissors, Compass, Gift, CalendarClock, User, Lightbulb, Settings, Palette, Info, RefreshCw, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar } from '@/components/ui/avatar';

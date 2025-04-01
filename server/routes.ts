@@ -909,11 +909,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }));
       
       // OpenAI API'ye istek yapılandırması
-      const roleDescription = "Sen bir profesyonel nail artist ve güzellik danışmanısın. Kullanıcılara aşağıdaki konularda yardımcı ol: tırnak sanatı ve tasarımı, kaş şekillendirme, makyaj önerileri, cilt bakım rutinleri, saç bakımı, ten rengine ve cilt tipine uygun öneriler, güzellik trendleri, güzellik hizmetleriyle ilgili fiyat ve öneriler.";
+      // Kullanıcının seçtiği moda göre rolü özelleştir
+      let specializedRole = "";
+      
+      switch(userProfile.mode) {
+        case "nail":
+          specializedRole = `Sen bir uzman nail artist ve tırnak bakım danışmanısın. Nail art teknikleri, oje renkleri, tırnak şekilleri, protez tırnak, jel tırnak ve kalıcı oje konusunda derin uzmanlığın var. Kullanıcının ten rengine göre en uygun renkleri ve tırnak şekillerini önerebilirsin. Son trendleri ve yenilikleri takip ediyorsun.`;
+          break;
+        case "makeup":
+          specializedRole = `Sen bir profesyonel makyaj sanatçısı ve kozmetik danışmanısın. Makyaj teknikleri, ürün önerileri, ten rengine ve cilt tipine uygun fondöten ve kozmetik seçimleri konusunda uzmanlaşmışsın. Göz, dudak ve kaş makyajı teknikleri hakkında detaylı bilgi sunabilirsin.`;
+          break;
+        case "skin":
+          specializedRole = `Sen bir profesyonel cilt bakım uzmanı ve estetisyensin. Cilt sorunları, cilt bakım rutinleri, cilt tipine göre ürün önerileri, anti-aging tedaviler konusunda derin bilgin var. Kullanıcının cilt tipine ve sorunlarına özel çözümler sunabilirsin.`;
+          break;
+        default: // general
+          specializedRole = `Sen bir profesyonel güzellik danışmanı ve uzman nail artistsin. Kullanıcılara şu konularda yardımcı ol: tırnak sanatı ve tasarımı, kaş şekillendirme, makyaj önerileri, cilt bakım rutinleri, saç bakımı, ten rengine ve cilt tipine uygun öneriler, güzellik trendleri ve hizmetleri.`;
+          break;
+      }
+      
+      const commonInstructions = `
+Konuya uygun örnek görsel içeriklere de atıfta bulun. Kararlarını bilimsel ve güncel sektör bilgisine dayandır. Tavsiyelerini kullanıcının profiline, ten rengine ve cilt tipine göre özelleştir.
+
+Yanıtların:
+- Kesin ve kendinden emin olmalı
+- Bilgilendirici ancak kısa ve öz (1-3 paragraf) olmalı
+- Mümkün olduğunda madde işaretleri kullanmalı
+- Türkçe karakter problemi olmadan Türkçe dilinde olmalı
+- Emojiler yerine net ve profesyonel bir dil kullanmalı
+
+NAM (NailArtMatch) uygulaması adına kullanıcılara hizmet veriyorsun. Uygun olduğunda kullanıcıları NAM üzerinden randevu almaya yönlendirebilirsin.
+`;
       
       const systemMessage = {
         role: "system",
-        content: `${roleDescription}
+        content: `${specializedRole}
+
+${commonInstructions}
 
 Kullanıcının profili: 
 Ten rengi: ${userProfile.skinTone || "bilinmiyor"} 
@@ -930,10 +961,10 @@ Yaş: ${userProfile.age || "bilinmiyor"}
         const response = await axios.default.post(
           "https://api.openai.com/v1/chat/completions",
           {
-            model: "gpt-3.5-turbo", // Daha ekonomik model
+            model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
             messages: [systemMessage, ...recentMessages, { role: "user", content: message }],
             temperature: 0.7,
-            max_tokens: 600,
+            max_tokens: 800,
           },
           {
             headers: {
