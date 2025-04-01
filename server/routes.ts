@@ -9,6 +9,7 @@ import { setupWebSocketServer, broadcastToAll } from './websocket';
 import uploadRoutes from './routes/upload';
 import apiToolsRoutes from './routes/api-tools';
 import { nailArtPreviewRouter } from './routes/nail-art-preview';
+import { bookingsRouter } from './routes/bookings';
 
 // Mock Stripe implementation for now
 const mockStripe = {
@@ -37,6 +38,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Nail Art AI Preview API'lerini tanımla
   app.use('/api', nailArtPreviewRouter);
+  
+  // Bookings API'lerini tanımla
+  app.use('/api/bookings', bookingsRouter);
   
   // Kimlik doğrulama gerektirmeyen genel resim yükleme endpoint'i
   app.post('/api/public-upload/image', async (req, res, next) => {
