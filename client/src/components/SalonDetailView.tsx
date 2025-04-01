@@ -8,6 +8,7 @@ import { useLocation } from "wouter";
 import { useBackButton } from "@/hooks/useBackButton";
 import ParallaxSection from "./ParallaxSection";
 import AnimatedOnScroll from "./AnimatedOnScroll";
+import MasonryGrid from "./MasonryGrid";
 
 export default function SalonDetailView() {
   const { selectedSalon, setSelectedSalon, setSelectedArtist } = useAppContext();
@@ -316,24 +317,36 @@ export default function SalonDetailView() {
           <AnimatedOnScroll animation="fadeUp" duration={0.7}>
             <h3 className="font-bold mb-3">Salon Galerisi</h3>
           </AnimatedOnScroll>
-          <div className="grid grid-cols-2 gap-2">
+          
+          {/* Modern CSS Grid - MasonryGrid Bileşeni İle */}
+          <MasonryGrid
+            columns={{ sm: 1, md: 2, lg: 2, xl: 2 }}
+            gap="0.5rem"
+            className="my-4"
+          >
             {galleryImages.map((image, index) => (
               <AnimatedOnScroll
                 key={index}
-                animation={index === 0 ? "zoomIn" : index % 2 === 0 ? "fadeLeft" : "fadeRight"}
-                delay={index * 0.1}
+                animation={index % 3 === 0 ? "zoomIn" : index % 2 === 0 ? "fadeLeft" : "fadeRight"}
+                delay={index * 0.05}
                 duration={0.5}
               >
-                <div className={index === 0 ? "col-span-2" : ""}>
+                <div 
+                  style={{ 
+                    height: `${Math.floor(Math.random() * 150) + 150}px`, 
+                    overflow: 'hidden'
+                  }}
+                  className="rounded-lg shadow-sm hover:shadow-md transition-all"
+                >
                   <img
                     src={image}
                     alt={`Salon image ${index + 1}`}
-                    className="w-full h-40 object-cover rounded-lg hover:shadow-md transition-all hover:scale-[1.02]"
+                    className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-500"
                   />
                 </div>
               </AnimatedOnScroll>
             ))}
-          </div>
+          </MasonryGrid>
         </TabsContent>
       </Tabs>
 
