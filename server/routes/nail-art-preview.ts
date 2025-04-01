@@ -81,15 +81,20 @@ nailArtPreviewRouter.post('/nail-art-preview', async (req, res) => {
         
         // Gerçek tırnak işleme için GPT-4 Vision API'yi kullanın
         const promptMessage = `
-        Bu gerçek bir tırnak fotoğrafı. Bu tırnağa şu tasarımı uygulamanı istiyorum: "${designStyle}".
+        Bu bir tırnak fotoğrafıdır. Görüntüde bir el ve tırnaklar bulunmaktadır.
         
-        Lütfen yeni bir görsel oluştur ve bu görsel:
-        1. Tam olarak orijinal el ve tırnak pozisyonunu korusun
-        2. Tırnakları belirlenen tasarımla değiştirsin, elin geri kalanını koruyarak
-        3. Gerçekçi bir şekilde, profesyonel manikür uygulanmış gibi görünsün
-        4. Işık ve gölgeler doğal olsun
+        Lütfen bu tırnağa şu tasarımı uygula: "${designStyle}".
         
-        NOT: Sadece tırnak bölgelerini değiştir, elin kendisini veya parmaklarını değiştirme. Amacımız, sadece bu tırnağa yeni bir tasarım uygulanmış halini görmek.
+        Amacımız, mevcut tırnak fotoğrafındaki tırnakların nasıl görüneceğini göstermektir. 
+        
+        ÇOK ÖNEMLİ:
+        - SADECE insan eli ve tırnaklarını gösteren bir görüntü üret
+        - KESİNLİKLE ürün, şişe, şampuan veya başka nesneler gösterme
+        - KESİNLİKLE eldeki tırnaklar dışında hiçbir nesne gösterme
+        - Sadece EL ve TIRNAKLAR olmalı, başka hiçbir şey gösterme
+        - Eğer görselde tırnak yoksa, bir insan elini tırnaklarıyla göster
+        
+        İstediğim tırnak tasarımının bir insan elinde nasıl görüneceğini göster.
         `;
                 
         try {
@@ -118,11 +123,22 @@ nailArtPreviewRouter.post('/nail-art-preview', async (req, res) => {
           
           // DALL-E için detaylı prompt oluştur
           const dallePrompt = `
-          Gerçekçi yakın çekim bir el fotoğrafı, tamamen gerçekçi stil. Görüntüde sadece tırnaklar şu tasarıma sahip olmalı: ${designStyle}.
-          Tırnaklar tamamen profesyonel manikür yapılmış gibi görünmeli. 
-          Işık doğal olmalı, gölgeler gerçekçi olmalı.
-          Tırnaklar temiz, parlak ve detaylı olmalı.
+          SADECE insan eli ve tırnaklarını gösteren fotoğraf üret.
+          
+          Bir kadın elinin yakın çekim fotoğrafı, tırnaklarında şu tasarım uygulanmış: ${designStyle}.
+          
+          ÇOK ÖNEMLİ KURALLAR:
+          - Görüntüde SADECE bir el ve tırnaklar bulunmalı, başka hiçbir nesne olmamalı
+          - Ürün, şişe veya şampuan KESİNLİKLE gösterme
+          - Sade bir arka plan kullanmalısın, dikkat dağıtmamalı
+          - El doğal bir pozda olmalı, tırnaklar açıkça görünmeli
+          - Profesyonel manikür yapılmış gibi gerçekçi tırnaklar göster
+          - El fotoğrafı gerçekçi ve fotoğrafik kalitede olmalı
+          
+          Tırnakları şu dekorasyon ve tasarımla çiz: ${designStyle}
           ${visionAnalysis}
+          
+          TEKRARLIYORUM: SADECE EL VE TIRNAKLAR OLMALI, BAŞKA HİÇBİR ŞEY GÖSTERMEMELİSİN!
           `;
             
           console.log("DALL-E 3 için prompt oluşturuldu, görsel üretiliyor...");
