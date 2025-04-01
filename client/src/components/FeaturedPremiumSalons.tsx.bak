@@ -4,10 +4,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BadgeCheck, Heart, Image, Star } from 'lucide-react';
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Salon } from "@shared/schema";
-import { getQueryFn } from "@/lib/queryClient";
+import * as AppWrite from '@/lib/appwrite';
 
-interface SalonWithExtras extends Salon {
+interface Salon {
+  $id: string;
+  name: string;
+  address: string;
+  rating: number;
+  reviewCount: number;
+  imageUrl: string;
+  isPremium: boolean;
+  discount?: string;
   likeCount?: number;
   galleryCount?: number;
 }
@@ -15,10 +22,18 @@ interface SalonWithExtras extends Salon {
 export default function FeaturedPremiumSalons() {
   const [_, navigate] = useLocation();
   
-  // Premium salonları PostgreSQL'den getir
-  const { data: featuredSalons, isLoading, error } = useQuery<SalonWithExtras[]>({
-    queryKey: ['/api/salons/featured'],
-    queryFn: getQueryFn({ on401: "throw" }),
+  // Premium salonları Appwrite'dan getir
+  const { data: featuredSalons, isLoading, error } = useQuery<Salon[]>({
+    queryKey: ['featured-premium-salons'],
+    queryFn: async () => {
+      try {
+        const salons = await AppWrite.getFeaturedSalons();
+        return salons as any;
+      } catch (err) {
+        console.error('Premium salonlar alınırken hata oluştu:', err);
+        throw err;
+      }
+    },
     refetchOnWindowFocus: false,
   });
   
@@ -62,9 +77,9 @@ export default function FeaturedPremiumSalons() {
         <div className="flex gap-4">
           {featuredSalons.map((salon) => (
             <Card 
-              key={salon.id} 
+              key={salon.$id} 
               className="min-w-[280px] overflow-hidden hover:shadow-md transition-shadow cursor-pointer flex-shrink-0"
-              onClick={() => navigate(`/salons/${salon.id}`)}
+              onClick={() => navigate(`/salons/${salon.$id}`)}
             >
               <div className="relative h-36">
                 <img
@@ -72,7 +87,7 @@ export default function FeaturedPremiumSalons() {
                   alt={salon.name}
                   className="w-full h-full object-cover"
                   onError={(e) => {
-                    console.error("Salon resmi yüklenemedi:", salon.id);
+                    console.error("Salon resmi yüklenemedi:", salon.$id);
                     // Yedek resim göster
                     (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=400&h=250&fit=crop&q=80';
                   }}
@@ -97,11 +112,11 @@ export default function FeaturedPremiumSalons() {
                   onClick={(e) => {
                     e.stopPropagation();
                     // Salon detay sayfasına yönlendir
-                    navigate(`/salons/${salon.id}`);
+                    navigate(`/salons/${salon.$id}`);
                   }}
                 >
                   <Image className="h-3.5 w-3.5 mr-1" />
-                  <span className="text-xs">{salon.galleryCount || (salon.galleryImages?.length || 5)} Fotoğraf</span>
+                  <span className="text-xs">{salon.galleryCount || 5} Fotoğraf</span>
                 </Button>
                 
                 {/* Beğeni/Kalp Butonu */}
