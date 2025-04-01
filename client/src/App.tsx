@@ -20,6 +20,7 @@ import Profile from "@/pages/Profile";
 import Search from "@/pages/Search";
 import VirtualConsultation from "@/pages/VirtualConsultation";
 import ColorMatcher from "@/pages/ColorMatcher";
+import Bookings from "@/pages/Bookings";
 // Trending Designs sayfası tamamen kaldırıldı
 import Dashboard from "@/pages/admin/Dashboard";
 import CreateSalon from "@/pages/admin/CreateSalonNew";
@@ -132,6 +133,7 @@ function Router() {
         <Route path="/virtual-consultation" component={VirtualConsultation} />
         <Route path="/color-matcher" component={ColorMatcher} />
         <Route path="/nail-art-preview" component={NailArtPreview} />
+        <Route path="/bookings" component={Bookings} />
         {/* Trend Tasarımlar sayfası tamamen kaldırıldı */}
         
         {/* Salon Yönetim Sayfaları - Tam eşleşme kullan */}
