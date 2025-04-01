@@ -6,6 +6,8 @@ export const bookingsRouter = Router();
 // Kullanıcı randevularını getirme endpoint'i
 bookingsRouter.get("/user", async (req, res) => {
   try {
+    // UTF-8 karakter kodlaması sorununu çözmek için Content-Type header'ı ayarla
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
     // Oturum açmış kullanıcı kontrolü
     if (!req.isAuthenticated()) {
       // İşe yarar bir önizleme veri seti gönder
