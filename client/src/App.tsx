@@ -22,6 +22,7 @@ import VirtualConsultation from "@/pages/VirtualConsultation";
 import ColorMatcher from "@/pages/ColorMatcher";
 import Bookings from "@/pages/Bookings";
 import Test from "@/pages/Test";
+import ComponentTestPage from "@/pages/ComponentTestPage";
 // Trending Designs sayfası tamamen kaldırıldı
 import Dashboard from "@/pages/admin/Dashboard";
 import CreateSalon from "@/pages/admin/CreateSalonNew";
@@ -282,6 +283,11 @@ function Router() {
           <Test />
         </PageTransition>
       </Route>
+      <Route path="/component-test">
+        <PageTransition type="fade" duration={0.4}>
+          <ComponentTestPage />
+        </PageTransition>
+      </Route>
       {/* Trend Tasarımlar sayfası tamamen kaldırıldı */}
       
       {/* Salon Yönetim Sayfaları - Tam eşleşme kullan */}
@@ -391,7 +397,7 @@ function App() {
               <div>Refresh Key: {refreshKey.toString().substring(0, 8)}</div>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
               <div 
                 className="p-4 bg-pink-50 border border-pink-200 rounded-lg cursor-pointer hover:bg-pink-100"
                 onClick={() => window.location.href = "/"}
@@ -406,6 +412,14 @@ function App() {
               >
                 <h3 className="font-bold">Test Sayfası</h3>
                 <p className="text-sm">Test sayfasına git</p>
+              </div>
+              
+              <div 
+                className="p-4 bg-blue-50 border border-blue-200 rounded-lg cursor-pointer hover:bg-blue-100"
+                onClick={() => window.location.href = "/component-test"}
+              >
+                <h3 className="font-bold">Bileşen Test</h3>
+                <p className="text-sm">UI Bileşenlerini test et</p>
               </div>
             </div>
             
