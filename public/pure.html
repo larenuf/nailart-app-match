@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nail Art Match - Saf HTML Testi</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 2rem;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f9f9f9;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    h1 {
+      color: #e83e8c;
+      margin-bottom: 0.5rem;
+    }
+    
+    .subtitle {
+      color: #666;
+      margin-bottom: 2rem;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      padding: 1.5rem;
+    }
+    
+    .masonry-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    
+    .masonry-item {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+    
+    .masonry-item:nth-child(1) {
+      grid-row: span 2;
+    }
+    
+    .masonry-item:nth-child(3) {
+      grid-row: span 3;
+    }
+    
+    .masonry-item:nth-child(5) {
+      grid-row: span 2;
+    }
+    
+    .masonry-content {
+      padding: 1rem;
+    }
+    
+    .image-container {
+      height: 120px;
+      background-size: cover;
+      background-position: center;
+    }
+    
+    .button {
+      display: inline-block;
+      background-color: #e83e8c;
+      color: white;
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      border-radius: 0.35rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .button:hover {
+      background-color: #d03077;
+    }
+    
+    .purple {
+      background-color: #7b2cbf;
+    }
+    
+    .purple:hover {
+      background-color: #6a24a5;
+    }
+    
+    .animation-box {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #e83e8c, #7b2cbf);
+      border-radius: 8px;
+      margin: 1rem auto;
+    }
+    
+    .animation-bounce {
+      animation: bounce 1s infinite alternate;
+    }
+    
+    .animation-fade {
+      animation: fade 2s infinite alternate;
+    }
+    
+    .animation-rotate {
+      animation: rotate 3s linear infinite;
+    }
+    
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-30px); }
+    }
+    
+    @keyframes fade {
+      0% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+    
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #eee;
+      color: #666;
+    }
+    
+    #confetti-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Nail Art Match</h1>
+      <div class="subtitle">
+        Saf HTML ve CSS ile UI Bileşenleri
+      </div>
+    </header>
+    
+    <div class="card">
+      <h2>Bu Sayfa Nedir?</h2>
+      <p>Bu sayfada, Nail Art Match uygulamasının UI bileşenlerini saf HTML, CSS ve JavaScript ile oluşturulmuş bir versiyonunu görebilirsiniz. Herhangi bir framework veya kütüphane kullanılmadan tasarlanmıştır.</p>
+      <p>Bu sayfa çalışıyorsa, sunucu tarafında statik dosyaların doğru şekilde servis edildiği anlamına gelir.</p>
+    </div>
+    
+    <div class="card">
+      <h2>Masonry Grid</h2>
+      <p>CSS Grid kullanarak oluşturulmuş bir masonry düzeni:</p>
+      
+      <div class="masonry-grid">
+        <div class="masonry-item">
+          <div class="image-container" style="background-image: url('https://images.unsplash.com/photo-1632345031435-8727f6897d53')"></div>
+          <div class="masonry-content">
+            <h3>Manikür</h3>
+            <p>Profesyonel tırnak bakımı</p>
+          </div>
+        </div>
+        
+        <div class="masonry-item">
+          <div class="image-container" style="background-image: url('https://images.unsplash.com/photo-1632169486919-f91e45b64486')"></div>
+          <div class="masonry-content">
+            <h3>Pedikür</h3>
+            <p>Ayak bakım ve güzellik</p>
+          </div>
+        </div>
+        
+        <div class="masonry-item">
+          <div class="image-container" style="background-image: url('https://images.unsplash.com/photo-1604654894610-df63bc536371')"></div>
+          <div class="masonry-content">
+            <h3>Protez Tırnak</h3>
+            <p>Kalıcı ve dayanıklı tırnaklar</p>
+          </div>
+        </div>
+        
+        <div class="masonry-item">
+          <div class="image-container" style="background-image: url('https://images.unsplash.com/photo-1640360880517-11f20fbfdaa9')"></div>
+          <div class="masonry-content">
+            <h3>Nail Art</h3>
+            <p>Özel tasarım tırnaklar</p>
+          </div>
+        </div>
+        
+        <div class="masonry-item">
+          <div class="image-container" style="background-image: url('https://images.unsplash.com/photo-1604902394631-4a96527add13')"></div>
+          <div class="masonry-content">
+            <h3>Jel Tırnak</h3>
+            <p>Uzun süre dayanıklı tırnaklar</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>Animasyonlar</h2>
+      <p>CSS animasyonları ile oluşturulan etkileşimli bileşenler:</p>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <div style="text-align: center;">
+          <h3>Bounce</h3>
+          <div class="animation-box animation-bounce"></div>
+        </div>
+        
+        <div style="text-align: center;">
+          <h3>Fade</h3>
+          <div class="animation-box animation-fade"></div>
+        </div>
+        
+        <div style="text-align: center;">
+          <h3>Rotate</h3>
+          <div class="animation-box animation-rotate"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>Etkileşimli Elementler</h2>
+      <p>JavaScript ile geliştirilmiş etkileşimli bileşenler:</p>
+      
+      <div style="margin-bottom: 1rem;">
+        <h3>Sayaç</h3>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <span id="counter-value">0</span>
+          <button class="button" id="increment-button">Artır</button>
+          <button class="button purple" id="reset-button">Sıfırla</button>
+        </div>
+      </div>
+      
+      <div>
+        <h3>Konfeti Efekti</h3>
+        <button class="button" id="confetti-button">Konfeti Göster</button>
+        <div id="confetti-container"></div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>Sayfa Bilgileri</h2>
+      <p><strong>Yükleme Zamanı:</strong> <span id="load-time"></span></p>
+      <p><strong>Tarayıcı:</strong> <span id="user-agent"></span></p>
+    </div>
+    
+    <footer>
+      <p>&copy; 2023 Nail Art Match. Tüm hakları saklıdır.</p>
+    </footer>
+  </div>
+  
+  <script>
+    // Sayaç fonksiyonalitesi
+    const counterValue = document.getElementById('counter-value');
+    const incrementButton = document.getElementById('increment-button');
+    const resetButton = document.getElementById('reset-button');
+    
+    let count = 0;
+    
+    incrementButton.addEventListener('click', () => {
+      count++;
+      counterValue.textContent = count;
+    });
+    
+    resetButton.addEventListener('click', () => {
+      count = 0;
+      counterValue.textContent = count;
+    });
+    
+    // Konfeti efekti
+    const confettiButton = document.getElementById('confetti-button');
+    const confettiContainer = document.getElementById('confetti-container');
+    
+    confettiButton.addEventListener('click', () => {
+      createConfetti();
+    });
+    
+    function createConfetti() {
+      confettiContainer.style.display = 'block';
+      confettiContainer.innerHTML = '';
+      
+      for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement('div');
+        
+        const colors = ['#e83e8c', '#7b2cbf', '#4cc9f0', '#f72585', '#4895ef'];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        
+        confetti.style.position = 'absolute';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.top = -20 + 'px';
+        confetti.style.width = Math.random() * 10 + 5 + 'px';
+        confetti.style.height = Math.random() * 10 + 5 + 'px';
+        confetti.style.backgroundColor = randomColor;
+        confetti.style.borderRadius = '50%';
+        confetti.style.opacity = Math.random() * 0.5 + 0.5;
+        
+        const animationDuration = Math.random() * 3 + 2;
+        confetti.style.animation = `fall ${animationDuration}s linear forwards`;
+        
+        // Create a unique keyframe for this confetti
+        const style = document.createElement('style');
+        style.textContent = `
+          @keyframes fall {
+            0% {
+              transform: translateY(0) rotate(0deg);
+            }
+            100% {
+              transform: translateY(${Math.random() * 500 + 500}px) rotate(${Math.random() * 360}deg);
+              opacity: 0;
+            }
+          }
+        `;
+        
+        document.head.appendChild(style);
+        confettiContainer.appendChild(confetti);
+      }
+      
+      setTimeout(() => {
+        confettiContainer.style.display = 'none';
+      }, 5000);
+    }
+    
+    // Sayfa bilgileri
+    document.getElementById('load-time').textContent = new Date().toLocaleTimeString();
+    document.getElementById('user-agent').textContent = navigator.userAgent;
+  </script>
+</body>
+</html>
