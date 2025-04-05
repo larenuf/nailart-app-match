@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animasyon Test Sayfası</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    
+    header {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    
+    h1 {
+      color: #e83e8c;
+      margin: 0;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .test-section {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    h2 {
+      color: #7b2cbf;
+      margin-top: 0;
+    }
+    
+    button {
+      background: #e83e8c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      transition: all 0.2s;
+    }
+    
+    button:hover {
+      background: #d03077;
+      transform: translateY(-2px);
+    }
+    
+    .controls {
+      margin-bottom: 20px;
+    }
+    
+    /* Animation Test Area */
+    .animation-demo {
+      height: 200px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    
+    .test-element {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #e83e8c, #7b2cbf);
+      border-radius: 10px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    
+    /* Animation Classes */
+    .fade-in {
+      animation: fadeIn 1s;
+    }
+    
+    .slide-left {
+      animation: slideLeft 1s;
+    }
+    
+    .slide-up {
+      animation: slideUp 1s;
+    }
+    
+    .scale {
+      animation: scale 1s;
+    }
+    
+    .rotate {
+      animation: rotate 1s;
+    }
+    
+    .bounce {
+      animation: bounce 1s;
+    }
+    
+    /* Confetti Container */
+    .confetti-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+    
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #e83e8c;
+      border-radius: 50%;
+    }
+    
+    /* Masonry Grid */
+    .masonry-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      grid-auto-rows: 20px;
+      grid-gap: 10px;
+    }
+    
+    .masonry-item {
+      border-radius: 5px;
+      grid-row-end: span var(--rows);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+    
+    /* Keyframes */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideLeft {
+      from { transform: translate(100%, -50%); }
+      to { transform: translate(-50%, -50%); }
+    }
+    
+    @keyframes slideUp {
+      from { transform: translate(-50%, 100%); }
+      to { transform: translate(-50%, -50%); }
+    }
+    
+    @keyframes scale {
+      0% { transform: translate(-50%, -50%) scale(0.2); }
+      70% { transform: translate(-50%, -50%) scale(1.2); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+    
+    @keyframes rotate {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translate(-50%, -50%); }
+      40% { transform: translate(-50%, -80%); }
+      60% { transform: translate(-50%, -60%); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Animasyon Bileşenleri Test Sayfası</h1>
+    <p>Bu sayfa, eklenen animasyon bileşenlerini test etmek için tasarlanmıştır.</p>
+  </header>
+  
+  <div class="container">
+    <!-- Animation Type Test -->
+    <div class="test-section">
+      <h2>Animasyon Tipleri</h2>
+      <p>Farklı animasyon tiplerini test etmek için bir buton seçin:</p>
+      
+      <div class="controls">
+        <button onclick="playAnimation('fade-in')">Fade In</button>
+        <button onclick="playAnimation('slide-left')">Slide Left</button>
+        <button onclick="playAnimation('slide-up')">Slide Up</button>
+        <button onclick="playAnimation('scale')">Scale</button>
+        <button onclick="playAnimation('rotate')">Rotate</button>
+        <button onclick="playAnimation('bounce')">Bounce</button>
+      </div>
+      
+      <div class="animation-demo">
+        <div id="animationElement" class="test-element"></div>
+      </div>
+    </div>
+    
+    <!-- Confetti Test -->
+    <div class="test-section">
+      <h2>Konfeti Efekti</h2>
+      <p>Başarılı işlemler için konfeti efekti gösterir:</p>
+      
+      <button onclick="showConfetti()">Konfeti Göster</button>
+      <div id="confettiContainer" class="confetti-container"></div>
+    </div>
+    
+    <!-- Masonry Grid Test -->
+    <div class="test-section">
+      <h2>Masonry Grid</h2>
+      <p>Farklı yüksekliklere sahip öğelerle oluşturulmuş grid düzeni:</p>
+      
+      <div class="masonry-grid" id="masonryGrid">
+        <!-- Grid items will be generated by JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Animation Type Test
+    function playAnimation(animationType) {
+      const element = document.getElementById('animationElement');
+      
+      // Reset animations by cloning the element
+      const newElement = element.cloneNode(true);
+      element.parentNode.replaceChild(newElement, element);
+      
+      // Give the browser a moment to reset
+      setTimeout(() => {
+        newElement.classList.add(animationType);
+      }, 10);
+    }
+    
+    // Confetti Effect
+    function showConfetti() {
+      const container = document.getElementById('confettiContainer');
+      container.innerHTML = ''; // Clear any existing confetti
+      
+      // Create confetti pieces
+      for (let i = 0; i < 100; i++) {
+        createConfettiPiece(container, i);
+      }
+      
+      // Clear confetti after animation
+      setTimeout(() => {
+        container.innerHTML = '';
+      }, 3000);
+    }
+    
+    function createConfettiPiece(container, index) {
+      const colors = ['#e83e8c', '#7b2cbf', '#3a0ca3', '#4361ee', '#4cc9f0'];
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti';
+      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.left = Math.random() * 100 + '%';
+      confetti.style.top = -20 + 'px';
+      confetti.style.width = 5 + Math.random() * 10 + 'px';
+      confetti.style.height = confetti.style.width;
+      confetti.style.opacity = Math.random() + 0.5;
+      
+      // Add unique animation
+      confetti.style.animation = `fall-${index} 3s ease-out forwards`;
+      
+      // Create keyframes for this piece
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes fall-${index} {
+          0% { transform: translateY(0) rotate(0deg); }
+          100% { transform: translateY(${window.innerHeight}px) rotate(${Math.random() * 360}deg); }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      container.appendChild(confetti);
+    }
+    
+    // Masonry Grid
+    function createMasonryGrid() {
+      const grid = document.getElementById('masonryGrid');
+      const colors = ['#e83e8c', '#7b2cbf', '#3a0ca3', '#4361ee', '#4cc9f0'];
+      
+      // Clear existing grid
+      grid.innerHTML = '';
+      
+      // Create grid items
+      for (let i = 0; i < 20; i++) {
+        const item = document.createElement('div');
+        item.className = 'masonry-item';
+        
+        // Random height in grid rows
+        const rows = Math.floor(Math.random() * 5) + 2; // 2-6 rows
+        item.style.setProperty('--rows', rows);
+        
+        // Random background color
+        item.style.backgroundColor = colors[i % colors.length];
+        
+        // Add content
+        item.textContent = i + 1;
+        
+        grid.appendChild(item);
+      }
+    }
+    
+    // Initialize page
+    window.onload = function() {
+      createMasonryGrid();
+    };
+  </script>
+</body>
+</html>

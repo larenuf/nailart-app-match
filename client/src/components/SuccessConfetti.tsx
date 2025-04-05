@@ -1,68 +1,112 @@
-import React, { useState, useEffect } from 'react';
-import Confetti from 'react-confetti';
-// Window boyutunu izlemek için inline hook
-function useWindowSize() {
-  const [windowSize, setWindowSize] = useState({
-    width: typeof window !== 'undefined' ? window.innerWidth : 0,
-    height: typeof window !== 'undefined' ? window.innerHeight : 0,
-  });
-
-  useEffect(() => {
-    function handleResize() {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    }
-    
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  return windowSize;
-}
+import { useState, useEffect } from 'react';
+import ReactConfetti from 'react-confetti';
+import { useWindowSize } from '@/hooks/useWindowSize';
+import { motion } from 'framer-motion';
 
 interface SuccessConfettiProps {
+  show: boolean;
   duration?: number;
+  message?: string;
+  onComplete?: () => void;
+  recycle?: boolean;
+  particleCount?: number;
 }
 
-export const SuccessConfetti: React.FC<SuccessConfettiProps> = ({ 
-  duration = 5000 
-}) => {
-  const [isActive, setIsActive] = useState(true);
+/**
+ * Başarılı işlemler sonrasında konfeti efekti gösterir
+ * 
+ * @param show - Konfeti gösterilsin mi?
+ * @param duration - Konfeti süresi (ms)
+ * @param message - Gösterilecek başarı mesajı
+ * @param onComplete - Konfeti tamamlandığında çağrılacak fonksiyon
+ * @param recycle - Parçacıklar yeniden kullanılsın mı (sonsuz loop için true, kısa animasyon için false)
+ * @param particleCount - Parçacık sayısı
+ */
+export function SuccessConfetti({
+  show,
+  duration = 3000,
+  message = 'İşlem başarıyla tamamlandı!',
+  onComplete,
+  recycle = false,
+  particleCount = 200
+}: SuccessConfettiProps) {
+  const [showConfetti, setShowConfetti] = useState(show);
   const { width, height } = useWindowSize();
-
-  // Konfeti için renkler
-  const colors = ['#FFC0CB', '#FF69B4', '#FFB6C1', '#FF1493', '#DB7093', '#C71585', '#9370DB', '#BA55D3'];
   
+  // Belirtilen süre sonra konfeti gösterimini kapat
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsActive(false);
-    }, duration);
-
-    return () => clearTimeout(timer);
-  }, [duration]);
-
-  if (!isActive) return null;
-
+    if (show) {
+      setShowConfetti(true);
+      
+      if (!recycle) {
+        const timer = setTimeout(() => {
+          setShowConfetti(false);
+          if (onComplete) onComplete();
+        }, duration);
+        
+        return () => clearTimeout(timer);
+      }
+    } else {
+      setShowConfetti(false);
+    }
+  }, [show, duration, recycle, onComplete]);
+  
+  // Mesaj animasyonları için varyantlar
+  const variants = {
+    hidden: { opacity: 0, scale: 0.8, y: 20 },
+    visible: { 
+      opacity: 1, 
+      scale: 1, 
+      y: 0,
+      transition: {
+        type: 'spring',
+        damping: 12
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      scale: 0.8, 
+      y: -20,
+      transition: {
+        type: 'ease',
+        duration: 0.4
+      }
+    }
+  };
+  
   return (
-    <Confetti
-      width={width}
-      height={height}
-      recycle={false}
-      numberOfPieces={400}
-      gravity={0.2}
-      colors={colors}
-      confettiSource={{
-        x: width / 2,
-        y: height / 3,
-        w: 0,
-        h: 0
-      }}
-    />
+    <>
+      {showConfetti && (
+        <>
+          <ReactConfetti
+            width={width}
+            height={height}
+            recycle={recycle}
+            numberOfPieces={particleCount}
+            gravity={0.2}
+            colors={[
+              '#f472b6', // pink-400
+              '#ec4899', // pink-500
+              '#a855f7', // purple-500
+              '#8b5cf6', // violet-500
+              '#60a5fa', // blue-400
+              '#22d3ee', // cyan-400
+            ]}
+          />
+          
+          {message && (
+            <motion.div 
+              className="fixed top-1/4 left-1/2 transform -translate-x-1/2 z-50 bg-white dark:bg-gray-800 shadow-lg px-6 py-4 rounded-xl"
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              variants={variants}
+            >
+              <h3 className="text-lg font-bold text-center text-primary">{message}</h3>
+            </motion.div>
+          )}
+        </>
+      )}
+    </>
   );
-};
-
-export default SuccessConfetti;
+}

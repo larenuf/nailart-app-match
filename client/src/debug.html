@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      color: #333;
+      padding: 20px;
+      margin: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #e83e8c;
+    }
+    pre {
+      background: #f5f5f5;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    button {
+      background: #e83e8c;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    button:hover {
+      background: #d03077;
+    }
+    .section {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Debug Page</h1>
+    
+    <div class="section">
+      <h2>System Information</h2>
+      <pre id="sysInfo">Loading...</pre>
+    </div>
+    
+    <div class="section">
+      <h2>Debug Actions</h2>
+      <button onclick="clearCache()">Clear Cache</button>
+      <button onclick="reloadPage()">Force Reload</button>
+      <button onclick="testConfetti()">Test Confetti</button>
+    </div>
+    
+    <div class="section">
+      <h2>Navigation</h2>
+      <button onclick="navigate('/')">Home</button>
+      <button onclick="navigate('/test')">Test Page</button>
+      <button onclick="navigate('/salons')">Salons</button>
+    </div>
+    
+    <div class="section">
+      <h2>Console Log</h2>
+      <pre id="logOutput">No logs yet</pre>
+    </div>
+  </div>
+
+  <script>
+    // System info
+    function updateSysInfo() {
+      const info = {
+        url: window.location.href,
+        userAgent: navigator.userAgent,
+        screenSize: `${window.innerWidth}x${window.innerHeight}`,
+        devicePixelRatio: window.devicePixelRatio,
+        connectionType: navigator.connection ? navigator.connection.effectiveType : 'unknown',
+        language: navigator.language,
+        time: new Date().toISOString()
+      };
+      
+      document.getElementById('sysInfo').textContent = JSON.stringify(info, null, 2);
+    }
+    
+    // Cache clearing
+    function clearCache() {
+      if ('caches' in window) {
+        caches.keys().then(names => {
+          names.forEach(name => {
+            caches.delete(name);
+            log(`Cache "${name}" cleared`);
+          });
+        });
+      }
+      
+      // Clear session and local storage
+      sessionStorage.clear();
+      localStorage.clear();
+      log('Session and local storage cleared');
+      
+      // Force reload
+      window.location.reload(true);
+    }
+    
+    // Reload
+    function reloadPage() {
+      log('Forcing page reload...');
+      window.location.reload(true);
+    }
+    
+    // Navigation
+    function navigate(path) {
+      log(`Navigating to: ${path}`);
+      window.location.href = path;
+    }
+    
+    // Logger
+    function log(message) {
+      const logEl = document.getElementById('logOutput');
+      const time = new Date().toLocaleTimeString();
+      logEl.textContent = `[${time}] ${message}\n${logEl.textContent}`;
+      console.log(`[DEBUG] ${message}`);
+    }
+    
+    // Test confetti
+    function testConfetti() {
+      log('Creating test confetti element');
+      const confetti = document.createElement('div');
+      confetti.style.position = 'fixed';
+      confetti.style.top = '0';
+      confetti.style.left = '0';
+      confetti.style.width = '100%';
+      confetti.style.height = '100%';
+      confetti.style.zIndex = '9999';
+      confetti.style.pointerEvents = 'none';
+      
+      for (let i = 0; i < 100; i++) {
+        const particle = document.createElement('div');
+        particle.style.position = 'absolute';
+        particle.style.width = '10px';
+        particle.style.height = '10px';
+        particle.style.borderRadius = '50%';
+        particle.style.backgroundColor = ['#f472b6', '#a855f7', '#8b5cf6', '#60a5fa'][i % 4];
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.animation = `fall-${i} 3s ease forwards`;
+        
+        const keyframes = document.createElement('style');
+        keyframes.textContent = `
+          @keyframes fall-${i} {
+            0% { transform: translateY(-10px); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(${100 + Math.random() * 500}px) rotate(${Math.random() * 360}deg); opacity: 0; }
+          }
+        `;
+        document.head.appendChild(keyframes);
+        confetti.appendChild(particle);
+      }
+      
+      document.body.appendChild(confetti);
+      
+      setTimeout(() => {
+        confetti.remove();
+        log('Confetti test complete');
+      }, 3000);
+    }
+    
+    // Initialization
+    updateSysInfo();
+    log('Debug page initialized');
+    
+    // Update system info every 5 seconds
+    setInterval(updateSysInfo, 5000);
+  </script>
+</body>
+</html>

@@ -1,68 +1,128 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, ReactNode } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 interface ParallaxSectionProps {
-  backgroundUrl: string;
-  children: React.ReactNode;
-  height?: string;
+  children: ReactNode;
+  className?: string;
+  offset?: number;
+  direction?: 'up' | 'down' | 'left' | 'right';
   speed?: number;
+  zIndex?: number;
+  overlay?: boolean;
   overlayColor?: string;
   overlayOpacity?: number;
-  className?: string;
 }
 
-const ParallaxSection: React.FC<ParallaxSectionProps> = ({
-  backgroundUrl,
+/**
+ * ParallaxSection bileşeni sayfada kaydırma ile hareket eden bölümler oluşturur
+ * 
+ * @param children - Içerik
+ * @param className - Ek CSS sınıfları
+ * @param offset - Başlangıç offseti
+ * @param direction - Hareket yönü
+ * @param speed - Hareket hızı faktörü, 0-1 arası değerler
+ * @param zIndex - z-index değeri
+ * @param overlay - Renk katmanı eklenip eklenmeyeceği
+ * @param overlayColor - Renk katmanı rengi
+ * @param overlayOpacity - Renk katmanı şeffaflığı
+ */
+export function ParallaxSection({
   children,
-  height = '50vh',
-  speed = 0.5,
-  overlayColor = '#000000',
-  overlayOpacity = 0.4,
   className = '',
-}) => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-
-  // Paralaks efekti için transform değerini hesaplama
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', `${speed * 30}%`]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1, 0.8]);
-
+  offset = 50,
+  direction = 'up',
+  speed = 0.3,
+  zIndex = 0,
+  overlay = false,
+  overlayColor = '#000',
+  overlayOpacity = 0.4
+}: ParallaxSectionProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [elementTop, setElementTop] = useState(0);
+  const [clientHeight, setClientHeight] = useState(0);
+  
+  const { scrollY } = useScroll();
+  
+  // Elementin pozisyonunu takip et
+  useEffect(() => {
+    if (!containerRef.current) return;
+    
+    const setValues = () => {
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      
+      setElementTop(rect.top + window.scrollY);
+      setClientHeight(window.innerHeight);
+    };
+    
+    setValues();
+    window.addEventListener('resize', setValues);
+    return () => window.removeEventListener('resize', setValues);
+  }, [containerRef]);
+  
+  // Kaydırma için kullanılacak çevirimi hesapla
+  const getDirectionalValue = () => {
+    switch (direction) {
+      case 'up':
+        return { y: [0, -offset] };
+      case 'down':
+        return { y: [0, offset] };
+      case 'left':
+        return { x: [0, -offset] };
+      case 'right':
+        return { x: [0, offset] };
+      default:
+        return { y: [0, -offset] };
+    }
+  };
+  
+  // Elementin görünürlüğünü kontrol et ve hareket et
+  const { x, y } = getDirectionalValue();
+  
+  // Parallax efekt için yY değeri hesapla
+  const transformY = useTransform(
+    scrollY,
+    [elementTop - clientHeight, elementTop + clientHeight],
+    y || [0, 0],
+    { clamp: false }
+  );
+  
+  // Parallax efekt için X değeri hesapla
+  const transformX = useTransform(
+    scrollY,
+    [elementTop - clientHeight, elementTop + clientHeight],
+    x || [0, 0],
+    { clamp: false }
+  );
+  
   return (
     <div 
-      ref={sectionRef}
+      ref={containerRef} 
       className={`relative overflow-hidden ${className}`}
-      style={{ height }}
+      style={{ zIndex }}
     >
-      {/* Arkaplan Resmi - Paralaks Efekti */}
-      <motion.div 
-        className="absolute inset-0 z-0"
-        style={{ 
-          y,
-          backgroundImage: `url(${backgroundUrl})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          opacity,
+      <motion.div
+        style={{
+          x: transformX,
+          y: transformY,
+          height: '100%',
+          width: '100%',
         }}
-      />
-      
-      {/* Resim Üzerindeki Kaplama/Overlay */}
-      <div 
-        className="absolute inset-0 z-10" 
-        style={{ 
-          backgroundColor: overlayColor,
-          opacity: overlayOpacity,
-        }} 
-      />
-      
-      {/* İçerik */}
-      <div className="relative z-20 h-full w-full flex flex-col">
+      >
         {children}
-      </div>
+      </motion.div>
+      
+      {/* Opsiyonel overlay katmanı */}
+      {overlay && (
+        <div 
+          className="absolute inset-0 pointer-events-none" 
+          style={{ 
+            backgroundColor: overlayColor, 
+            opacity: overlayOpacity, 
+            zIndex: 1 
+          }}
+        />
+      )}
     </div>
   );
-};
-
-export default ParallaxSection;
+}

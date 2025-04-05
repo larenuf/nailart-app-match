@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/select";
 import TopNavigation from '@/components/TopNavigation';
 import BottomNavigation from '@/components/BottomNavigation';
-import { SalonCardSkeletonGroup } from '@/components/SalonCardSkeleton';
+import SalonCardSkeleton from '@/components/SalonCardSkeleton';
 import { 
   MapPin, 
   Star, 
@@ -473,7 +473,7 @@ export default function SalonList() {
         <div className="space-y-4">
           {isLoading ? (
             <div className="mt-2">
-              <SalonCardSkeletonGroup count={6} />
+              <SalonCardSkeleton count={6} />
             </div>
           ) : error ? (
             <div className="text-center py-10 text-red-500">
