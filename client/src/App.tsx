@@ -21,6 +21,7 @@ import Search from "@/pages/Search";
 import VirtualConsultation from "@/pages/VirtualConsultation";
 import ColorMatcher from "@/pages/ColorMatcher";
 import Bookings from "@/pages/Bookings";
+import Test from "@/pages/Test";
 // Trending Designs sayfası tamamen kaldırıldı
 import Dashboard from "@/pages/admin/Dashboard";
 import CreateSalon from "@/pages/admin/CreateSalonNew";
@@ -103,47 +104,209 @@ function Router() {
     }
   }, []);
   
+  // Her rota için uygun geçiş tipini belirle
+  const getTransitionTypeForRoute = (path: string): any => {
+    // Ana sayfa için elastic geçiş
+    if (path === '/' || path === '/home') {
+      return {
+        type: 'elastic',
+        duration: 0.5
+      };
+    }
+    
+    // Onboarding için fade 
+    if (path === '/auth' || path === '/onboarding') {
+      return {
+        type: 'fade',
+        duration: 0.4
+      };
+    }
+    
+    // Salon listeleri için staggered geçiş
+    if (path === '/salons') {
+      return {
+        type: 'staggered',
+        duration: 0.4,
+        delayChildren: 0.05,
+        staggerChildren: 0.03
+      };
+    }
+    
+    // Salon detayları için slide-left
+    if (path.startsWith('/salons/')) {
+      return {
+        type: 'slide-left',
+        duration: 0.4
+      };
+    }
+    
+    // Sanatçı detayları için slide-up
+    if (path.startsWith('/artists/')) {
+      return {
+        type: 'slide-up',
+        duration: 0.4
+      };
+    }
+    
+    // Randevu sayfaları için bounce
+    if (path.startsWith('/booking') || path === '/bookings' || path === '/checkout' || path === '/payment-success') {
+      return {
+        type: 'bounce',
+        duration: 0.5
+      };
+    }
+    
+    // Özel sayfalar için özel geçişler
+    if (path === '/nail-art-preview') {
+      return {
+        type: 'scale',
+        duration: 0.5
+      };
+    }
+    
+    // Admin sayfaları için hızlı slide-down
+    if (path.startsWith('/admin')) {
+      return {
+        type: 'slide-down',
+        duration: 0.3
+      };
+    }
+    
+    // Diğer tüm sayfalar için standart fade geçişi
+    return {
+      type: 'fade',
+      duration: 0.3
+    };
+  };
+  
+  // Mevcut konum için geçiş türünü al
+  const transitionProps = getTransitionTypeForRoute(location);
+  
   return (
-    <PageTransition>
-      <Switch>
-        <Route path="/auth">
+    <Switch>
+      <Route path="/auth">
+        <PageTransition type={transitionProps.type} duration={transitionProps.duration}>
           <Onboarding onComplete={completeOnboarding} />
-        </Route>
-        <Route path="/onboarding">
+        </PageTransition>
+      </Route>
+      <Route path="/onboarding">
+        <PageTransition type={transitionProps.type} duration={transitionProps.duration}>
           <Onboarding onComplete={completeOnboarding} />
-        </Route>
-        <Route path="/home">
+        </PageTransition>
+      </Route>
+      <Route path="/home">
+        <PageTransition type={transitionProps.type} duration={transitionProps.duration}>
           <HomeView />
-        </Route>
-        <Route path="/">
+        </PageTransition>
+      </Route>
+      <Route path="/">
+        <PageTransition type={transitionProps.type} duration={transitionProps.duration}>
           {isFirstVisit ? 
             <Onboarding onComplete={completeOnboarding} /> : 
             <HomeView />
           }
-        </Route>
-        <Route path="/salons" component={SalonList} />
-        <Route path="/salons/:id" component={SalonDetail} />
-        <Route path="/artists/:id" component={ArtistDetail} />
-        <Route path="/booking/:id" component={Booking} />
-        <Route path="/booking-wizard/:id" component={BookingWizard} />
-        <Route path="/checkout" component={Checkout} />
-        <Route path="/payment-success" component={PaymentSuccess} />
-        <Route path="/profile" component={Profile} />
-        <Route path="/search" component={Search} />
-        <Route path="/virtual-consultation" component={VirtualConsultation} />
-        <Route path="/color-matcher" component={ColorMatcher} />
-        <Route path="/nail-art-preview" component={NailArtPreview} />
-        <Route path="/bookings" component={Bookings} />
-        {/* Trend Tasarımlar sayfası tamamen kaldırıldı */}
-        
-        {/* Salon Yönetim Sayfaları - Tam eşleşme kullan */}
-        <Route path="/admin" children={<Dashboard />} />
-        <Route path="/admin/dashboard" children={<Dashboard />} />
-        <Route path="/admin/create-salon" children={<CreateSalon />} />
-        
-        <Route component={NotFound} />
-      </Switch>
-    </PageTransition>
+        </PageTransition>
+      </Route>
+      <Route path="/salons">
+        <PageTransition 
+          type={transitionProps.type} 
+          duration={transitionProps.duration}
+          delayChildren={transitionProps.delayChildren}
+          staggerChildren={transitionProps.staggerChildren}
+        >
+          <SalonList />
+        </PageTransition>
+      </Route>
+      <Route path="/salons/:id">
+        <PageTransition type={transitionProps.type} duration={transitionProps.duration}>
+          <SalonDetail />
+        </PageTransition>
+      </Route>
+      <Route path="/artists/:id">
+        <PageTransition type={transitionProps.type} duration={transitionProps.duration}>
+          <ArtistDetail />
+        </PageTransition>
+      </Route>
+      <Route path="/booking/:id">
+        <PageTransition type={transitionProps.type} duration={transitionProps.duration}>
+          <Booking />
+        </PageTransition>
+      </Route>
+      <Route path="/booking-wizard/:id">
+        <PageTransition type={transitionProps.type} duration={transitionProps.duration}>
+          <BookingWizard />
+        </PageTransition>
+      </Route>
+      <Route path="/checkout">
+        <PageTransition type={transitionProps.type} duration={transitionProps.duration}>
+          <Checkout />
+        </PageTransition>
+      </Route>
+      <Route path="/payment-success">
+        <PageTransition type={transitionProps.type} duration={transitionProps.duration}>
+          <PaymentSuccess />
+        </PageTransition>
+      </Route>
+      <Route path="/profile">
+        <PageTransition type="slide-left" duration={0.4}>
+          <Profile />
+        </PageTransition>
+      </Route>
+      <Route path="/search">
+        <PageTransition type="slide-down" duration={0.3}>
+          <Search />
+        </PageTransition>
+      </Route>
+      <Route path="/virtual-consultation">
+        <PageTransition type="scale" duration={0.4}>
+          <VirtualConsultation />
+        </PageTransition>
+      </Route>
+      <Route path="/color-matcher">
+        <PageTransition type="fade" duration={0.4}>
+          <ColorMatcher />
+        </PageTransition>
+      </Route>
+      <Route path="/nail-art-preview">
+        <PageTransition type={transitionProps.type} duration={transitionProps.duration}>
+          <NailArtPreview />
+        </PageTransition>
+      </Route>
+      <Route path="/bookings">
+        <PageTransition type={transitionProps.type} duration={transitionProps.duration}>
+          <Bookings />
+        </PageTransition>
+      </Route>
+      <Route path="/test">
+        <PageTransition type="wave" duration={0.4} delayChildren={0.05} staggerChildren={0.05}>
+          <Test />
+        </PageTransition>
+      </Route>
+      {/* Trend Tasarımlar sayfası tamamen kaldırıldı */}
+      
+      {/* Salon Yönetim Sayfaları - Tam eşleşme kullan */}
+      <Route path="/admin">
+        <PageTransition type={transitionProps.type} duration={transitionProps.duration}>
+          <Dashboard />
+        </PageTransition>
+      </Route>
+      <Route path="/admin/dashboard">
+        <PageTransition type={transitionProps.type} duration={transitionProps.duration}>
+          <Dashboard />
+        </PageTransition>
+      </Route>
+      <Route path="/admin/create-salon">
+        <PageTransition type={transitionProps.type} duration={transitionProps.duration}>
+          <CreateSalon />
+        </PageTransition>
+      </Route>
+      
+      <Route>
+        <PageTransition type="fade" duration={0.3}>
+          <NotFound />
+        </PageTransition>
+      </Route>
+    </Switch>
   );
 }
 
@@ -213,23 +376,66 @@ function App() {
     }
   }, []);
   
-  return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <I18nProvider>
-          <AppProvider>
-            <Router key={refreshKey} />
-            <AiChat />
+  // Basit bir sayfa oluşturalım - WebSocket sorunları için geçici çözüm
+  try {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <div className="min-h-screen bg-white text-black p-6">
+            <h1 className="text-2xl font-bold mb-4 text-pink-500">Nail Art Match</h1>
+            <p className="mb-4">Uygulama yükleniyor. Lütfen bekleyin...</p>
             
-            {/* Tema seçici */}
-            <ThemeSelector onThemeChange={handleThemeChange} />
+            <div className="p-4 border border-gray-300 rounded mb-4">
+              <h2 className="text-lg font-bold mb-2">Diagnostik Bilgileri</h2>
+              <div>Sayfa Yüklenme Zamanı: {new Date().toLocaleTimeString()}</div>
+              <div>Refresh Key: {refreshKey.toString().substring(0, 8)}</div>
+            </div>
             
-            <Toaster />
-          </AppProvider>
-        </I18nProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
-  );
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              <div 
+                className="p-4 bg-pink-50 border border-pink-200 rounded-lg cursor-pointer hover:bg-pink-100"
+                onClick={() => window.location.href = "/"}
+              >
+                <h3 className="font-bold">Ana Sayfa</h3>
+                <p className="text-sm">Ana sayfaya git</p>
+              </div>
+              
+              <div 
+                className="p-4 bg-purple-50 border border-purple-200 rounded-lg cursor-pointer hover:bg-purple-100"
+                onClick={() => window.location.href = "/test"}
+              >
+                <h3 className="font-bold">Test Sayfası</h3>
+                <p className="text-sm">Test sayfasına git</p>
+              </div>
+            </div>
+            
+            <button
+              className="bg-pink-500 text-white px-4 py-2 rounded-md hover:bg-pink-600"
+              onClick={() => window.location.reload()}
+            >
+              Sayfayı Yenile
+            </button>
+          </div>
+          <Toaster />
+        </ThemeProvider>
+      </QueryClientProvider>
+    );
+  } catch (err: any) {
+    console.error("Render hatası:", err);
+    return (
+      <div className="min-h-screen bg-white text-black p-6">
+        <h1 className="text-2xl font-bold mb-4 text-red-500">Hata!</h1>
+        <p className="mb-4">Uygulama yüklenirken bir hata oluştu.</p>
+        <pre className="p-4 bg-gray-100 rounded overflow-auto">{err?.toString() || "Bilinmeyen hata"}</pre>
+        <button
+          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          onClick={() => window.location.reload()}
+        >
+          Sayfayı Yenile
+        </button>
+      </div>
+    );
+  }
 }
 
 export default App;
