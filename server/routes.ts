@@ -10,6 +10,7 @@ import uploadRoutes from './routes/upload';
 import apiToolsRoutes from './routes/api-tools';
 import { nailArtPreviewRouter } from './routes/nail-art-preview';
 import { bookingsRouter } from './routes/bookings';
+import { createStaticDemoPage } from './static-demo';
 
 // Mock Stripe implementation for now
 const mockStripe = {
@@ -27,6 +28,11 @@ const mockStripe = {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Static demo sayfası route'u ekle
+  app.get('/static-demo', (req, res) => {
+    res.send(createStaticDemoPage());
+  });
+  
   // Setup authentication routes
   setupAuth(app);
   
