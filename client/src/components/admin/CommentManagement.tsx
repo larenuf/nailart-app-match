@@ -43,29 +43,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-// WebSocket bağlantısı için
-let socket: WebSocket | null = null;
-
-const setupWebSocket = () => {
-  if (!socket || socket.readyState === WebSocket.CLOSED) {
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}/ws`;
-    socket = new WebSocket(wsUrl);
-    
-    socket.onopen = () => {
-      console.log("WebSocket bağlantısı kuruldu");
-    };
-    
-    socket.onerror = (error) => {
-      console.error("WebSocket hatası:", error);
-    };
-    
-    socket.onclose = () => {
-      console.log("WebSocket bağlantısı kapandı");
-      setTimeout(setupWebSocket, 3000); // Yeniden bağlanmayı dene
-    };
-  }
-};
+// TanStack Query polling kullanarak gerçek zamanlı güncellemeler sağlanacak
+// WebSocket yerine polling kullanıyoruz
 
 // Yorum form şeması
 const commentFormSchema = z.object({
@@ -106,7 +85,8 @@ export default function CommentManagement() {
     refetch
   } = useQuery<Review[]>({
     queryKey: ['/api/admin/reviews'],
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    refetchInterval: 30000 // Her 30 saniyede bir otomatik yenileme
   });
   
   // Form ayarları
@@ -167,45 +147,7 @@ export default function CommentManagement() {
     }
   });
   
-  useEffect(() => {
-    // WebSocket bağlantısını kur
-    setupWebSocket();
-    
-    if (socket) {
-      socket.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          
-          // Review güncellemelerini dinle
-          if (data.type === 'review_update') {
-            console.log('Yorum güncellemesi algılandı:', data);
-            queryClient.invalidateQueries({ queryKey: ['/api/admin/reviews'] });
-            
-            // Bildirim göster
-            if (data.data.action === 'update') {
-              toast({
-                title: "Yorum Güncellendi",
-                description: "Bir yorum güncellendi",
-              });
-            } else if (data.data.action === 'delete') {
-              toast({
-                title: "Yorum Silindi",
-                description: "Bir yorum silindi",
-              });
-            }
-          }
-        } catch (error) {
-          console.error('WebSocket mesajı işlenirken hata:', error);
-        }
-      };
-    }
-    
-    return () => {
-      if (socket) {
-        socket.onmessage = null;
-      }
-    };
-  }, [toast]);
+  // TanStack Query ile otomatik veri yenileme kullanıldığı için useEffect ile ek polling yapmaya gerek kalmadı.
   
   useEffect(() => {
     if (selectedReview) {

@@ -46,29 +46,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-// WebSocket bağlantısı için
-let socket: WebSocket | null = null;
-
-const setupWebSocket = () => {
-  if (!socket || socket.readyState === WebSocket.CLOSED) {
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}/ws`;
-    socket = new WebSocket(wsUrl);
-    
-    socket.onopen = () => {
-      console.log("WebSocket bağlantısı kuruldu");
-    };
-    
-    socket.onerror = (error) => {
-      console.error("WebSocket hatası:", error);
-    };
-    
-    socket.onclose = () => {
-      console.log("WebSocket bağlantısı kapandı");
-      setTimeout(setupWebSocket, 3000); // Yeniden bağlanmayı dene
-    };
-  }
-};
+// TanStack Query polling kullanarak gerçek zamanlı güncellemeler sağlanacak
+// WebSocket yerine polling kullanıyoruz
 
 // Hikaye form şeması
 const storyFormSchema = z.object({
@@ -93,7 +72,8 @@ export default function StoryManagement() {
     refetch
   } = useQuery<Story[]>({
     queryKey: ['/api/admin/stories'],
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    refetchInterval: 30000 // Her 30 saniyede bir otomatik yenileme
   });
   
   // Form ayarları
@@ -177,50 +157,7 @@ export default function StoryManagement() {
     }
   });
   
-  useEffect(() => {
-    // WebSocket bağlantısını kur
-    setupWebSocket();
-    
-    if (socket) {
-      socket.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          
-          // Story güncellemelerini dinle
-          if (data.type === 'story_update') {
-            console.log('Story güncellemesi algılandı:', data);
-            queryClient.invalidateQueries({ queryKey: ['/api/admin/stories'] });
-            
-            // Bildirim göster
-            if (data.data.action === 'create') {
-              toast({
-                title: "Yeni Hikaye",
-                description: "Yeni bir hikaye eklendi: " + data.data.story.title,
-              });
-            } else if (data.data.action === 'update') {
-              toast({
-                title: "Hikaye Güncellendi",
-                description: "Hikaye güncellendi: " + data.data.story.title,
-              });
-            } else if (data.data.action === 'delete') {
-              toast({
-                title: "Hikaye Silindi",
-                description: "Bir hikaye silindi",
-              });
-            }
-          }
-        } catch (error) {
-          console.error('WebSocket mesajı işlenirken hata:', error);
-        }
-      };
-    }
-    
-    return () => {
-      if (socket) {
-        socket.onmessage = null;
-      }
-    };
-  }, [toast]);
+  // TanStack Query ile otomatik veri yenileme kullanıldığı için useEffect ile ek polling yapmaya gerek kalmadı.
   
   useEffect(() => {
     if (editingStory) {
