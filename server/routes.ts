@@ -11,6 +11,7 @@ import apiToolsRoutes from './routes/api-tools';
 import { nailArtPreviewRouter } from './routes/nail-art-preview';
 import { bookingsRouter } from './routes/bookings';
 import { createStaticDemoPage } from './static-demo';
+import path from 'path';
 
 // Mock Stripe implementation for now
 const mockStripe = {
@@ -28,9 +29,21 @@ const mockStripe = {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Static demo sayfası route'u ekle
+  // Statik test sayfaları için özel rotalar ekleyelim
   app.get('/static-demo', (req, res) => {
     res.send(createStaticDemoPage());
+  });
+  
+  // Pure HTML için özel rota
+  app.get('/pure-html-test', (req, res) => {
+    const rootDir = process.cwd();
+    res.sendFile(path.resolve(rootDir, 'public/pure.html'));
+  });
+  
+  // Simple HTML için özel rota
+  app.get('/simple-html-test', (req, res) => {
+    const rootDir = process.cwd();
+    res.sendFile(path.resolve(rootDir, 'public/simple.html'));
   });
   
   // Setup authentication routes
