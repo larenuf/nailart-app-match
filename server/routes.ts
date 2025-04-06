@@ -46,6 +46,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(path.resolve(rootDir, 'public/simple.html'));
   });
   
+  // Simplified-app (SalonDetailView örneği) için özel rota
+  app.get('/salon-detail-test', (req, res) => {
+    const rootDir = process.cwd();
+    res.sendFile(path.resolve(rootDir, 'public/simplified-app.html'));
+  });
+  
   // Minimal React testi için özel rota
   app.get('/minimal-react-test', (req, res) => {
     const rootDir = process.cwd();
