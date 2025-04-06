@@ -4,6 +4,8 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 interface ParallaxSectionProps {
   children: ReactNode;
   className?: string;
+  backgroundUrl?: string;
+  height?: string;
   offset?: number;
   direction?: 'up' | 'down' | 'left' | 'right';
   speed?: number;
@@ -26,14 +28,16 @@ interface ParallaxSectionProps {
  * @param overlayColor - Renk katmanı rengi
  * @param overlayOpacity - Renk katmanı şeffaflığı
  */
-export function ParallaxSection({
+function ParallaxSection({
   children,
   className = '',
+  backgroundUrl,
+  height = 'auto',
   offset = 50,
   direction = 'up',
   speed = 0.3,
   zIndex = 0,
-  overlay = false,
+  overlay = backgroundUrl ? true : false,
   overlayColor = '#000',
   overlayOpacity = 0.4
 }: ParallaxSectionProps) {
@@ -99,30 +103,37 @@ export function ParallaxSection({
     <div 
       ref={containerRef} 
       className={`relative overflow-hidden ${className}`}
-      style={{ zIndex }}
+      style={{ zIndex, height }}
     >
-      <motion.div
-        style={{
-          x: transformX,
-          y: transformY,
-          height: '100%',
-          width: '100%',
-        }}
-      >
+      {/* Arkaplan resmi */}
+      {backgroundUrl && (
+        <motion.div
+          className="absolute inset-0 bg-cover bg-center z-0"
+          style={{
+            x: transformX,
+            y: transformY,
+            backgroundImage: `url(${backgroundUrl})`,
+          }}
+        />
+      )}
+      
+      {/* İçerik */}
+      <div className="relative z-10 h-full w-full">
         {children}
-      </motion.div>
+      </div>
       
       {/* Opsiyonel overlay katmanı */}
       {overlay && (
         <div 
-          className="absolute inset-0 pointer-events-none" 
+          className="absolute inset-0 pointer-events-none z-5" 
           style={{ 
             backgroundColor: overlayColor, 
-            opacity: overlayOpacity, 
-            zIndex: 1 
+            opacity: overlayOpacity
           }}
         />
       )}
     </div>
   );
 }
+
+export default ParallaxSection;
