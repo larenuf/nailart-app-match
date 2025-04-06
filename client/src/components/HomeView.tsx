@@ -1,27 +1,25 @@
 import TopNavigation from "./TopNavigation";
 import BottomNavigation from "./BottomNavigation";
-import { lazy, Suspense, useCallback, useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "wouter";
-import { useI18n } from "@/i18n";
-import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "@/context/ThemeContext";
-import { useAppContext } from "@/context/AppContext";
-import { usePageCacheOptimizer, runParallelQueries } from "@/lib/performance";
-import { Spinner } from "./ui/spinner";
+import StorySection2 from "./StorySection2";
+import CategoriesSection from "./CategoriesSection";
+import FeaturedSalonsSectionNew from "./FeaturedSalonsSectionNew";
+import FeaturedPremiumSalons from "./FeaturedPremiumSalons";
+import NailProductsSection from "@/components/NailProductsSection";
+import LeafletClusterMap from "./LeafletClusterMap";
+//import TrendingDesigns from "./TrendingDesigns";
 import { 
   Sparkles, Palette, Medal, MousePointerClick, ImagePlus, Megaphone, 
   SlidersHorizontal, Calendar, Sun, ArrowRight, Bell, MapPin, 
   Heart, SearchIcon, Star, LayoutGrid, Map, Moon, Settings,
   User, Clock, Filter, TrendingUp, Menu, XCircle, ChevronRight
 } from 'lucide-react';
-
-// Lazy loaded components
-const StorySection2 = lazy(() => import("./StorySection2"));
-const CategoriesSection = lazy(() => import("./CategoriesSection"));
-const FeaturedSalonsSectionNew = lazy(() => import("./FeaturedSalonsSectionNew"));
-const FeaturedPremiumSalons = lazy(() => import("./FeaturedPremiumSalons"));
-const NailProductsSection = lazy(() => import("@/components/NailProductsSection"));
-const LeafletClusterMap = lazy(() => import("./LeafletClusterMap"));
+import { Link } from 'wouter';
+import { useCallback, useState, useEffect, useRef } from "react";
+import { useLocation } from "wouter";
+import { useI18n } from "@/i18n";
+import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "@/context/ThemeContext";
+import { useAppContext } from "@/context/AppContext";
 
 // Feature card component
 interface FeatureCardProps {
