@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Hata Ayıklama</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .log-entry {
+      padding: 8px;
+      margin-bottom: 4px;
+      border-radius: 4px;
+    }
+    
+    .log-info {
+      background-color: #e6f7ff;
+      border-left: 4px solid #1890ff;
+    }
+    
+    .log-success {
+      background-color: #f6ffed;
+      border-left: 4px solid #52c41a;
+    }
+    
+    .log-warning {
+      background-color: #fffbe6;
+      border-left: 4px solid #faad14;
+    }
+    
+    .log-error {
+      background-color: #fff2f0;
+      border-left: 4px solid #ff4d4f;
+    }
+    
+    #console-log {
+      max-height: 400px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+  <div class="container mx-auto px-4 py-8 max-w-5xl">
+    <header class="mb-8 text-center">
+      <h1 class="text-4xl font-bold text-purple-600 mb-2">WebSocket Hata Ayıklama</h1>
+      <p class="text-gray-600">Replit'teki WebSocket Sorunlarını Tespit Etme</p>
+    </header>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">WebSocket Test</h2>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">WebSocket URL</label>
+            <input type="text" id="ws-url" value="wss://cc585201-25b3-46d4-ae88-91fabbe0d50a-00-2img5bddmditq.spock.replit.dev/ws" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+          </div>
+          
+          <div class="flex space-x-2">
+            <button id="connect-btn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+              Bağlan
+            </button>
+            <button id="send-btn" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600" disabled>
+              Mesaj Gönder
+            </button>
+            <button id="disconnect-btn" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600" disabled>
+              Bağlantıyı Kes
+            </button>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Gönderilecek Mesaj</label>
+            <input type="text" id="message" value="Merhaba WebSocket!" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+          </div>
+        </div>
+        
+        <div class="mt-6">
+          <h3 class="font-semibold text-gray-800 mb-2">Bağlantı Durumu</h3>
+          <div id="status" class="p-3 bg-gray-100 rounded-md">
+            Bağlantı yok
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Vite WebSocket Testi</h2>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Vite HMR WebSocket URL</label>
+            <input type="text" id="vite-ws-url" value="" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+          </div>
+          
+          <div class="flex space-x-2">
+            <button id="vite-connect-btn" class="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600">
+              Vite'a Bağlan
+            </button>
+            <button id="vite-disconnect-btn" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600" disabled>
+              Bağlantıyı Kes
+            </button>
+          </div>
+          
+          <p class="text-sm text-gray-600">
+            Not: Bu test, Vite'ın HMR (Hot Module Replacement) WebSocket bağlantısını taklit eder ve sorunları yakalar.
+          </p>
+        </div>
+        
+        <div class="mt-6">
+          <h3 class="font-semibold text-gray-800 mb-2">Vite Bağlantı Durumu</h3>
+          <div id="vite-status" class="p-3 bg-gray-100 rounded-md">
+            Vite bağlantısı yok
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Konsol Günlüğü</h2>
+      <div id="console-log" class="p-4 bg-gray-100 rounded-md"></div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Tanı Sonuçları</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+          <h3 class="font-semibold text-purple-800 mb-2">Ağ Durumu</h3>
+          <div id="network-status" class="text-sm">Bağlantı kurulamadı</div>
+        </div>
+        
+        <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <h3 class="font-semibold text-blue-800 mb-2">WebSocket Protokolü</h3>
+          <div id="protocol-status" class="text-sm">Kontrol edilmedi</div>
+        </div>
+        
+        <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+          <h3 class="font-semibold text-green-800 mb-2">Vite HMR Durumu</h3>
+          <div id="vite-hmr-status" class="text-sm">Bağlantı yok</div>
+        </div>
+      </div>
+      
+      <div id="diagnosis-result" class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <h3 class="font-semibold text-yellow-800 mb-2">Tanı Sonucu</h3>
+        <p class="text-sm">Henüz test yapılmadı. Bağlantı testlerini çalıştırın.</p>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Çözüm Önerileri</h2>
+      
+      <div class="space-y-4">
+        <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <h3 class="font-semibold text-blue-800 mb-2">Replit Sorunları için Çözümler</h3>
+          <ul class="list-disc list-inside text-sm space-y-1">
+            <li>Replit'in WebSocket bağlantılarını düzgün şekilde kurması için sayfayı yenileyin.</li>
+            <li>Replit'in kendisini önbelleğini temizlemesi için workspace'i yeniden başlatın.</li>
+            <li>Alternatif test sayfalarını deneyin: <a href="/debug" class="text-blue-600 hover:underline">/debug</a></li>
+            <li>WebSocket'in kullanılmadığı bir sürüm oluşturmayı düşünün.</li>
+          </ul>
+        </div>
+        
+        <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+          <h3 class="font-semibold text-green-800 mb-2">Yerel Geliştirme Ortamı</h3>
+          <p class="text-sm mb-2">Bu proje, yerel bir geliştirme ortamında daha düzgün çalışabilir. Alınan bir önlem olarak:</p>
+          <ul class="list-disc list-inside text-sm space-y-1">
+            <li>GitHub'a repoyu push edin ve yerel olarak klonlayın.</li>
+            <li>Geliştirmeye yerel ortamda devam edin, ekran görüntülerini Replit'e yükleyin.</li>
+            <li>Proje üretim sürümünü derleyin ve Replit'e sadece derlenen sürümü yükleyin.</li>
+          </ul>
+        </div>
+        
+        <div class="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+          <h3 class="font-semibold text-purple-800 mb-2">Alternatifleri Deneyin</h3>
+          <ul class="list-disc list-inside text-sm space-y-1">
+            <li><a href="/minimal-react-test" class="text-blue-600 hover:underline">Minimal React Test</a> - CDN üzerinden yüklenen React</li>
+            <li><a href="/simplified-app" class="text-blue-600 hover:underline">Basitleştirilmiş Uygulama</a> - CDN React ile salon listeleme</li>
+            <li><a href="/debug" class="text-blue-600 hover:underline">Tanı Sayfası</a> - Sorun giderme araçları</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <footer class="text-center text-gray-500 text-sm">
+      <p>&copy; 2025 Nail Art Match - WebSocket Tanı Aracı</p>
+    </footer>
+  </div>
+  
+  <script>
+    // Konsol log fonksiyonu
+    function log(message, type = 'info') {
+      const consoleLog = document.getElementById('console-log');
+      const entry = document.createElement('div');
+      entry.classList.add('log-entry', `log-${type}`);
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      consoleLog.appendChild(entry);
+      consoleLog.scrollTop = consoleLog.scrollHeight;
+    }
+    
+    // WebSocket nesnesi
+    let socket = null;
+    let viteSocket = null;
+    
+    // UI elemanları
+    const connectBtn = document.getElementById('connect-btn');
+    const sendBtn = document.getElementById('send-btn');
+    const disconnectBtn = document.getElementById('disconnect-btn');
+    const statusEl = document.getElementById('status');
+    const messageEl = document.getElementById('message');
+    const wsUrlEl = document.getElementById('ws-url');
+    
+    const viteConnectBtn = document.getElementById('vite-connect-btn');
+    const viteDisconnectBtn = document.getElementById('vite-disconnect-btn');
+    const viteStatusEl = document.getElementById('vite-status');
+    const viteWsUrlEl = document.getElementById('vite-ws-url');
+    
+    // Otomatik Vite WebSocket URL tespiti
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const host = window.location.host;
+    
+    viteWsUrlEl.value = `${protocol}//${host}`;
+    
+    // Ağ ve protokol durumu
+    const networkStatusEl = document.getElementById('network-status');
+    const protocolStatusEl = document.getElementById('protocol-status');
+    const viteHmrStatusEl = document.getElementById('vite-hmr-status');
+    const diagnosisResultEl = document.getElementById('diagnosis-result').querySelector('p');
+    
+    // Bağlantı oluşturma
+    connectBtn.addEventListener('click', () => {
+      const url = wsUrlEl.value;
+      
+      try {
+        socket = new WebSocket(url);
+        log(`WebSocket bağlantısı kuruluyor: ${url}`, 'info');
+        statusEl.textContent = 'Bağlanıyor...';
+        statusEl.classList.add('bg-yellow-100');
+        
+        socket.onopen = () => {
+          log('WebSocket bağlantısı kuruldu!', 'success');
+          statusEl.textContent = 'Bağlandı';
+          statusEl.classList.remove('bg-yellow-100', 'bg-red-100');
+          statusEl.classList.add('bg-green-100');
+          
+          connectBtn.disabled = true;
+          sendBtn.disabled = false;
+          disconnectBtn.disabled = false;
+          
+          // Ağ durumunu güncelle
+          networkStatusEl.textContent = 'Bağlantı başarılı';
+          networkStatusEl.classList.add('text-green-600');
+          
+          // WebSocket protokolü kontrolü
+          protocolStatusEl.textContent = socket.protocol || 'Protokol belirtilmemiş';
+        };
+        
+        socket.onmessage = (event) => {
+          log(`Mesaj alındı: ${event.data}`, 'info');
+        };
+        
+        socket.onerror = (error) => {
+          log('WebSocket hatası oluştu!', 'error');
+          statusEl.textContent = 'Bağlantı hatası';
+          statusEl.classList.remove('bg-yellow-100', 'bg-green-100');
+          statusEl.classList.add('bg-red-100');
+          
+          // Ağ durumunu güncelle
+          networkStatusEl.textContent = 'Bağlantı hatası';
+          networkStatusEl.classList.add('text-red-600');
+          
+          // Teşhis sonucunu güncelle
+          updateDiagnosis('ws-error');
+        };
+        
+        socket.onclose = (event) => {
+          log(`WebSocket bağlantısı kapandı. Kod: ${event.code}, Neden: ${event.reason}`, 'warning');
+          statusEl.textContent = `Bağlantı kesildi (${event.code})`;
+          statusEl.classList.remove('bg-yellow-100', 'bg-green-100');
+          statusEl.classList.add('bg-red-100');
+          
+          connectBtn.disabled = false;
+          sendBtn.disabled = true;
+          disconnectBtn.disabled = true;
+          
+          // Ağ durumunu güncelle
+          networkStatusEl.textContent = `Bağlantı kesildi (${event.code})`;
+          networkStatusEl.classList.remove('text-green-600');
+          networkStatusEl.classList.add('text-red-600');
+          
+          // Teşhis sonucunu güncelle
+          updateDiagnosis('ws-closed', event.code);
+        };
+      } catch (error) {
+        log(`WebSocket başlatılamadı: ${error.message}`, 'error');
+        statusEl.textContent = 'Bağlantı başlatılamadı';
+        statusEl.classList.remove('bg-yellow-100', 'bg-green-100');
+        statusEl.classList.add('bg-red-100');
+        
+        // Ağ durumunu güncelle
+        networkStatusEl.textContent = 'Bağlantı başlatılamadı';
+        networkStatusEl.classList.add('text-red-600');
+        
+        // Teşhis sonucunu güncelle
+        updateDiagnosis('ws-init-fail');
+      }
+    });
+    
+    // Mesaj gönderme
+    sendBtn.addEventListener('click', () => {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        const message = messageEl.value;
+        socket.send(message);
+        log(`Mesaj gönderildi: ${message}`, 'success');
+      } else {
+        log('Mesaj gönderilemedi: WebSocket bağlantısı yok veya hazır değil', 'error');
+      }
+    });
+    
+    // Bağlantıyı kesme
+    disconnectBtn.addEventListener('click', () => {
+      if (socket) {
+        socket.close();
+        log('WebSocket bağlantısı kapatıldı', 'info');
+      }
+    });
+    
+    // Vite WebSocket testi
+    viteConnectBtn.addEventListener('click', () => {
+      const url = viteWsUrlEl.value;
+      
+      try {
+        viteSocket = new WebSocket(url);
+        log(`Vite WebSocket bağlantısı kuruluyor: ${url}`, 'info');
+        viteStatusEl.textContent = 'Vite bağlantısı kuruluyor...';
+        viteStatusEl.classList.add('bg-yellow-100');
+        
+        viteSocket.onopen = () => {
+          log('Vite WebSocket bağlantısı kuruldu!', 'success');
+          viteStatusEl.textContent = 'Vite bağlantısı kuruldu';
+          viteStatusEl.classList.remove('bg-yellow-100', 'bg-red-100');
+          viteStatusEl.classList.add('bg-green-100');
+          
+          viteConnectBtn.disabled = true;
+          viteDisconnectBtn.disabled = false;
+          
+          // Vite HMR durumunu güncelle
+          viteHmrStatusEl.textContent = 'Vite HMR bağlantısı başarılı';
+          viteHmrStatusEl.classList.add('text-green-600');
+          
+          // Teşhis sonucunu güncelle
+          updateDiagnosis('vite-connected');
+          
+          // HMR mesajı göndermeyi dene
+          setTimeout(() => {
+            try {
+              const type = typeof viteSocket.send;
+              if (type === 'function' && viteSocket.readyState === WebSocket.OPEN) {
+                viteSocket.send(JSON.stringify({ type: 'ping' }));
+                log('Vite HMR ping mesajı gönderildi', 'success');
+              }
+            } catch (e) {
+              log(`Vite HMR mesajı gönderilemedi: ${e.message}`, 'error');
+            }
+          }, 1000);
+        };
+        
+        viteSocket.onmessage = (event) => {
+          log(`Vite mesajı alındı: ${event.data}`, 'info');
+          try {
+            const data = JSON.parse(event.data);
+            log(`Vite mesaj tipi: ${data.type}`, 'info');
+          } catch (e) {
+            log('Vite mesajı JSON değil', 'warning');
+          }
+        };
+        
+        viteSocket.onerror = (error) => {
+          log('Vite WebSocket hatası oluştu!', 'error');
+          viteStatusEl.textContent = 'Vite bağlantı hatası';
+          viteStatusEl.classList.remove('bg-yellow-100', 'bg-green-100');
+          viteStatusEl.classList.add('bg-red-100');
+          
+          // Vite HMR durumunu güncelle
+          viteHmrStatusEl.textContent = 'Vite HMR bağlantı hatası';
+          viteHmrStatusEl.classList.add('text-red-600');
+          
+          // Teşhis sonucunu güncelle
+          updateDiagnosis('vite-error');
+        };
+        
+        viteSocket.onclose = (event) => {
+          log(`Vite WebSocket bağlantısı kapandı. Kod: ${event.code}, Neden: ${event.reason}`, 'warning');
+          viteStatusEl.textContent = `Vite bağlantısı kesildi (${event.code})`;
+          viteStatusEl.classList.remove('bg-yellow-100', 'bg-green-100');
+          viteStatusEl.classList.add('bg-red-100');
+          
+          viteConnectBtn.disabled = false;
+          viteDisconnectBtn.disabled = true;
+          
+          // Vite HMR durumunu güncelle
+          viteHmrStatusEl.textContent = `Vite HMR bağlantısı kesildi (${event.code})`;
+          viteHmrStatusEl.classList.remove('text-green-600');
+          viteHmrStatusEl.classList.add('text-red-600');
+          
+          // Teşhis sonucunu güncelle
+          updateDiagnosis('vite-closed', event.code);
+        };
+      } catch (error) {
+        log(`Vite WebSocket başlatılamadı: ${error.message}`, 'error');
+        viteStatusEl.textContent = 'Vite bağlantısı başlatılamadı';
+        viteStatusEl.classList.remove('bg-yellow-100', 'bg-green-100');
+        viteStatusEl.classList.add('bg-red-100');
+        
+        // Vite HMR durumunu güncelle
+        viteHmrStatusEl.textContent = 'Vite HMR bağlantısı başlatılamadı';
+        viteHmrStatusEl.classList.add('text-red-600');
+        
+        // Teşhis sonucunu güncelle
+        updateDiagnosis('vite-init-fail');
+      }
+    });
+    
+    // Vite bağlantısını kesme
+    viteDisconnectBtn.addEventListener('click', () => {
+      if (viteSocket) {
+        viteSocket.close();
+        log('Vite WebSocket bağlantısı kapatıldı', 'info');
+      }
+    });
+    
+    // Teşhis sonucunu güncelleme fonksiyonu
+    function updateDiagnosis(status, code = null) {
+      switch (status) {
+        case 'ws-error':
+          diagnosisResultEl.innerHTML = `<span class="text-red-600 font-semibold">Sorun:</span> WebSocket bağlantısı kurulurken hata oluştu. Bu muhtemelen Replit WebSocket sorunlarını gösteriyor.`;
+          break;
+        case 'ws-closed':
+          if (code === 1006) {
+            diagnosisResultEl.innerHTML = `<span class="text-red-600 font-semibold">Sorun:</span> WebSocket bağlantısı anormal şekilde kapandı (Kod: 1006). Bu genellikle ağ sorunları veya proxy/güvenlik duvarı engelleri nedeniyle olur.`;
+          } else {
+            diagnosisResultEl.innerHTML = `<span class="text-orange-600 font-semibold">Uyarı:</span> WebSocket bağlantısı kapandı (Kod: ${code}). Bu, bağlantının düzgün şekilde kapanmadığını gösterebilir.`;
+          }
+          break;
+        case 'ws-init-fail':
+          diagnosisResultEl.innerHTML = `<span class="text-red-600 font-semibold">Sorun:</span> WebSocket nesnesi oluşturulamadı. Bu muhtemelen URL formatı hatası veya tarayıcı güvenlik kısıtlamaları nedeniyle olabilir.`;
+          break;
+        case 'vite-error':
+          diagnosisResultEl.innerHTML = `<span class="text-red-600 font-semibold">Sorun:</span> Vite HMR WebSocket bağlantısında hata oluştu. Bu, React uygulamasının yüklenmemesinin muhtemel nedenidir.`;
+          break;
+        case 'vite-closed':
+          diagnosisResultEl.innerHTML = `<span class="text-red-600 font-semibold">Sorun:</span> Vite HMR WebSocket bağlantısı kapandı (Kod: ${code}). Vite'ın istemci ile iletişim kuramaması, React uygulamasının yüklenmeme nedeni olabilir.`;
+          break;
+        case 'vite-init-fail':
+          diagnosisResultEl.innerHTML = `<span class="text-red-600 font-semibold">Sorun:</span> Vite HMR WebSocket bağlantısı başlatılamadı. Bu, React uygulamasının boş sayfa göstermesinin muhtemel nedenidir.`;
+          break;
+        case 'vite-connected':
+          diagnosisResultEl.innerHTML = `<span class="text-green-600 font-semibold">İyi Haber:</span> Vite HMR WebSocket bağlantısı başarılı. Bu, WebSocket alt yapısının çalıştığını gösteriyor.`;
+          break;
+        default:
+          diagnosisResultEl.textContent = 'Tanı sonucu: Bilinmeyen durum';
+      }
+    }
+    
+    // Sayfa yüklendiğinde tarayıcı bilgilerini logla
+    document.addEventListener('DOMContentLoaded', () => {
+      log(`Tarayıcı: ${navigator.userAgent}`, 'info');
+      log(`WebSocket Destekleniyor mu: ${typeof WebSocket !== 'undefined' ? 'Evet' : 'Hayır'}`, 'info');
+      log(`Protokol: ${window.location.protocol}`, 'info');
+      log(`Host: ${window.location.host}`, 'info');
+      
+      // Temel ağ kontrolü
+      checkNetworkConnectivity();
+    });
+    
+    // Ağ bağlantısını kontrol et
+    function checkNetworkConnectivity() {
+      const startTime = Date.now();
+      
+      fetch('/api/user')
+        .then(response => {
+          const endTime = Date.now();
+          const duration = endTime - startTime;
+          
+          log(`API yanıt durumu: ${response.status} (${duration}ms)`, 'success');
+          
+          networkStatusEl.textContent = `API bağlantısı çalışıyor (${duration}ms)`;
+          networkStatusEl.classList.add('text-green-600');
+          
+          return response.json();
+        })
+        .catch(error => {
+          log(`API hatası: ${error.message}`, 'error');
+          
+          networkStatusEl.textContent = 'API bağlantısı hatası';
+          networkStatusEl.classList.add('text-red-600');
+        });
+    }
+  </script>
+</body>
+</html>

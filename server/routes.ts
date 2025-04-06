@@ -64,6 +64,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(path.resolve(rootDir, 'public/debug.html'));
   });
   
+  // WebSocket hata ayıklama sayfası için özel rota
+  app.get('/websocket-debug', (req, res) => {
+    const rootDir = process.cwd();
+    res.sendFile(path.resolve(rootDir, 'public/error-tracker.html'));
+  });
+  
+  // Statik uygulama sürümü için özel rota
+  app.get('/static-app', (req, res) => {
+    const rootDir = process.cwd();
+    res.sendFile(path.resolve(rootDir, 'public/static-app.html'));
+  });
+  
   // Setup authentication routes
   setupAuth(app);
   
