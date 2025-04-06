@@ -4,8 +4,6 @@ import { Salon, Service, Artist, TimeSlot } from "@/types";
 import { useAppContext } from "@/context/AppContext";
 import { useLocation } from "wouter";
 import { Loader2, Check, ArrowRight, Calendar, Clock, User } from "lucide-react";
-import SuccessConfetti from "@/components/SuccessConfetti";
-import { motion } from "framer-motion";
 
 type BookingStep = "service" | "date" | "artist" | "confirm";
 
@@ -15,8 +13,6 @@ export default function BookingFlow({ salonId }: { salonId: number }) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot | null>(null);
   const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
-  const [showConfetti, setShowConfetti] = useState(false);
-  const [bookingSuccess, setBookingSuccess] = useState(false);
   const [, setLocation] = useLocation();
   const { setSelectedSalon } = useAppContext();
   
@@ -119,17 +115,11 @@ export default function BookingFlow({ salonId }: { salonId: number }) {
   
   // Randevuyu onayla
   const handleConfirmBooking = () => {
-    // Konfeti göster
-    setShowConfetti(true);
-    setBookingSuccess(true);
-    
     // Gerçek bir uygulamada burada API'ye bir istek gönderilecek
     // ve rezervasyon veritabanına kaydedilecektir
     
-    // Gecikme ile ödeme sayfasına yönlendir
-    setTimeout(() => {
-      setLocation("/checkout");
-    }, 3000);
+    // Şimdilik ödeme sayfasına yönlendirelim
+    setLocation("/checkout");
   };
   
   // Yükleme durumu
@@ -143,45 +133,7 @@ export default function BookingFlow({ salonId }: { salonId: number }) {
   
   // Adımları göster
   return (
-    <div className="p-4 relative">
-      {/* Konfeti efekti */}
-      {showConfetti && <SuccessConfetti duration={3000} />}
-      
-      {/* Başarılı randevu mesajı */}
-      {bookingSuccess && (
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-white/95 p-6 rounded-lg text-center"
-        >
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-            className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4"
-          >
-            <Check className="h-10 w-10 text-green-500" />
-          </motion.div>
-          <motion.h2 
-            className="text-2xl font-bold mb-2"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            Randevunuz Oluşturuldu!
-          </motion.h2>
-          <motion.p
-            className="text-gray-600 mb-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
-          >
-            Ödeme sayfasına yönlendiriliyorsunuz...
-          </motion.p>
-        </motion.div>
-      )}
-      
+    <div className="p-4">
       {/* Adım göstergesi */}
       <div className="flex justify-between mb-6 px-2">
         <div className={`flex flex-col items-center ${step === "service" ? "text-[#6A5ACD]" : "text-gray-400"}`}>

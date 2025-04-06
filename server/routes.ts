@@ -10,8 +10,6 @@ import uploadRoutes from './routes/upload';
 import apiToolsRoutes from './routes/api-tools';
 import { nailArtPreviewRouter } from './routes/nail-art-preview';
 import { bookingsRouter } from './routes/bookings';
-import { createStaticDemoPage } from './static-demo';
-import path from 'path';
 
 // Mock Stripe implementation for now
 const mockStripe = {
@@ -29,59 +27,6 @@ const mockStripe = {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Statik test sayfaları için özel rotalar ekleyelim
-  app.get('/static-demo', (req, res) => {
-    res.send(createStaticDemoPage());
-  });
-  
-  // Pure HTML için özel rota
-  app.get('/pure-html-test', (req, res) => {
-    const rootDir = process.cwd();
-    res.sendFile(path.resolve(rootDir, 'public/pure.html'));
-  });
-  
-  // Simple HTML için özel rota
-  app.get('/simple-html-test', (req, res) => {
-    const rootDir = process.cwd();
-    res.sendFile(path.resolve(rootDir, 'public/simple.html'));
-  });
-  
-  // Simplified-app (SalonDetailView örneği) için özel rota
-  app.get('/salon-detail-test', (req, res) => {
-    const rootDir = process.cwd();
-    res.sendFile(path.resolve(rootDir, 'public/simplified-app.html'));
-  });
-  
-  // Minimal React testi için özel rota
-  app.get('/minimal-react-test', (req, res) => {
-    const rootDir = process.cwd();
-    res.sendFile(path.resolve(rootDir, 'public/minimal-react.html'));
-  });
-  
-  // Basitleştirilmiş React uygulaması için özel rota
-  app.get('/simplified-app', (req, res) => {
-    const rootDir = process.cwd();
-    res.sendFile(path.resolve(rootDir, 'public/simplified-app.html'));
-  });
-  
-  // Tanı ve hata ayıklama sayfası için özel rota
-  app.get('/debug', (req, res) => {
-    const rootDir = process.cwd();
-    res.sendFile(path.resolve(rootDir, 'public/debug.html'));
-  });
-  
-  // WebSocket hata ayıklama sayfası için özel rota
-  app.get('/websocket-debug', (req, res) => {
-    const rootDir = process.cwd();
-    res.sendFile(path.resolve(rootDir, 'public/error-tracker.html'));
-  });
-  
-  // Statik uygulama sürümü için özel rota
-  app.get('/static-app', (req, res) => {
-    const rootDir = process.cwd();
-    res.sendFile(path.resolve(rootDir, 'public/static-app.html'));
-  });
-  
   // Setup authentication routes
   setupAuth(app);
   
@@ -964,42 +909,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }));
       
       // OpenAI API'ye istek yapılandırması
-      // Kullanıcının seçtiği moda göre rolü özelleştir
-      let specializedRole = "";
-      
-      switch(userProfile.mode) {
-        case "nail":
-          specializedRole = `Sen bir uzman nail artist ve tırnak bakım danışmanısın. Nail art teknikleri, oje renkleri, tırnak şekilleri, protez tırnak, jel tırnak ve kalıcı oje konusunda derin uzmanlığın var. Kullanıcının ten rengine göre en uygun renkleri ve tırnak şekillerini önerebilirsin. Son trendleri ve yenilikleri takip ediyorsun.`;
-          break;
-        case "makeup":
-          specializedRole = `Sen bir profesyonel makyaj sanatçısı ve kozmetik danışmanısın. Makyaj teknikleri, ürün önerileri, ten rengine ve cilt tipine uygun fondöten ve kozmetik seçimleri konusunda uzmanlaşmışsın. Göz, dudak ve kaş makyajı teknikleri hakkında detaylı bilgi sunabilirsin.`;
-          break;
-        case "skin":
-          specializedRole = `Sen bir profesyonel cilt bakım uzmanı ve estetisyensin. Cilt sorunları, cilt bakım rutinleri, cilt tipine göre ürün önerileri, anti-aging tedaviler konusunda derin bilgin var. Kullanıcının cilt tipine ve sorunlarına özel çözümler sunabilirsin.`;
-          break;
-        default: // general
-          specializedRole = `Sen bir profesyonel güzellik danışmanı ve uzman nail artistsin. Kullanıcılara şu konularda yardımcı ol: tırnak sanatı ve tasarımı, kaş şekillendirme, makyaj önerileri, cilt bakım rutinleri, saç bakımı, ten rengine ve cilt tipine uygun öneriler, güzellik trendleri ve hizmetleri.`;
-          break;
-      }
-      
-      const commonInstructions = `
-Konuya uygun örnek görsel içeriklere de atıfta bulun. Kararlarını bilimsel ve güncel sektör bilgisine dayandır. Tavsiyelerini kullanıcının profiline, ten rengine ve cilt tipine göre özelleştir.
-
-Yanıtların:
-- Kesin ve kendinden emin olmalı
-- Bilgilendirici ancak kısa ve öz (1-3 paragraf) olmalı
-- Mümkün olduğunda madde işaretleri kullanmalı
-- Türkçe karakter problemi olmadan Türkçe dilinde olmalı
-- Emojiler yerine net ve profesyonel bir dil kullanmalı
-
-NAM (NailArtMatch) uygulaması adına kullanıcılara hizmet veriyorsun. Uygun olduğunda kullanıcıları NAM üzerinden randevu almaya yönlendirebilirsin.
-`;
+      const roleDescription = "Sen bir profesyonel nail artist ve güzellik danışmanısın. Kullanıcılara aşağıdaki konularda yardımcı ol: tırnak sanatı ve tasarımı, kaş şekillendirme, makyaj önerileri, cilt bakım rutinleri, saç bakımı, ten rengine ve cilt tipine uygun öneriler, güzellik trendleri, güzellik hizmetleriyle ilgili fiyat ve öneriler.";
       
       const systemMessage = {
         role: "system",
-        content: `${specializedRole}
-
-${commonInstructions}
+        content: `${roleDescription}
 
 Kullanıcının profili: 
 Ten rengi: ${userProfile.skinTone || "bilinmiyor"} 
@@ -1016,10 +930,10 @@ Yaş: ${userProfile.age || "bilinmiyor"}
         const response = await axios.default.post(
           "https://api.openai.com/v1/chat/completions",
           {
-            model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+            model: "gpt-3.5-turbo", // Daha ekonomik model
             messages: [systemMessage, ...recentMessages, { role: "user", content: message }],
             temperature: 0.7,
-            max_tokens: 800,
+            max_tokens: 600,
           },
           {
             headers: {
