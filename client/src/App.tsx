@@ -432,105 +432,21 @@ function App() {
     );
   };
 
-  // Asıl uygulamayı çalıştırmayı deneyip hata ayıklama bilgileri toplamak için try-catch kullanıyoruz
-  try {
-    // Asıl uygulamayı çalıştırmanız gerekiyorsa, aşağıdaki satırın yorumunu kaldırın:
-    // throw new Error("Hata ayıklama için asıl uygulamayı atlıyoruz");
-    
-    return (
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <I18nProvider>
-            <AppProvider>
-              <Router />
-              <Toaster />
-            </AppProvider>
-          </I18nProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    );
-  } catch (err: any) {
-    console.error("Render hatası:", err);
-    
-    // Detaylı hata raporu hazırlama
-    const errorStack = err?.stack?.split('\n').map((line: string, i: number) => (
-      <div key={i} className={i === 0 ? "font-bold text-red-600" : "text-xs"}>{line}</div>
-    ));
-    
-    // Neden olabilecek yaygın hataları belirle
-    let possibleCauses = [];
-    const errorMsg = err?.toString() || "";
-    
-    if (errorMsg.includes("cannot read property") || errorMsg.includes("undefined is not an object")) {
-      possibleCauses.push("Bir değişken tanımsız olabilir. Null/undefined kontrolü yapılmamış olabilir.");
-    }
-    if (errorMsg.includes("is not a function")) {
-      possibleCauses.push("Bir fonksiyon veya metot yanlış tanımlanmış veya çağrılmış olabilir.");
-    }
-    if (errorMsg.includes("hook")) {
-      possibleCauses.push("React Hook kullanım kuralları ihlal edilmiş olabilir (koşullu hook çağrısı, döngü içinde hook vb.)");
-    }
-    if (errorMsg.includes("CORS")) {
-      possibleCauses.push("Tarayıcı CORS politikası nedeniyle API çağrısı engellenmiş olabilir.");
-    }
-    if (errorMsg.includes("ChunkLoadError") || errorMsg.includes("Loading chunk")) {
-      possibleCauses.push("JavaScript chunk yüklenemedi. Önbellek sorunları olabilir, sayfayı yenilemeyi deneyin.");
-    }
-    
-    // Basitleştirilmiş hata sayfası render et
-    return (
-      <div className="min-h-screen bg-white text-black p-6 overflow-auto">
-        <h1 className="text-2xl font-bold mb-4 text-red-500">React Hata Ayıklama Aracı</h1>
-        <p className="mb-4">Uygulama yüklenirken bir hata oluştu. Sorun giderme için aşağıdaki bilgileri kullanabilirsiniz.</p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-            <h2 className="text-lg font-bold mb-2 text-red-800">Hata Detayları</h2>
-            <div className="p-3 bg-gray-50 rounded text-sm mb-4 overflow-auto max-h-60">
-              {errorStack || "Hata izlemesi mevcut değil"}
-            </div>
-            
-            <h3 className="font-semibold text-red-700 mb-1">Olası Nedenler:</h3>
-            {possibleCauses.length > 0 ? (
-              <ul className="list-disc list-inside text-sm">
-                {possibleCauses.map((cause, i) => (
-                  <li key={i} className="mb-1">{cause}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-sm italic">Olası neden tespit edilemedi.</p>
-            )}
-          </div>
-          
-          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <h2 className="text-lg font-bold mb-2 text-blue-800">Alternatif Sayfalar</h2>
-            <p className="text-sm mb-3">Ana uygulama çalışmıyor ancak aşağıdaki bağlantıları deneyebilirsiniz:</p>
-            <div className="flex flex-wrap gap-2 mb-4">
-              <a href="/debug" className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">
-                Tanı Sayfası
-              </a>
-              <a href="/simplified-app" className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">
-                Basitleştirilmiş Uygulama
-              </a>
-              <a href="/minimal-react-test" className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">
-                Minimal React
-              </a>
-            </div>
-            
-            <h3 className="font-semibold text-blue-700 mb-1">Hata Giderme Adımları:</h3>
-            <ol className="list-decimal list-inside text-sm space-y-1">
-              <li>Tarayıcı önbelleğini temizleyin</li>
-              <li>Tarayıcı konsolundaki diğer hata mesajlarını kontrol edin</li>
-              <li>Çalışan basitleştirilmiş sayfaları deneyin</li>
-              <li>Replit websocket bağlantılarını kontrol edin</li>
-            </ol>
-          </div>
-        </div>
-        
-        <TestApp />
-      </div>
-    );
-  }
+  // Uygulamayı doğrudan çalıştır, hata ayıklama kodunu atla
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <I18nProvider>
+          <AppProvider>
+            <Router />
+            <Toaster />
+          </AppProvider>
+        </I18nProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+  
+  // Hata yakalama kodunu tamamen kaldırdık
 }
 
 export default App;
