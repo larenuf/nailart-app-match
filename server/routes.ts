@@ -52,6 +52,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(path.resolve(rootDir, 'public/minimal-react.html'));
   });
   
+  // Basitleştirilmiş React uygulaması için özel rota
+  app.get('/simplified-app', (req, res) => {
+    const rootDir = process.cwd();
+    res.sendFile(path.resolve(rootDir, 'public/simplified-app.html'));
+  });
+  
   // Setup authentication routes
   setupAuth(app);
   
