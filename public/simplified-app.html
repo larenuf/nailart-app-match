@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nail Art Match - Basitleştirilmiş Uygulama</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* Özel Stiller */
+    body {
+      background-color: #f9f9f9;
+    }
+    
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    /* Animasyonlar */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    // SalonCard Bileşeni
+    const SalonCard = ({ salon }) => {
+      return (
+        <div className="card bg-white p-4 mb-4 fade-in">
+          <div 
+            className="h-40 bg-cover bg-center rounded-lg mb-3" 
+            style={{ backgroundImage: `url(${salon.imageUrl})` }}
+          ></div>
+          <h3 className="text-xl font-bold text-gray-800">{salon.name}</h3>
+          <p className="text-gray-600 mb-2">{salon.address}</p>
+          <div className="flex items-center mb-2">
+            <span className="text-yellow-500 mr-1">★</span>
+            <span>{salon.rating} ({salon.reviewCount} değerlendirme)</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-pink-600 font-semibold">{salon.openTime} - {salon.closeTime}</span>
+            {salon.discount && (
+              <span className="bg-pink-100 text-pink-800 px-2 py-1 rounded-full text-xs font-semibold">
+                {salon.discount}
+              </span>
+            )}
+          </div>
+        </div>
+      )
+    };
+
+    // HomePage Bileşeni
+    const HomePage = () => {
+      const [salons, setSalons] = React.useState([
+        {
+          id: 1,
+          name: "NAM Nail Studio",
+          address: "Bağdat Caddesi No: 123, Kadıköy",
+          rating: 4.8,
+          reviewCount: 128,
+          openTime: "09:00",
+          closeTime: "20:00",
+          imageUrl: "https://images.unsplash.com/photo-1632345031435-8727f6897d53",
+          discount: "%15 İndirim"
+        },
+        {
+          id: 2,
+          name: "Bella Nails",
+          address: "Teşvikiye Mah. Bronz Sokak, Nişantaşı",
+          rating: 4.6,
+          reviewCount: 94,
+          openTime: "10:00",
+          closeTime: "19:00",
+          imageUrl: "https://images.unsplash.com/photo-1604654894610-df63bc536371",
+          discount: ""
+        },
+        {
+          id: 3,
+          name: "Elite Nail Bar",
+          address: "Bebek Mah. Cevdet Paşa Cad. No:42, Bebek",
+          rating: 4.9,
+          reviewCount: 215,
+          openTime: "09:00",
+          closeTime: "21:00",
+          imageUrl: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b",
+          discount: "Yeni Müşterilere Özel"
+        },
+      ]);
+      
+      const [loading, setLoading] = React.useState(false);
+      const [error, setError] = React.useState(null);
+      
+      return (
+        <div className="container mx-auto px-4 py-8">
+          <header className="mb-8 text-center">
+            <h1 className="text-4xl font-bold text-pink-600 mb-2">Nail Art Match</h1>
+            <p className="text-gray-600">Basitleştirilmiş Uygulaması</p>
+          </header>
+          
+          <div className="mb-6 bg-pink-50 rounded-lg p-4 border border-pink-100">
+            <p className="text-pink-800">
+              Bu, Nail Art Match uygulamasının basitleştirilmiş bir versiyonudur. 
+              Harici bir API'ye bağlanmadan, tamamen istemci tarafında çalışan basit bir React uygulamasıdır.
+            </p>
+          </div>
+          
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Popüler Salonlar</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {salons.map(salon => (
+                <SalonCard key={salon.id} salon={salon} />
+              ))}
+            </div>
+          </div>
+          
+          <div className="p-4 bg-white rounded-lg shadow">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Uygulama Durumu</h2>
+            <div className="space-y-2">
+              <p><strong>Salon Sayısı:</strong> {salons.length}</p>
+              <p><strong>Yükleniyor:</strong> {loading ? "Evet" : "Hayır"}</p>
+              <p><strong>Hata:</strong> {error ? error : "Yok"}</p>
+              <button 
+                className="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded mt-4"
+                onClick={() => {
+                  setLoading(true);
+                  setTimeout(() => {
+                    const newSalon = {
+                      id: salons.length + 1,
+                      name: "Yeni Salon " + (salons.length + 1),
+                      address: "İstanbul, Türkiye",
+                      rating: 4.5,
+                      reviewCount: 10,
+                      openTime: "10:00",
+                      closeTime: "18:00",
+                      imageUrl: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b",
+                      discount: ""
+                    };
+                    setSalons([...salons, newSalon]);
+                    setLoading(false);
+                  }, 1000);
+                }}
+              >
+                {loading ? "Yükleniyor..." : "Salon Ekle"}
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // Ana Uygulama Bileşeni
+    const App = () => {
+      return (
+        <HomePage />
+      );
+    };
+    
+    // React uygulamasını DOM'a bağlama
+    const container = document.getElementById('root');
+    const root = ReactDOM.createRoot(container);
+    root.render(<App />);
+  </script>
+</body>
+</html>
