@@ -382,71 +382,152 @@ function App() {
     }
   }, []);
   
-  // Basit bir sayfa oluşturalım - WebSocket sorunları için geçici çözüm
+  // React Router içinde değişiklik yapmadan basit bir TestApp bileşeni hazırlayalım
+  const TestApp = () => {
+    const refreshKey = Date.now() + Math.random();
+    
+    return (
+      <div className="min-h-screen bg-white text-black p-6">
+        <h1 className="text-2xl font-bold mb-4 text-pink-500">Nail Art Match</h1>
+        <p className="mb-4">Geliştirilmiş Hata Ayıklama Modu</p>
+        
+        <div className="p-4 border border-gray-300 rounded mb-4">
+          <h2 className="text-lg font-bold mb-2">Diagnostik Bilgileri</h2>
+          <div>Sayfa Yüklenme Zamanı: {new Date().toLocaleTimeString()}</div>
+          <div>Refresh Key: {refreshKey.toString().substring(0, 8)}</div>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <h3 className="font-semibold text-blue-800 mb-2">Test Sayfaları</h3>
+            <div className="flex flex-wrap gap-2 mb-2">
+              <a href="/debug" className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">Tanı Sayfası</a>
+              <a href="/simplified-app" className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">Basitleştirilmiş Uygulama</a>
+              <a href="/minimal-react-test" className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">Minimal React Test</a>
+            </div>
+          </div>
+          
+          <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+            <h3 className="font-semibold text-green-800 mb-2">Uygulama Rotaları</h3>
+            <div className="flex flex-wrap gap-2">
+              <a href="/" className="bg-green-500 text-white px-3 py-1 rounded-md text-sm hover:bg-green-600">Anasayfa</a>
+              <a href="/salons" className="bg-green-500 text-white px-3 py-1 rounded-md text-sm hover:bg-green-600">Salonlar</a>
+              <a href="/test" className="bg-green-500 text-white px-3 py-1 rounded-md text-sm hover:bg-green-600">Test Sayfası</a>
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+          <h3 className="font-semibold text-yellow-800 mb-2">Uygulama Durumu</h3>
+          <p className="text-sm mb-2">Şu anda uygulama geliştirilmiş hata ayıklama modunda çalışıyor. Tam React uygulamasını çalıştırmaya çalışırken hatalar oluştuğu için bu basitleştirilmiş sürüme geçildi.</p>
+        </div>
+        
+        <button
+          className="bg-pink-500 text-white px-4 py-2 rounded-md hover:bg-pink-600"
+          onClick={() => window.location.reload()}
+        >
+          Sayfayı Yenile
+        </button>
+      </div>
+    );
+  };
+
+  // Asıl uygulamayı çalıştırmayı deneyip hata ayıklama bilgileri toplamak için try-catch kullanıyoruz
   try {
+    // Asıl uygulamayı çalıştırmanız gerekiyorsa, aşağıdaki satırın yorumunu kaldırın:
+    // throw new Error("Hata ayıklama için asıl uygulamayı atlıyoruz");
+    
     return (
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
-          <div className="min-h-screen bg-white text-black p-6">
-            <h1 className="text-2xl font-bold mb-4 text-pink-500">Nail Art Match</h1>
-            <p className="mb-4">Uygulama yükleniyor. Lütfen bekleyin...</p>
-            
-            <div className="p-4 border border-gray-300 rounded mb-4">
-              <h2 className="text-lg font-bold mb-2">Diagnostik Bilgileri</h2>
-              <div>Sayfa Yüklenme Zamanı: {new Date().toLocaleTimeString()}</div>
-              <div>Refresh Key: {refreshKey.toString().substring(0, 8)}</div>
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-              <div 
-                className="p-4 bg-pink-50 border border-pink-200 rounded-lg cursor-pointer hover:bg-pink-100"
-                onClick={() => window.location.href = "/"}
-              >
-                <h3 className="font-bold">Ana Sayfa</h3>
-                <p className="text-sm">Ana sayfaya git</p>
-              </div>
-              
-              <div 
-                className="p-4 bg-purple-50 border border-purple-200 rounded-lg cursor-pointer hover:bg-purple-100"
-                onClick={() => window.location.href = "/test"}
-              >
-                <h3 className="font-bold">Test Sayfası</h3>
-                <p className="text-sm">Test sayfasına git</p>
-              </div>
-              
-              <div 
-                className="p-4 bg-blue-50 border border-blue-200 rounded-lg cursor-pointer hover:bg-blue-100"
-                onClick={() => window.location.href = "/component-test"}
-              >
-                <h3 className="font-bold">Bileşen Test</h3>
-                <p className="text-sm">UI Bileşenlerini test et</p>
-              </div>
-            </div>
-            
-            <button
-              className="bg-pink-500 text-white px-4 py-2 rounded-md hover:bg-pink-600"
-              onClick={() => window.location.reload()}
-            >
-              Sayfayı Yenile
-            </button>
-          </div>
-          <Toaster />
+          <I18nProvider>
+            <AppProvider>
+              <Router />
+              <Toaster />
+            </AppProvider>
+          </I18nProvider>
         </ThemeProvider>
       </QueryClientProvider>
     );
   } catch (err: any) {
     console.error("Render hatası:", err);
+    
+    // Detaylı hata raporu hazırlama
+    const errorStack = err?.stack?.split('\n').map((line: string, i: number) => (
+      <div key={i} className={i === 0 ? "font-bold text-red-600" : "text-xs"}>{line}</div>
+    ));
+    
+    // Neden olabilecek yaygın hataları belirle
+    let possibleCauses = [];
+    const errorMsg = err?.toString() || "";
+    
+    if (errorMsg.includes("cannot read property") || errorMsg.includes("undefined is not an object")) {
+      possibleCauses.push("Bir değişken tanımsız olabilir. Null/undefined kontrolü yapılmamış olabilir.");
+    }
+    if (errorMsg.includes("is not a function")) {
+      possibleCauses.push("Bir fonksiyon veya metot yanlış tanımlanmış veya çağrılmış olabilir.");
+    }
+    if (errorMsg.includes("hook")) {
+      possibleCauses.push("React Hook kullanım kuralları ihlal edilmiş olabilir (koşullu hook çağrısı, döngü içinde hook vb.)");
+    }
+    if (errorMsg.includes("CORS")) {
+      possibleCauses.push("Tarayıcı CORS politikası nedeniyle API çağrısı engellenmiş olabilir.");
+    }
+    if (errorMsg.includes("ChunkLoadError") || errorMsg.includes("Loading chunk")) {
+      possibleCauses.push("JavaScript chunk yüklenemedi. Önbellek sorunları olabilir, sayfayı yenilemeyi deneyin.");
+    }
+    
+    // Basitleştirilmiş hata sayfası render et
     return (
-      <div className="min-h-screen bg-white text-black p-6">
-        <h1 className="text-2xl font-bold mb-4 text-red-500">Hata!</h1>
-        <p className="mb-4">Uygulama yüklenirken bir hata oluştu.</p>
-        <pre className="p-4 bg-gray-100 rounded overflow-auto">{err?.toString() || "Bilinmeyen hata"}</pre>
-        <button
-          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-          onClick={() => window.location.reload()}
-        >
-          Sayfayı Yenile
-        </button>
+      <div className="min-h-screen bg-white text-black p-6 overflow-auto">
+        <h1 className="text-2xl font-bold mb-4 text-red-500">React Hata Ayıklama Aracı</h1>
+        <p className="mb-4">Uygulama yüklenirken bir hata oluştu. Sorun giderme için aşağıdaki bilgileri kullanabilirsiniz.</p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+            <h2 className="text-lg font-bold mb-2 text-red-800">Hata Detayları</h2>
+            <div className="p-3 bg-gray-50 rounded text-sm mb-4 overflow-auto max-h-60">
+              {errorStack || "Hata izlemesi mevcut değil"}
+            </div>
+            
+            <h3 className="font-semibold text-red-700 mb-1">Olası Nedenler:</h3>
+            {possibleCauses.length > 0 ? (
+              <ul className="list-disc list-inside text-sm">
+                {possibleCauses.map((cause, i) => (
+                  <li key={i} className="mb-1">{cause}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm italic">Olası neden tespit edilemedi.</p>
+            )}
+          </div>
+          
+          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <h2 className="text-lg font-bold mb-2 text-blue-800">Alternatif Sayfalar</h2>
+            <p className="text-sm mb-3">Ana uygulama çalışmıyor ancak aşağıdaki bağlantıları deneyebilirsiniz:</p>
+            <div className="flex flex-wrap gap-2 mb-4">
+              <a href="/debug" className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">
+                Tanı Sayfası
+              </a>
+              <a href="/simplified-app" className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">
+                Basitleştirilmiş Uygulama
+              </a>
+              <a href="/minimal-react-test" className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">
+                Minimal React
+              </a>
+            </div>
+            
+            <h3 className="font-semibold text-blue-700 mb-1">Hata Giderme Adımları:</h3>
+            <ol className="list-decimal list-inside text-sm space-y-1">
+              <li>Tarayıcı önbelleğini temizleyin</li>
+              <li>Tarayıcı konsolundaki diğer hata mesajlarını kontrol edin</li>
+              <li>Çalışan basitleştirilmiş sayfaları deneyin</li>
+              <li>Replit websocket bağlantılarını kontrol edin</li>
+            </ol>
+          </div>
+        </div>
+        
+        <TestApp />
       </div>
     );
   }
