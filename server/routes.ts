@@ -1453,8 +1453,9 @@ Yaş: ${userProfile.age || "bilinmiyor"}
 
   const httpServer = createServer(app);
   
-  // WebSocket sunucusunu geliştirilmiş modül ile kur
-  setupWebSocketServer(httpServer);
+  // Geçici olarak WebSocket sunucusunu devre dışı bırakıyoruz
+  // setupWebSocketServer(httpServer);
+  console.log("WebSocket server is temporarily disabled");
 
   return httpServer;
 }

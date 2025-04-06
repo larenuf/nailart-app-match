@@ -1,3 +1,6 @@
+// WebSocket desteğini devre dışı bırakmak için polyfill'i içe aktaralım
+import './lib/websocket-pollyfill';
+
 import { Switch, Route, useLocation } from "wouter";
 import { useState, useEffect } from "react";
 import { queryClient } from "./lib/queryClient";

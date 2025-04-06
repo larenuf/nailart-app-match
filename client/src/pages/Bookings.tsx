@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from 'wouter';
 import { useToast } from '@/hooks/use-toast';
@@ -169,17 +169,37 @@ const Bookings: React.FC = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("all");
   
-  // Randevuları çekme
-  const { data: bookings = [], isLoading, refetch } = useQuery<Booking[]>({
-    queryKey: ['/api/bookings/user'],
-    queryFn: async () => {
+  // Randevuları çekme - doğrudan Fetch API kullanımı
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  const fetchBookings = useCallback(async () => {
+    try {
+      setIsLoading(true);
       const response = await fetch('/api/bookings/user');
       if (!response.ok) {
         throw new Error('Randevular yüklenirken bir hata oluştu');
       }
-      return response.json();
+      const data = await response.json();
+      setBookings(data);
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Randevuları getirme hatası:', error);
+      toast({
+        title: "Hata",
+        description: "Randevular yüklenirken bir hata oluştu",
+        variant: "destructive",
+      });
+      setIsLoading(false);
     }
-  });
+  }, [toast]);
+  
+  useEffect(() => {
+    fetchBookings();
+  }, [fetchBookings]);
+  
+  // refetch fonksiyonu artık fetchBookings'i çağıracak
+  const refetch = fetchBookings;
   
   // Filtrelenmiş randevular
   const filteredBookings = bookings.filter(booking => {
@@ -230,6 +250,10 @@ const Bookings: React.FC = () => {
       <TopNavigation title="Randevularım" showBackButton />
       
       <div className="max-w-3xl mx-auto p-4">
+        <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-md text-sm">
+          WebSocket bağlantıları geçici olarak devre dışı bırakıldı. Randevuları doğrudan API'den yüklüyoruz.
+        </div>
+        
         <Tabs 
           defaultValue="all" 
           value={activeTab}
