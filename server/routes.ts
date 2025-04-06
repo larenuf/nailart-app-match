@@ -46,6 +46,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(path.resolve(rootDir, 'public/simple.html'));
   });
   
+  // Minimal React testi için özel rota
+  app.get('/minimal-react-test', (req, res) => {
+    const rootDir = process.cwd();
+    res.sendFile(path.resolve(rootDir, 'public/minimal-react.html'));
+  });
+  
   // Setup authentication routes
   setupAuth(app);
   
