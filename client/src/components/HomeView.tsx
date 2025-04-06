@@ -1,25 +1,27 @@
 import TopNavigation from "./TopNavigation";
 import BottomNavigation from "./BottomNavigation";
-import StorySection2 from "./StorySection2";
-import CategoriesSection from "./CategoriesSection";
-import FeaturedSalonsSectionNew from "./FeaturedSalonsSectionNew";
-import FeaturedPremiumSalons from "./FeaturedPremiumSalons";
-import NailProductsSection from "@/components/NailProductsSection";
-import LeafletClusterMap from "./LeafletClusterMap";
-//import TrendingDesigns from "./TrendingDesigns";
+import { lazy, Suspense, useCallback, useState, useEffect, useRef } from "react";
+import { Link, useLocation } from "wouter";
+import { useI18n } from "@/i18n";
+import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "@/context/ThemeContext";
+import { useAppContext } from "@/context/AppContext";
+import { usePageCacheOptimizer, runParallelQueries } from "@/lib/performance";
+import { Spinner } from "./ui/spinner";
 import { 
   Sparkles, Palette, Medal, MousePointerClick, ImagePlus, Megaphone, 
   SlidersHorizontal, Calendar, Sun, ArrowRight, Bell, MapPin, 
   Heart, SearchIcon, Star, LayoutGrid, Map, Moon, Settings,
   User, Clock, Filter, TrendingUp, Menu, XCircle, ChevronRight
 } from 'lucide-react';
-import { Link } from 'wouter';
-import { useCallback, useState, useEffect, useRef } from "react";
-import { useLocation } from "wouter";
-import { useI18n } from "@/i18n";
-import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "@/context/ThemeContext";
-import { useAppContext } from "@/context/AppContext";
+
+// Lazy loaded components
+const StorySection2 = lazy(() => import("./StorySection2"));
+const CategoriesSection = lazy(() => import("./CategoriesSection"));
+const FeaturedSalonsSectionNew = lazy(() => import("./FeaturedSalonsSectionNew"));
+const FeaturedPremiumSalons = lazy(() => import("./FeaturedPremiumSalons"));
+const NailProductsSection = lazy(() => import("@/components/NailProductsSection"));
+const LeafletClusterMap = lazy(() => import("./LeafletClusterMap"));
 
 // Feature card component
 interface FeatureCardProps {
