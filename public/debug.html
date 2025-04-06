@@ -1,190 +1,227 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Debug Page</title>
+  <title>Nail Art Match - Tanı Sayfası</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #fff;
-      color: #333;
-      padding: 20px;
-      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      background: #f9f9f9;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    
+    .fade-in {
+      animation: fadeIn 0.5s ease-in;
     }
-    h1 {
-      color: #e83e8c;
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
-    pre {
-      background: #f5f5f5;
-      padding: 10px;
-      border-radius: 4px;
+    
+    .console-output {
+      background-color: #1e1e1e;
+      color: #dcdcdc;
+      font-family: 'Courier New', monospace;
+      padding: 1rem;
+      border-radius: 0.5rem;
       overflow-x: auto;
+      white-space: pre-wrap;
     }
-    button {
-      background: #e83e8c;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-right: 8px;
-      margin-bottom: 8px;
+    
+    .status-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 6px;
     }
-    button:hover {
-      background: #d03077;
+    
+    .status-good {
+      background-color: #10b981;
     }
-    .section {
-      margin-bottom: 20px;
-      padding: 15px;
-      background: white;
-      border-radius: 6px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    
+    .status-warning {
+      background-color: #f59e0b;
+    }
+    
+    .status-error {
+      background-color: #ef4444;
     }
   </style>
 </head>
-<body>
-  <div class="container">
-    <h1>Debug Page</h1>
+<body class="bg-gray-100 text-gray-900">
+  <div class="container mx-auto px-4 py-8 max-w-5xl">
+    <header class="mb-8 text-center">
+      <h1 class="text-4xl font-bold text-pink-600 mb-2">Nail Art Match</h1>
+      <p class="text-gray-600">Tanı ve Hata Ayıklama Sayfası</p>
+    </header>
     
-    <div class="section">
-      <h2>System Information</h2>
-      <pre id="sysInfo">Loading...</pre>
-    </div>
-    
-    <div class="section">
-      <h2>Debug Actions</h2>
-      <button onclick="clearCache()">Clear Cache</button>
-      <button onclick="reloadPage()">Force Reload</button>
-      <button onclick="testConfetti()">Test Confetti</button>
-    </div>
-    
-    <div class="section">
-      <h2>Navigation</h2>
-      <button onclick="navigate('/')">Home</button>
-      <button onclick="navigate('/test')">Test Page</button>
-      <button onclick="navigate('/salons')">Salons</button>
-    </div>
-    
-    <div class="section">
-      <h2>Console Log</h2>
-      <pre id="logOutput">No logs yet</pre>
-    </div>
-  </div>
-
-  <script>
-    // System info
-    function updateSysInfo() {
-      const info = {
-        url: window.location.href,
-        userAgent: navigator.userAgent,
-        screenSize: `${window.innerWidth}x${window.innerHeight}`,
-        devicePixelRatio: window.devicePixelRatio,
-        connectionType: navigator.connection ? navigator.connection.effectiveType : 'unknown',
-        language: navigator.language,
-        time: new Date().toISOString()
-      };
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-8 fade-in">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Sistem Durumu</h2>
       
-      document.getElementById('sysInfo').textContent = JSON.stringify(info, null, 2);
-    }
-    
-    // Cache clearing
-    function clearCache() {
-      if ('caches' in window) {
-        caches.keys().then(names => {
-          names.forEach(name => {
-            caches.delete(name);
-            log(`Cache "${name}" cleared`);
-          });
-        });
-      }
-      
-      // Clear session and local storage
-      sessionStorage.clear();
-      localStorage.clear();
-      log('Session and local storage cleared');
-      
-      // Force reload
-      window.location.reload(true);
-    }
-    
-    // Reload
-    function reloadPage() {
-      log('Forcing page reload...');
-      window.location.reload(true);
-    }
-    
-    // Navigation
-    function navigate(path) {
-      log(`Navigating to: ${path}`);
-      window.location.href = path;
-    }
-    
-    // Logger
-    function log(message) {
-      const logEl = document.getElementById('logOutput');
-      const time = new Date().toLocaleTimeString();
-      logEl.textContent = `[${time}] ${message}\n${logEl.textContent}`;
-      console.log(`[DEBUG] ${message}`);
-    }
-    
-    // Test confetti
-    function testConfetti() {
-      log('Creating test confetti element');
-      const confetti = document.createElement('div');
-      confetti.style.position = 'fixed';
-      confetti.style.top = '0';
-      confetti.style.left = '0';
-      confetti.style.width = '100%';
-      confetti.style.height = '100%';
-      confetti.style.zIndex = '9999';
-      confetti.style.pointerEvents = 'none';
-      
-      for (let i = 0; i < 100; i++) {
-        const particle = document.createElement('div');
-        particle.style.position = 'absolute';
-        particle.style.width = '10px';
-        particle.style.height = '10px';
-        particle.style.borderRadius = '50%';
-        particle.style.backgroundColor = ['#f472b6', '#a855f7', '#8b5cf6', '#60a5fa'][i % 4];
-        particle.style.top = `${Math.random() * 100}%`;
-        particle.style.left = `${Math.random() * 100}%`;
-        particle.style.animation = `fall-${i} 3s ease forwards`;
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+          <div class="flex items-center">
+            <span class="status-indicator status-good"></span>
+            <h3 class="font-semibold">CDN Kaynakları</h3>
+          </div>
+          <p class="text-sm text-gray-600 mt-2">CDN'den script ve stil dosyaları başarıyla yüklendi.</p>
+        </div>
         
-        const keyframes = document.createElement('style');
-        keyframes.textContent = `
-          @keyframes fall-${i} {
-            0% { transform: translateY(-10px); opacity: 0; }
-            10% { opacity: 1; }
-            100% { transform: translateY(${100 + Math.random() * 500}px) rotate(${Math.random() * 360}deg); opacity: 0; }
-          }
-        `;
-        document.head.appendChild(keyframes);
-        confetti.appendChild(particle);
+        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+          <div class="flex items-center">
+            <span class="status-indicator status-good"></span>
+            <h3 class="font-semibold">Sunucu Durumu</h3>
+          </div>
+          <p class="text-sm text-gray-600 mt-2">Express sunucusu aktif durumda ve çalışıyor.</p>
+        </div>
+        
+        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+          <div class="flex items-center">
+            <span class="status-indicator status-warning"></span>
+            <h3 class="font-semibold">Ana Uygulama</h3>
+          </div>
+          <p class="text-sm text-gray-600 mt-2">React uygulaması yüklenirken sorunlar oluşuyor.</p>
+        </div>
+      </div>
+      
+      <h3 class="text-xl font-semibold mb-3">Tanı Araçları</h3>
+      
+      <div class="space-y-4">
+        <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <h4 class="font-semibold text-blue-800 mb-2">Alternatif Sayfalar</h4>
+          <p class="text-sm mb-3">Farklı karmaşıklık seviyelerinde test sayfaları:</p>
+          <div class="flex flex-wrap gap-2">
+            <a href="/pure.html" class="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">Saf HTML</a>
+            <a href="/minimal-react-test" class="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">Minimal React</a>
+            <a href="/simplified-app" class="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">Basitleştirilmiş App</a>
+            <a href="/" class="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">Ana Uygulama</a>
+          </div>
+        </div>
+        
+        <div class="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+          <h4 class="font-semibold text-purple-800 mb-2">API Testi</h4>
+          <p class="text-sm mb-3">API endpoint'lerinin çalışıp çalışmadığını kontrol edin:</p>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="testAPI('/api/salons')" class="bg-purple-500 text-white px-3 py-1 rounded-md text-sm hover:bg-purple-600">Salonları Kontrol Et</button>
+            <button onclick="testAPI('/api/user')" class="bg-purple-500 text-white px-3 py-1 rounded-md text-sm hover:bg-purple-600">Kullanıcı Durumunu Kontrol Et</button>
+            <button onclick="testAPI('/api/categories')" class="bg-purple-500 text-white px-3 py-1 rounded-md text-sm hover:bg-purple-600">Kategorileri Kontrol Et</button>
+          </div>
+          <div id="api-result" class="mt-3 hidden">
+            <h5 class="font-semibold text-sm mb-1">Sonuç:</h5>
+            <pre class="console-output text-xs p-3 max-h-40"></pre>
+          </div>
+        </div>
+        
+        <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+          <h4 class="font-semibold text-green-800 mb-2">Önbellek Temizleme</h4>
+          <p class="text-sm mb-3">Önbellek sorunlarını çözmek için önbelleği temizleyin:</p>
+          <button onclick="clearCache()" class="bg-green-500 text-white px-3 py-1 rounded-md text-sm hover:bg-green-600">Önbelleği Temizle ve Sayfayı Yenile</button>
+        </div>
+        
+        <div class="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+          <h4 class="font-semibold text-amber-800 mb-2">Teknik Bilgiler</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div>
+              <p><strong>Kullanıcı Tarayıcısı:</strong> <span id="user-agent"></span></p>
+              <p><strong>Ekran Çözünürlüğü:</strong> <span id="screen-resolution"></span></p>
+              <p><strong>LocalStorage Erişimi:</strong> <span id="localstorage-access"></span></p>
+            </div>
+            <div>
+              <p><strong>Sayfa Yüklenme Zamanı:</strong> <span id="page-load-time"></span></p>
+              <p><strong>Tarayıcı Dili:</strong> <span id="browser-language"></span></p>
+              <p><strong>Tarayıcı Tema Tercihi:</strong> <span id="color-scheme"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Yaygın Sorunlar ve Çözümleri</h2>
+      
+      <div class="space-y-4">
+        <div class="p-4 bg-red-50 border border-red-200 rounded-lg">
+          <h3 class="font-semibold text-red-800 mb-2">Boş Sayfa Sorunu</h3>
+          <p class="text-sm mb-2">Ana uygulama sayfası boş veya beyaz bir sayfa gösteriyorsa, şunları deneyin:</p>
+          <ol class="list-decimal list-inside text-sm text-gray-700 space-y-1">
+            <li>Tarayıcı önbelleğini temizleyin ve sayfayı yenileyin.</li>
+            <li>Farklı bir tarayıcı kullanın (Chrome, Firefox, Safari).</li>
+            <li>Javascript konsolunda hata mesajlarını kontrol edin.</li>
+            <li>Alternatif olarak, basitleştirilmiş React uygulamasını kullanın: <a href="/simplified-app" class="text-blue-600 hover:underline">/simplified-app</a></li>
+          </ol>
+        </div>
+        
+        <div class="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+          <h3 class="font-semibold text-orange-800 mb-2">API Bağlantı Sorunları</h3>
+          <p class="text-sm mb-2">API'ye bağlanırken sorunlar yaşıyorsanız, şunları kontrol edin:</p>
+          <ol class="list-decimal list-inside text-sm text-gray-700 space-y-1">
+            <li>Internet bağlantınızın aktif olduğundan emin olun.</li>
+            <li>Tarayıcı güvenlik ayarlarının API isteklerine izin verdiğinden emin olun.</li>
+            <li>Tarayıcı konsolunda CORS hatalarını kontrol edin.</li>
+            <li>Sayfayı yenileyin ve tekrar deneyin.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    
+    <footer class="text-center text-gray-500 text-sm">
+      <p>&copy; 2023-2025 Nail Art Match - Tanı ve Hata Ayıklama Sayfası</p>
+      <p class="mt-1">Bu sayfa, uygulamanın çalışmasını teşhis etmek ve sorunları gidermek için oluşturulmuştur.</p>
+    </footer>
+  </div>
+  
+  <script>
+    // Sayfa yüklendiğinde çalışacak kodlar
+    document.addEventListener('DOMContentLoaded', function() {
+      // Teknik bilgileri doldur
+      document.getElementById('user-agent').textContent = navigator.userAgent;
+      document.getElementById('screen-resolution').textContent = `${window.screen.width}x${window.screen.height}`;
+      document.getElementById('page-load-time').textContent = new Date().toLocaleTimeString();
+      document.getElementById('browser-language').textContent = navigator.language || navigator.userLanguage;
+      
+      // LocalStorage erişimini kontrol et
+      try {
+        localStorage.setItem('test', 'test');
+        localStorage.removeItem('test');
+        document.getElementById('localstorage-access').textContent = 'Erişilebilir';
+        document.getElementById('localstorage-access').classList.add('text-green-600');
+      } catch (e) {
+        document.getElementById('localstorage-access').textContent = 'Erişilemiyor';
+        document.getElementById('localstorage-access').classList.add('text-red-600');
       }
       
-      document.body.appendChild(confetti);
+      // Tarayıcı tema tercihi
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.getElementById('color-scheme').textContent = 'Karanlık';
+      } else {
+        document.getElementById('color-scheme').textContent = 'Aydınlık';
+      }
+    });
+    
+    // API testi işlevi
+    async function testAPI(endpoint) {
+      const resultContainer = document.getElementById('api-result');
+      const outputElement = resultContainer.querySelector('.console-output');
       
-      setTimeout(() => {
-        confetti.remove();
-        log('Confetti test complete');
-      }, 3000);
+      resultContainer.classList.remove('hidden');
+      outputElement.textContent = 'İstek gönderiliyor...';
+      
+      try {
+        const response = await fetch(endpoint);
+        const data = await response.json();
+        outputElement.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        outputElement.textContent = `Hata: ${error.message}`;
+      }
     }
     
-    // Initialization
-    updateSysInfo();
-    log('Debug page initialized');
-    
-    // Update system info every 5 seconds
-    setInterval(updateSysInfo, 5000);
+    // Önbellek temizleme
+    function clearCache() {
+      // Timestamp ekleyerek URL'yi zorla yenileyerek önbelleği atla
+      window.location.href = window.location.pathname + '?t=' + Date.now();
+    }
   </script>
 </body>
 </html>
