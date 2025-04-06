@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/select";
 import TopNavigation from '@/components/TopNavigation';
 import BottomNavigation from '@/components/BottomNavigation';
-import SalonCardSkeleton from '@/components/SalonCardSkeleton';
 import { 
   MapPin, 
   Star, 
@@ -472,8 +471,8 @@ export default function SalonList() {
         {/* Sonuçlar */}
         <div className="space-y-4">
           {isLoading ? (
-            <div className="mt-2">
-              <SalonCardSkeleton count={6} />
+            <div className="flex justify-center py-10">
+              <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
             </div>
           ) : error ? (
             <div className="text-center py-10 text-red-500">

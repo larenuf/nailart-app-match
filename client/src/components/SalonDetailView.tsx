@@ -6,9 +6,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useLocation } from "wouter";
 import { useBackButton } from "@/hooks/useBackButton";
-import ParallaxSection from "./ParallaxSection";
-import { AnimatedOnScroll } from "./AnimatedOnScroll";
-import { MasonryGrid } from "./MasonryGrid";
 
 export default function SalonDetailView() {
   const { selectedSalon, setSelectedSalon, setSelectedArtist } = useAppContext();
@@ -71,34 +68,19 @@ export default function SalonDetailView() {
         </div>
       </div>
 
-      {/* Salon Kapak Fotoğrafı ve Ana Bilgileri - Paralaks Efekti Eklendi */}
-      <ParallaxSection
-        backgroundUrl={selectedSalon.imageUrl}
-        height="240px"
-        speed={0.3}
-        overlayOpacity={0.2}
-        className="relative"
-      >
+      {/* Salon Kapak Fotoğrafı ve Ana Bilgileri */}
+      <div className="relative">
+        <img
+          src={selectedSalon.imageUrl}
+          alt={selectedSalon.name}
+          className="w-full h-48 object-cover"
+        />
         {selectedSalon.discount && (
-          <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold z-30">
+          <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
             {selectedSalon.discount} İndirim
           </div>
         )}
-        {selectedSalon.isPremium && (
-          <div className="absolute top-4 left-4 bg-amber-500 text-white px-3 py-1 rounded-full text-sm font-bold z-30">
-            Premium
-          </div>
-        )}
-        
-        {/* Kapak fotoğrafı üzerine salon bilgileri */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent text-white z-30">
-          <h1 className="text-xl font-bold drop-shadow-md">{selectedSalon.name}</h1>
-          <div className="flex items-center text-sm">
-            <i className="fas fa-map-marker-alt mr-1"></i>
-            <span className="drop-shadow-md">{selectedSalon.address}</span>
-          </div>
-        </div>
-      </ParallaxSection>
+      </div>
 
       {/* Derecelendirme ve Temel Bilgiler */}
       <div className="px-4 py-3">
@@ -216,48 +198,40 @@ export default function SalonDetailView() {
 
         {/* Randevu Al Sekmesi */}
         <TabsContent value="services" className="px-4 py-3">
-          <AnimatedOnScroll animation="up" duration={0.7}>
-            <h3 className="font-bold mb-3">Randevu Alabileceğiniz Hizmetler</h3>
-          </AnimatedOnScroll>
+          <h3 className="font-bold mb-3">Randevu Alabileceğiniz Hizmetler</h3>
           <div className="space-y-3">
-            {mockServices.map((service, index) => (
-              <AnimatedOnScroll 
+            {mockServices.map((service) => (
+              <div 
                 key={service.id}
-                animation="left"
-                delay={index * 0.1}
-                duration={0.5}
+                className="p-3 border border-gray-100 rounded-lg hover:border-[#F9E0E7] transition-colors"
               >
-                <div className="p-3 border border-gray-100 rounded-lg hover:border-[#F9E0E7] hover:shadow-md transition-all">
-                  <div className="flex justify-between">
-                    <h4 className="font-medium">{service.name}</h4>
-                    <span className="font-bold">${service.price}</span>
-                  </div>
-                  <p className="text-sm text-gray-600 my-1">{service.description}</p>
-                  <div className="flex justify-between items-center mt-2">
-                    <span className="text-xs text-gray-500">{service.durationMinutes} dakika</span>
-                    <button 
-                      className="text-xs bg-[#F9E0E7] hover:bg-[#F9E0E7]/80 text-[#333333] px-3 py-1 rounded-full"
-                      onClick={() => {
-                        if (selectedSalon) {
-                          // Yeni randevu akışına yönlendir
-                          window.location.href = `/booking-wizard/${selectedSalon.id}`;
-                        }
-                      }}
-                    >
-                      Randevu Al
-                    </button>
-                  </div>
+                <div className="flex justify-between">
+                  <h4 className="font-medium">{service.name}</h4>
+                  <span className="font-bold">${service.price}</span>
                 </div>
-              </AnimatedOnScroll>
+                <p className="text-sm text-gray-600 my-1">{service.description}</p>
+                <div className="flex justify-between items-center mt-2">
+                  <span className="text-xs text-gray-500">{service.durationMinutes} dakika</span>
+                  <button 
+                    className="text-xs bg-[#F9E0E7] hover:bg-[#F9E0E7]/80 text-[#333333] px-3 py-1 rounded-full"
+                    onClick={() => {
+                      if (selectedSalon) {
+                        // Yeni randevu akışına yönlendir
+                        window.location.href = `/booking-wizard/${selectedSalon.id}`;
+                      }
+                    }}
+                  >
+                    Randevu Al
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
         </TabsContent>
 
         {/* Nail Artistleri Sekmesi */}
         <TabsContent value="artists" className="px-4 py-3">
-          <AnimatedOnScroll animation="up" duration={0.7}>
-            <h3 className="font-bold mb-3">Tırnak Sanatçılarımız</h3>
-          </AnimatedOnScroll>
+          <h3 className="font-bold mb-3">Tırnak Sanatçılarımız</h3>
 
           {artistsLoading ? (
             <div className="space-y-3">
@@ -267,46 +241,40 @@ export default function SalonDetailView() {
             </div>
           ) : (
             <div className="space-y-3">
-              {artists?.map((artist, index) => (
-                <AnimatedOnScroll 
+              {artists?.map((artist) => (
+                <div
                   key={artist.id}
-                  animation="right"
-                  delay={index * 0.1}
-                  duration={0.6}
+                  className="flex p-3 border border-gray-100 rounded-lg hover:border-[#F9E0E7] cursor-pointer transition-colors"
+                  onClick={() => handleArtistSelect(artist)}
                 >
-                  <div
-                    className="flex p-3 border border-gray-100 rounded-lg hover:border-[#F9E0E7] cursor-pointer transition-all hover:shadow-md"
-                    onClick={() => handleArtistSelect(artist)}
-                  >
-                    <img
-                      src={artist.imageUrl}
-                      alt={artist.name}
-                      className="w-16 h-16 rounded-full object-cover"
-                    />
-                    <div className="ml-3 flex-1">
-                      <h4 className="font-medium">{artist.name}</h4>
-                      <p className="text-sm text-gray-600">{artist.specialty}</p>
-                      <div className="flex items-center mt-1">
-                        <div className="flex text-[#FFD700] text-xs">
-                          {[...Array(Math.floor(artist.rating))].map((_, i) => (
-                            <i key={i} className="fas fa-star"></i>
-                          ))}
-                          {artist.rating % 1 > 0 && (
-                            <i className="fas fa-star-half-alt"></i>
-                          )}
-                        </div>
-                        <span className="text-xs ml-1 text-gray-500">
-                          ({artist.reviewCount} yorum)
-                        </span>
+                  <img
+                    src={artist.imageUrl}
+                    alt={artist.name}
+                    className="w-16 h-16 rounded-full object-cover"
+                  />
+                  <div className="ml-3 flex-1">
+                    <h4 className="font-medium">{artist.name}</h4>
+                    <p className="text-sm text-gray-600">{artist.specialty}</p>
+                    <div className="flex items-center mt-1">
+                      <div className="flex text-[#FFD700] text-xs">
+                        {[...Array(Math.floor(artist.rating))].map((_, i) => (
+                          <i key={i} className="fas fa-star"></i>
+                        ))}
+                        {artist.rating % 1 > 0 && (
+                          <i className="fas fa-star-half-alt"></i>
+                        )}
                       </div>
-                    </div>
-                    <div className="flex items-center">
-                      <button className="text-gray-400 hover:text-[#F9E0E7]">
-                        <i className="fas fa-chevron-right"></i>
-                      </button>
+                      <span className="text-xs ml-1 text-gray-500">
+                        ({artist.reviewCount} yorum)
+                      </span>
                     </div>
                   </div>
-                </AnimatedOnScroll>
+                  <div className="flex items-center">
+                    <button className="text-gray-400 hover:text-[#F9E0E7]">
+                      <i className="fas fa-chevron-right"></i>
+                    </button>
+                  </div>
+                </div>
               ))}
             </div>
           )}
@@ -314,39 +282,18 @@ export default function SalonDetailView() {
 
         {/* Galeri Sekmesi */}
         <TabsContent value="gallery" className="px-4 py-3">
-          <AnimatedOnScroll animation="up" duration={0.7}>
-            <h3 className="font-bold mb-3">Salon Galerisi</h3>
-          </AnimatedOnScroll>
-          
-          {/* Modern CSS Grid - MasonryGrid Bileşeni İle */}
-          <MasonryGrid
-            columns={{ mobile: 1, tablet: 2, desktop: 2 }}
-            gap="0.5rem"
-            className="my-4"
-          >
+          <h3 className="font-bold mb-3">Salon Galerisi</h3>
+          <div className="grid grid-cols-2 gap-2">
             {galleryImages.map((image, index) => (
-              <AnimatedOnScroll
-                key={index}
-                animation={index % 3 === 0 ? "scale" : index % 2 === 0 ? "left" : "right"}
-                delay={index * 0.05}
-                duration={0.5}
-              >
-                <div 
-                  style={{ 
-                    height: `${Math.floor(Math.random() * 150) + 150}px`, 
-                    overflow: 'hidden'
-                  }}
-                  className="rounded-lg shadow-sm hover:shadow-md transition-all"
-                >
-                  <img
-                    src={image}
-                    alt={`Salon image ${index + 1}`}
-                    className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-500"
-                  />
-                </div>
-              </AnimatedOnScroll>
+              <div key={index} className={index === 0 ? "col-span-2" : ""}>
+                <img
+                  src={image}
+                  alt={`Salon image ${index + 1}`}
+                  className="w-full h-40 object-cover rounded-lg"
+                />
+              </div>
             ))}
-          </MasonryGrid>
+          </div>
         </TabsContent>
       </Tabs>
 
