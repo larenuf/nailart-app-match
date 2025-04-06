@@ -7,8 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { useLocation } from "wouter";
 import { useBackButton } from "@/hooks/useBackButton";
 import ParallaxSection from "./ParallaxSection";
-import AnimatedOnScroll from "./AnimatedOnScroll";
-import MasonryGrid from "./MasonryGrid";
+import { AnimatedOnScroll } from "./AnimatedOnScroll";
+import { MasonryGrid } from "./MasonryGrid";
 
 export default function SalonDetailView() {
   const { selectedSalon, setSelectedSalon, setSelectedArtist } = useAppContext();
@@ -216,14 +216,14 @@ export default function SalonDetailView() {
 
         {/* Randevu Al Sekmesi */}
         <TabsContent value="services" className="px-4 py-3">
-          <AnimatedOnScroll animation="fadeUp" duration={0.7}>
+          <AnimatedOnScroll animation="up" duration={0.7}>
             <h3 className="font-bold mb-3">Randevu Alabileceğiniz Hizmetler</h3>
           </AnimatedOnScroll>
           <div className="space-y-3">
             {mockServices.map((service, index) => (
               <AnimatedOnScroll 
                 key={service.id}
-                animation="fadeLeft"
+                animation="left"
                 delay={index * 0.1}
                 duration={0.5}
               >
@@ -255,7 +255,7 @@ export default function SalonDetailView() {
 
         {/* Nail Artistleri Sekmesi */}
         <TabsContent value="artists" className="px-4 py-3">
-          <AnimatedOnScroll animation="fadeUp" duration={0.7}>
+          <AnimatedOnScroll animation="up" duration={0.7}>
             <h3 className="font-bold mb-3">Tırnak Sanatçılarımız</h3>
           </AnimatedOnScroll>
 
@@ -270,7 +270,7 @@ export default function SalonDetailView() {
               {artists?.map((artist, index) => (
                 <AnimatedOnScroll 
                   key={artist.id}
-                  animation="fadeRight"
+                  animation="right"
                   delay={index * 0.1}
                   duration={0.6}
                 >
@@ -314,20 +314,20 @@ export default function SalonDetailView() {
 
         {/* Galeri Sekmesi */}
         <TabsContent value="gallery" className="px-4 py-3">
-          <AnimatedOnScroll animation="fadeUp" duration={0.7}>
+          <AnimatedOnScroll animation="up" duration={0.7}>
             <h3 className="font-bold mb-3">Salon Galerisi</h3>
           </AnimatedOnScroll>
           
           {/* Modern CSS Grid - MasonryGrid Bileşeni İle */}
           <MasonryGrid
-            columns={{ sm: 1, md: 2, lg: 2, xl: 2 }}
+            columns={{ mobile: 1, tablet: 2, desktop: 2 }}
             gap="0.5rem"
             className="my-4"
           >
             {galleryImages.map((image, index) => (
               <AnimatedOnScroll
                 key={index}
-                animation={index % 3 === 0 ? "zoomIn" : index % 2 === 0 ? "fadeLeft" : "fadeRight"}
+                animation={index % 3 === 0 ? "scale" : index % 2 === 0 ? "left" : "right"}
                 delay={index * 0.05}
                 duration={0.5}
               >
