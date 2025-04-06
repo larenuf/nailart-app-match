@@ -58,6 +58,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(path.resolve(rootDir, 'public/simplified-app.html'));
   });
   
+  // Tanı ve hata ayıklama sayfası için özel rota
+  app.get('/debug', (req, res) => {
+    const rootDir = process.cwd();
+    res.sendFile(path.resolve(rootDir, 'public/debug.html'));
+  });
+  
   // Setup authentication routes
   setupAuth(app);
   
