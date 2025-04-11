@@ -298,7 +298,9 @@ export default function AiChat() {
                 size="icon" 
                 className="text-white hover:bg-white/20 h-8 w-8" 
                 onClick={() => setOpen(false)}
-                title="Kapat"
+                title={locale === 'en' ? "Close" : 
+                       locale === 'ar' ? "إغلاق" : 
+                       "Kapat"}
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -310,7 +312,10 @@ export default function AiChat() {
             <div className="p-3 bg-gray-50 border-b border-gray-200">
               <div className="mb-2 flex items-center justify-between">
                 <h3 className="text-sm font-medium text-gray-700 flex items-center">
-                  <User className="w-4 h-4 mr-1" /> Kişisel Profil
+                  <User className="w-4 h-4 mr-1" /> 
+                  {locale === 'en' ? "Personal Profile" : 
+                   locale === 'ar' ? "الملف الشخصي" : 
+                   "Kişisel Profil"}
                 </h3>
                 <Button 
                   variant="ghost" 
@@ -324,7 +329,11 @@ export default function AiChat() {
               
               <div className="space-y-3">
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Konuşma Modu</label>
+                  <label className="block text-xs text-gray-500 mb-1">
+                    {locale === 'en' ? "Conversation Mode" : 
+                     locale === 'ar' ? "وضع المحادثة" : 
+                     "Konuşma Modu"}
+                  </label>
                   <div className="grid grid-cols-2 gap-2">
                     {chatModes.map((chatMode) => (
                       <Button
@@ -348,7 +357,11 @@ export default function AiChat() {
                 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">Ten Rengi</label>
+                    <label className="block text-xs text-gray-500 mb-1">
+                      {locale === 'en' ? "Skin Tone" : 
+                       locale === 'ar' ? "لون البشرة" : 
+                       "Ten Rengi"}
+                    </label>
                     <Select 
                       value={userProfile.skinTone}
                       onValueChange={(value) => setUserProfile({...userProfile, skinTone: value})}
