@@ -200,7 +200,7 @@ export default function StorySection2() {
               <div className="flex justify-between items-center">
                 <input 
                   type="text" 
-                  placeholder="Mesaj gönder..." 
+                  placeholder={locale === 'en' ? 'Send a message...' : locale === 'ar' ? 'إرسال رسالة...' : 'Mesaj gönder...'} 
                   className="bg-white/20 text-white rounded-full px-4 py-2 text-sm w-full" 
                   onClick={(e) => e.stopPropagation()} 
                 />
