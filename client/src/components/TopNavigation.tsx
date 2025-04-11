@@ -8,64 +8,66 @@ import LocationPicker from "./LocationPicker";
 import { LanguageSelector } from "./LanguageSelector";
 import { CurrencySelector } from "./CurrencySelector";
 import { useBackButton } from "@/hooks/useBackButton";
+import { useI18n } from "@/i18n";
 
 export default function TopNavigation({ title, showBackButton }: { title?: string; showBackButton?: boolean }) {
   const { userLocation } = useAppContext();
-  const displayLocation = userLocation || "İstanbul";
+  const { t, locale } = useI18n();
+  const displayLocation = userLocation || (locale === 'en' ? "Istanbul" : locale === 'ar' ? "إسطنبول" : "İstanbul");
   const { darkMode, toggleDarkMode } = useTheme();
   const [locationPickerOpen, setLocationPickerOpen] = useState(false);
   const [_, navigate] = useLocation();
   
-  // Kullanıcı bilgisini al
+  // Get user information
   const { data: user } = useQuery<{ id: number; username: string; email: string; role?: string }>({
     queryKey: ["/api/user"],
     retry: false,
   });
 
-  // Dark mode toggle butonu için click handler
+  // Click handler for dark mode toggle button
   const handleToggleDarkMode = useCallback((e: React.MouseEvent) => {
-    // Çok önemli: Olayın yayılmasını engelle
+    // Important: Prevent event propagation
     e.preventDefault();
     e.stopPropagation();
     toggleDarkMode();
   }, [toggleDarkMode]);
 
-  // Arama butonuna tıklama işleyicisi
+  // Click handler for search button
   const handleSearchClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("Arama butonuna tıklandı");
+    console.log("Search button clicked");
   }, []);
 
-  // Bildirim butonuna tıklama işleyicisi
+  // Click handler for notification button
   const handleNotificationClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("Bildirim butonuna tıklandı");
+    console.log("Notification button clicked");
   }, []);
   
-  // Yönetim paneli butonuna tıklama işleyicisi
+  // Click handler for admin panel button
   const handleAdminClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     navigate("/admin/dashboard");
   }, [navigate]);
 
-  // Konum seçimine tıklama işleyicisi
+  // Click handler for location selection
   const handleLocationClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("Konum seçimine tıklandı");
+    console.log("Location selection clicked");
     setLocationPickerOpen(true);
   }, []);
 
-  // Geri butonu için handler - özel navigationHistory servisimizi kullanıyoruz
+  // Handler for back button - using our custom navigationHistory service
   const { goBack } = useBackButton();
   const handleBackButtonClick = useCallback(() => {
     goBack();
   }, [goBack]);
   
-  // Onboarding'i sıfırlama butonu için handler
+  // Handler for resetting onboarding
   const resetOnboarding = useCallback(() => {
     localStorage.removeItem('firstVisit');
     window.location.href = '/';
@@ -96,7 +98,13 @@ export default function TopNavigation({ title, showBackButton }: { title?: strin
             <button 
               className="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-sm text-[#333333] dark:bg-gray-700 dark:text-white hover:scale-105 transition-all duration-200 hover:shadow-md"
               onClick={handleToggleDarkMode}
-              aria-label={darkMode ? "Açık moda geç" : "Koyu moda geç"}
+              aria-label={darkMode ? 
+                (locale === 'en' ? "Switch to light mode" : 
+                 locale === 'ar' ? "التبديل إلى الوضع الفاتح" : 
+                 "Açık moda geç") : 
+                (locale === 'en' ? "Switch to dark mode" : 
+                 locale === 'ar' ? "التبديل إلى الوضع الداكن" : 
+                 "Koyu moda geç")}
               type="button"
             >
               {darkMode ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} className="text-indigo-500" />}
@@ -118,12 +126,12 @@ export default function TopNavigation({ title, showBackButton }: { title?: strin
                 2
               </span>
             </button>
-            {/* Salon sahipleri ve yöneticiler için yönetim paneli butonu */}
+            {/* Admin panel button for salon owners and administrators */}
             {user && user.role && (user.role === "salon_owner" || user.role === "admin") && (
               <button 
                 className="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-sm text-[#333333] dark:bg-gray-700 dark:text-white hover:scale-105 transition-all duration-200"
                 onClick={handleAdminClick}
-                aria-label="Yönetim Paneli"
+                aria-label={locale === 'en' ? "Admin Panel" : locale === 'ar' ? "لوحة الإدارة" : "Yönetim Paneli"}
                 type="button"
               >
                 <Settings size={18} />
@@ -149,7 +157,7 @@ export default function TopNavigation({ title, showBackButton }: { title?: strin
                 type="button"
               >
                 <RefreshCw size={12} className="mr-1 animate-pulse" />
-                Intro
+                {locale === 'en' ? "Intro" : locale === 'ar' ? "مقدمة" : "Tanıtım"}
               </button>
               <LanguageSelector />
               <CurrencySelector />
@@ -158,7 +166,7 @@ export default function TopNavigation({ title, showBackButton }: { title?: strin
         )}
       </div>
 
-      {/* Konum Seçici */}
+      {/* Location Picker */}
       <LocationPicker 
         open={locationPickerOpen} 
         onClose={() => setLocationPickerOpen(false)} 
