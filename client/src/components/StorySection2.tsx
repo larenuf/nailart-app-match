@@ -1,8 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Story } from "@/types";
+import { useI18n } from "@/i18n";
 
 export default function StorySection2() {
+  const { locale } = useI18n();
   const { data: stories, isLoading } = useQuery<Story[]>({
     queryKey: ["/api/stories"],
   });
@@ -11,35 +13,35 @@ export default function StorySection2() {
   const [isStoryOpen, setIsStoryOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Story'ye tıklandığında çağrılacak basitleştirilmiş fonksiyon
+  // Function called when a story is clicked
   const handleStoryClick = useCallback((story: Story) => {
-    console.log("Story seçildi:", story.title, "ID:", story.id);
+    console.log("Story selected:", story.title, "ID:", story.id);
     setSelectedStory(story);
     setIsStoryOpen(true);
   }, []);
 
-  // Story modalını kapatan fonksiyon
+  // Function to close the story modal
   const closeStoryModal = useCallback(() => {
     setIsStoryOpen(false);
     
-    // Video referansı varsa videoyu durdur
+    // If video reference exists, pause the video
     if (videoRef.current) {
       videoRef.current.pause();
     }
   }, []);
   
-  // Video açıldığında oynatmayı başlat
+  // Start playback when video is opened
   useEffect(() => {
     if (isStoryOpen && videoRef.current && selectedStory?.videoUrl) {
       videoRef.current.play().catch(error => {
-        console.error("Video otomatik olarak oynatılamadı:", error);
+        console.error("Video could not be played automatically:", error);
       });
     }
   }, [isStoryOpen, selectedStory]);
 
-  // Alternatif resim kaynakları
+  // Alternative image sources
   const getAltImageUrl = (storyId: number) => {
-    switch (storyId % 5) { // Modulo 5 ile dağıtım yap
+    switch (storyId % 5) { // Use modulo 5 to distribute
       case 0:
         return "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?ixlib=rb-1.2.1&w=70&h=70&fit=crop&q=80";
       case 1:
@@ -55,7 +57,7 @@ export default function StorySection2() {
     }
   };
 
-  // Bu fonksiyon daha büyük görüntüler için
+  // This function is for larger images
   const getLargeImageUrl = (storyId: number) => {
     switch (storyId % 5) { 
       case 0:
@@ -112,7 +114,7 @@ export default function StorySection2() {
                   alt={story.title}
                   className="w-full h-full object-cover rounded-full"
                   onError={(e) => {
-                    console.error("Resim yüklenemedi:", story.imageUrl);
+                    console.error("Image could not be loaded:", story.imageUrl);
                     (e.target as HTMLImageElement).src = 'https://placekitten.com/70/70';
                   }}
                 />
@@ -144,7 +146,7 @@ export default function StorySection2() {
             className="relative h-[80vh] w-full max-w-md bg-black rounded-xl overflow-hidden" 
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Üst Bilgi */}
+            {/* Header Information */}
             <div className="absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-black/80 to-transparent p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
@@ -158,7 +160,7 @@ export default function StorySection2() {
                   />
                   <div className="ml-2">
                     <p className="text-white font-medium text-sm">{selectedStory.title}</p>
-                    <p className="text-white/70 text-xs">Şimdi</p>
+                    <p className="text-white/70 text-xs">{locale === 'en' ? 'Now' : locale === 'ar' ? 'الآن' : 'Şimdi'}</p>
                   </div>
                 </div>
                 <button 
@@ -172,7 +174,7 @@ export default function StorySection2() {
               </div>
             </div>
             
-            {/* Ana İçerik */}
+            {/* Main Content */}
             {selectedStory.videoUrl ? (
               <div className="w-full h-full flex items-center justify-center">
                 <iframe
@@ -193,7 +195,7 @@ export default function StorySection2() {
               />
             )}
             
-            {/* Alt Bilgi */}
+            {/* Footer Information */}
             <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black/80 to-transparent p-4">
               <div className="flex justify-between items-center">
                 <input 
