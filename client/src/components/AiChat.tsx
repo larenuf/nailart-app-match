@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
-import { Loader2, Send, X, MessageCircle, Sparkles, Scissors, Compass, Gift, CalendarClock, User, Lightbulb, Settings, Palette, Info, RefreshCw } from 'lucide-react';
+import { Loader2, Send, X, MessageCircle, Sparkles, Scissors, Compass, Gift, CalendarClock, User, Lightbulb, Settings, Palette, Info, RefreshCw, Trash2 } from 'lucide-react';
+import { useI18n } from '@/i18n';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar } from '@/components/ui/avatar';
@@ -41,12 +42,32 @@ type UserProfile = {
   age: string;
 };
 
-// AI Güzellik Asistanı için özel modlar
-const chatModes = [
-  { id: "general", name: "Genel", icon: <Sparkles size={14} />, description: "Genel güzellik tavsiyeleri" },
-  { id: "nail", name: "Nail Art", icon: <Scissors size={14} />, description: "Tırnak tasarımları ve bakımı" },
-  { id: "makeup", name: "Makyaj", icon: <Palette size={14} />, description: "Makyaj teknikleri ve ürünleri" },
-  { id: "skin", name: "Cilt Bakımı", icon: <Lightbulb size={14} />, description: "Cilt sorunları ve çözümleri" }
+// AI Beauty Consultant special modes
+const getChatModes = (locale: string) => [
+  { 
+    id: "general", 
+    name: locale === 'en' ? "General" : locale === 'ar' ? "عام" : "Genel", 
+    icon: <Sparkles size={14} />, 
+    description: locale === 'en' ? "General beauty advice" : locale === 'ar' ? "نصائح الجمال العامة" : "Genel güzellik tavsiyeleri" 
+  },
+  { 
+    id: "nail", 
+    name: locale === 'en' ? "Nail Art" : locale === 'ar' ? "فن الأظافر" : "Nail Art", 
+    icon: <Scissors size={14} />, 
+    description: locale === 'en' ? "Nail designs and care" : locale === 'ar' ? "تصاميم وعناية بالأظافر" : "Tırnak tasarımları ve bakımı" 
+  },
+  { 
+    id: "makeup", 
+    name: locale === 'en' ? "Makeup" : locale === 'ar' ? "مكياج" : "Makyaj", 
+    icon: <Palette size={14} />, 
+    description: locale === 'en' ? "Makeup techniques and products" : locale === 'ar' ? "تقنيات ومنتجات المكياج" : "Makyaj teknikleri ve ürünleri" 
+  },
+  { 
+    id: "skin", 
+    name: locale === 'en' ? "Skin Care" : locale === 'ar' ? "العناية بالبشرة" : "Cilt Bakımı", 
+    icon: <Lightbulb size={14} />, 
+    description: locale === 'en' ? "Skin issues and solutions" : locale === 'ar' ? "مشاكل وحلول البشرة" : "Cilt sorunları ve çözümleri" 
+  }
 ];
 
 // Ten rengi seçenekleri
@@ -74,6 +95,7 @@ export default function AiChat() {
   const [showSettings, setShowSettings] = useState(false);
   const [mode, setMode] = useState("general");
   const { toast } = useToast();
+  const { locale } = useI18n();
   
   // Kullanıcı profili (cilt tipi, ten rengi vb.)
   const [userProfile, setUserProfile] = useState<UserProfile>({
@@ -118,8 +140,12 @@ export default function AiChat() {
     onError: (error) => {
       console.error("AI chat error:", error);
       toast({
-        title: "Mesaj gönderilemedi",
-        description: "Lütfen daha sonra tekrar deneyin",
+        title: locale === 'en' ? "Failed to send message" : 
+               locale === 'ar' ? "فشل في إرسال الرسالة" : 
+               "Mesaj gönderilemedi",
+        description: locale === 'en' ? "Please try again later" : 
+                     locale === 'ar' ? "يرجى المحاولة مرة أخرى لاحقًا" : 
+                     "Lütfen daha sonra tekrar deneyin",
         variant: "destructive",
       });
       setTyping(false);
@@ -140,12 +166,18 @@ export default function AiChat() {
     }
   };
   
+  const chatModes = getChatModes(locale);
+  
   const handleModeChange = (newMode: string) => {
     setMode(newMode);
     setShowSettings(false);
     toast({
-      title: `Mod değiştirildi: ${chatModes.find(m => m.id === newMode)?.name}`,
-      description: "AI asistanı artık bu alanda uzmanlaşmış şekilde yanıt verecek",
+      title: locale === 'en' ? `Mode changed: ${chatModes.find(m => m.id === newMode)?.name}` : 
+             locale === 'ar' ? `تم تغيير الوضع: ${chatModes.find(m => m.id === newMode)?.name}` :
+             `Mod değiştirildi: ${chatModes.find(m => m.id === newMode)?.name}`,
+      description: locale === 'en' ? "AI assistant will now respond with expertise in this area" :
+                   locale === 'ar' ? "سيستجيب مساعد الذكاء الاصطناعي الآن بخبرة في هذا المجال" :
+                   "AI asistanı artık bu alanda uzmanlaşmış şekilde yanıt verecek",
     });
   };
 
@@ -176,8 +208,12 @@ export default function AiChat() {
             onClick={() => {
               if (!open) {
                 toast({
-                  title: "AI Güzellik Danışmanı Aktif",
-                  description: "Tırnak bakımı, makyaj ve güzellik tavsiyeleri için sorularınızı sorabilirsiniz!",
+                  title: locale === 'en' ? "AI Beauty Consultant Active" : 
+                        locale === 'ar' ? "مستشار الجمال بالذكاء الاصطناعي نشط" : 
+                        "AI Güzellik Danışmanı Aktif",
+                  description: locale === 'en' ? "You can ask questions about nail care, makeup, and beauty tips!" : 
+                               locale === 'ar' ? "يمكنك طرح أسئلة حول العناية بالأظافر والمكياج ونصائح الجمال!" : 
+                               "Tırnak bakımı, makyaj ve güzellik tavsiyeleri için sorularınızı sorabilirsiniz!",
                   variant: "default",
                 });
               }
@@ -197,14 +233,20 @@ export default function AiChat() {
                 <img src="https://images.pexels.com/photos/3065015/pexels-photo-3065015.jpeg?auto=compress&cs=tinysrgb&w=800" alt="AI Beauty Consultant" />
               </Avatar>
               <div>
-                <span className="font-medium block">AI Güzellik Danışmanı</span>
+                <span className="font-medium block">
+                  {locale === 'en' ? "AI Beauty Consultant" : 
+                   locale === 'ar' ? "مستشار الجمال بالذكاء الاصطناعي" : 
+                   "AI Güzellik Danışmanı"}
+                </span>
                 <span className="text-xs text-white/80 flex items-center gap-1">
                   {mode === "general" && <Sparkles size={12} />}
                   {mode === "nail" && <Scissors size={12} />}
                   {mode === "makeup" && <Palette size={12} />}
                   {mode === "skin" && <Lightbulb size={12} />}
                   <span>
-                    {chatModes.find(m => m.id === mode)?.name || "Genel"} mod
+                    {getChatModes(locale).find(m => m.id === mode)?.name || 
+                     (locale === 'en' ? "General" : locale === 'ar' ? "عام" : "Genel")} 
+                    {locale === 'en' ? " mode" : locale === 'ar' ? " وضع" : " mod"}
                   </span>
                 </span>
               </div>
@@ -216,17 +258,26 @@ export default function AiChat() {
                   size="icon" 
                   className="text-white hover:bg-white/20 h-8 w-8" 
                   onClick={() => {
-                    if (confirm("Konuşma geçmişini temizlemek istediğinize emin misiniz?")) {
+                    const confirmMessage = locale === 'en' ? "Are you sure you want to clear the conversation history?" : 
+                                           locale === 'ar' ? "هل أنت متأكد أنك تريد مسح سجل المحادثة؟" : 
+                                           "Konuşma geçmişini temizlemek istediğinize emin misiniz?";
+                    if (confirm(confirmMessage)) {
                       // This is a mock function since we don't have an actual API endpoint for this
                       // In production, you would make an API call to clear the conversation
                       queryClient.setQueryData(['/api/ai-chat/messages'], []);
                       toast({
-                        title: "Konuşma geçmişi temizlendi",
-                        description: "Yeni bir konuşmaya başlayabilirsiniz",
+                        title: locale === 'en' ? "Conversation history cleared" : 
+                               locale === 'ar' ? "تم مسح سجل المحادثة" : 
+                               "Konuşma geçmişi temizlendi",
+                        description: locale === 'en' ? "You can start a new conversation" : 
+                                     locale === 'ar' ? "يمكنك بدء محادثة جديدة" : 
+                                     "Yeni bir konuşmaya başlayabilirsiniz",
                       });
                     }
                   }}
-                  title="Konuşmayı Temizle"
+                  title={locale === 'en' ? "Clear Conversation" : 
+                         locale === 'ar' ? "مسح المحادثة" : 
+                         "Konuşmayı Temizle"}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -236,7 +287,9 @@ export default function AiChat() {
                 size="icon" 
                 className="text-white hover:bg-white/20 h-8 w-8" 
                 onClick={() => setShowSettings(!showSettings)}
-                title="Ayarlar"
+                title={locale === 'en' ? "Settings" : 
+                       locale === 'ar' ? "الإعدادات" : 
+                       "Ayarlar"}
               >
                 <Settings className="h-4 w-4" />
               </Button>
