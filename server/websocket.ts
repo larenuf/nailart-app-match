@@ -8,7 +8,7 @@ declare global {
 
 export function broadcastToAll(eventType: string, data: any) {
   if (!global.wss) {
-    console.log('WebSocket server not initialized');
+    console.log('WebSocket server başlatılmamış');
     return;
   }
   global.wss.clients.forEach((client: WebSocket) => {
@@ -20,7 +20,7 @@ export function broadcastToAll(eventType: string, data: any) {
 
 export function broadcastToRole(role: string, eventType: string, data: any) {
   if (!global.wss) {
-    console.log('WebSocket server not initialized');
+    console.log('WebSocket server başlatılmamış');
     return;
   }
   global.wss.clients.forEach((client: any) => {
@@ -31,52 +31,46 @@ export function broadcastToRole(role: string, eventType: string, data: any) {
 }
 
 export function setupWebSocketServer(server: Server) {
-  try {
-    if (global.wss) {
-      console.log('WebSocket server already exists');
-      return global.wss;
-    }
-
-    const wss = new WebSocketServer({ 
-      server,
-      path: '/ws',
-      perMessageDeflate: false,
-      clientTracking: true
-    });
-    
-    global.wss = wss;
-
-    wss.on('connection', (ws: any) => {
-      console.log('New WebSocket connection established');
-      
-      ws.on('message', (message: string) => {
-        try {
-          const data = JSON.parse(message);
-          if (data.type === 'setRole') {
-            ws.role = data.role;
-            console.log('Role set:', data.role);
-          }
-        } catch (error) {
-          console.error('WebSocket message parsing error:', error);
-        }
-      });
-
-      ws.on('error', (error: Error) => {
-        console.error('WebSocket connection error:', error);
-      });
-
-      ws.on('close', () => {
-        console.log('Client disconnected');
-      });
-    });
-
-    wss.on('error', (error: Error) => {
-      console.error('WebSocket server error:', error);
-    });
-
-    return wss;
-  } catch (error) {
-    console.error('WebSocket server setup error:', error);
-    throw error;
+  if (global.wss) {
+    console.log('WebSocket server zaten çalışıyor');
+    return global.wss;
   }
+
+  const wss = new WebSocketServer({ 
+    server,
+    port: undefined,
+    host: '0.0.0.0'
+  });
+    
+  global.wss = wss;
+
+  wss.on('connection', (ws: any) => {
+    console.log('Yeni WebSocket bağlantısı kuruldu');
+      
+    ws.on('message', (message: string) => {
+      try {
+        const data = JSON.parse(message);
+        if (data.type === 'setRole') {
+          ws.role = data.role;
+          console.log('Rol atandı:', data.role);
+        }
+      } catch (error) {
+        console.error('WebSocket mesaj hatası:', error);
+      }
+    });
+
+    ws.on('error', (error: Error) => {
+      console.error('WebSocket bağlantı hatası:', error);
+    });
+
+    ws.on('close', () => {
+      console.log('İstemci bağlantısı kapandı');
+    });
+  });
+
+  wss.on('error', (error: Error) => {
+    console.error('WebSocket server hatası:', error);
+  });
+
+  return wss;
 }
