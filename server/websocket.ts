@@ -32,8 +32,14 @@ export function broadcastToRole(role: string, eventType: string, data: any) {
 
 export function setupWebSocketServer(server: Server) {
   try {
+    if (global.wss) {
+      console.log('WebSocket server already exists');
+      return global.wss;
+    }
+
     const wss = new WebSocketServer({ 
       server,
+      path: '/ws',
       perMessageDeflate: false,
       clientTracking: true
     });
@@ -48,6 +54,7 @@ export function setupWebSocketServer(server: Server) {
           const data = JSON.parse(message);
           if (data.type === 'setRole') {
             ws.role = data.role;
+            console.log('Role set:', data.role);
           }
         } catch (error) {
           console.error('WebSocket message parsing error:', error);
@@ -57,6 +64,14 @@ export function setupWebSocketServer(server: Server) {
       ws.on('error', (error: Error) => {
         console.error('WebSocket connection error:', error);
       });
+
+      ws.on('close', () => {
+        console.log('Client disconnected');
+      });
+    });
+
+    wss.on('error', (error: Error) => {
+      console.error('WebSocket server error:', error);
     });
 
     return wss;
