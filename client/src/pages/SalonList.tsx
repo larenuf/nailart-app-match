@@ -60,8 +60,27 @@ interface Salon {
   galleryCount?: number;    // Galeri fotoğraf sayısı
 }
 
-interface SalonWithCity extends Salon {
+// SalonWithCity, Salon'u extend etmek yerine salon'daki tüm özellikleri ve ek özellikleri içeren bir tip olmalı
+interface SalonWithCity {
+  id: number;
+  name: string;
+  address: string;
+  phoneNumber: string;
+  rating: number;
+  reviewCount: number;
+  imageUrl: string;
+  distance: number;
+  discount: string;
+  isPremium: boolean;
+  openTime: string;
+  closeTime: string;
+  latitude: number;
+  longitude: number;
+  galleryImages?: string[];
+  // Eklenen özellikler
   city: string;
+  likeCount?: number;
+  galleryCount?: number;
 }
 
 // Filter tiplerini tanımla
@@ -159,6 +178,7 @@ export default function SalonList() {
     const likeCount = (salon.id * 17) % 200 + 20; // Rastgele beğeni sayısı
     const galleryCount = (salon.id * 7) % 10 + 3; // 3-12 arası fotoğraf sayısı
     
+    // Tüm salon özelliklerini kopyalayıp city ve diğer ek özellikleri ekle
     return {
       ...salon,
       city,
