@@ -1,10 +1,14 @@
 import { Server } from 'http';
 
-// WebSocket işlevselliği geçici olarak devre dışı bırakıldı
-// Dummy fonksiyonlar, mevcut API'yi bozmadan çağrıları işler
+import WebSocket, { WebSocketServer } from 'ws';
+
 export function broadcastToAll(eventType: string, data: any) {
-  // WebSocket devre dışı bırakıldı - mesaj gönderilmiyor
-  console.log(`[WebSocket Devre Dışı] broadcastToAll çağrısı alındı: ${eventType}`, data);
+  if (!global.wss) return;
+  global.wss.clients.forEach((client: WebSocket) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify({ type: eventType, data }));
+    }
+  });
 }
 
 export function broadcastToRole(role: string, eventType: string, data: any) {
