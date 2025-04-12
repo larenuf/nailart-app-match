@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from 'wouter';
+import { useAppContext } from '@/context/AppContext';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -133,7 +134,12 @@ export default function SalonList() {
     }));
   };
 
+  const { setSelectedSalon } = useAppContext();
+  
   const handleSalonClick = (salon: SalonWithCity) => {
+    // Context'e seçili salonu kaydedin, böylece detay sayfasında erişilebilir
+    setSelectedSalon(salon);
+    // Sonra doğru URL'ye yönlendirin
     navigate(`/salons/${salon.id}`);
   };
 
