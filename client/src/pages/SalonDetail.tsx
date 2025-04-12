@@ -16,15 +16,19 @@ export default function SalonDetail() {
   });
   
   useEffect(() => {
+    // API'den salon verisi gelirse ve seçili salon yoksa, context'e kaydet
     if (salon && !selectedSalon) {
       setSelectedSalon(salon);
     }
     
-    // If there's no salon selected, redirect to home
-    if (!selectedSalon && !salon) {
+    // Eğer useQuery hala yükleniyor ve selectedSalon boş değilse bekle
+    // Yükleme tamamlandı, API yanıtı ve seçili salon yoksa anasayfaya yönlendir
+    const queryIsLoading = id && !salon;
+    if (!queryIsLoading && !selectedSalon && !salon) {
+      console.log("Salon bulunamadı, anasayfaya yönlendiriliyor...");
       setLocation('/');
     }
-  }, [salon, selectedSalon, setSelectedSalon, setLocation]);
+  }, [salon, selectedSalon, setSelectedSalon, setLocation, id]);
   
   if (!selectedSalon) return null;
   
